@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../common/hooks/hooks";
-import { appActions } from "../../app/appSlice";
+import { appActions } from "../../features/appSlice";
 
 const Cards = () => {
   const loading = useAppSelector((state) => state.app.isLoading);

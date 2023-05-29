@@ -2,7 +2,7 @@ import React from "react";
 import logo from "../logo.svg";
 import { Counter } from "components/counter/Counter";
 import "./App.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, Link, RouterProvider } from "react-router-dom";
 import Cards from "components/cards/cards";
 import ForgotEmail from "components/forgotPassword/forgotEmail";
 import CheckEmail from "components/checkEmail/checkEmail";
@@ -15,6 +15,10 @@ import SetNewPassword from "components/setNewPassword/setNewPassword";
 
 function App() {
   const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <Register />,
+    },
     {
       path: "/cards",
       element: <Cards />,
@@ -58,7 +62,6 @@ function App() {
       <header className="App-header">
         {/*<img src={logo} className="App-logo" alt="logo" />*/}
         <RouterProvider router={router} />
-
         {/*<Counter />*/}
       </header>
     </div>

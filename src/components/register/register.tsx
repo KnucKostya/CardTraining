@@ -1,6 +1,8 @@
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import s from "./register.module.scss";
+import { Navigate, redirect } from "react-router-dom";
+import TextField from "@mui/material/TextField";
 
 const Register = () => {
   const {
@@ -13,31 +15,49 @@ const Register = () => {
 
   return (
     <div className={s.regForm}>
-      <div>Cards Sign Up</div>
+      <div className={s.cards}>Cards</div>
+      <div className={s.signIn}>Sign Up</div>
 
-      <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between" }}>
-        Please enter your email
-      </div>
+      <form className={s.form} onSubmit={handleSubmit(onSubmit)}>
+        <TextField
+          id="standard-basic"
+          label="email"
+          variant="standard"
+          InputLabelProps={{ style: { fontSize: 13 } }}
+          {...register("email", { required: true })}
+        />
+        <TextField
+          id="standard-basic"
+          label="password"
+          variant="standard"
+          InputLabelProps={{ style: { fontSize: 13 } }}
+          {...register("password", { required: true })}
+        />
+        <TextField
+          // className={s.input}
+          id="standard-basic"
+          label="confirm password"
+          variant="standard"
+          InputLabelProps={{ style: { fontSize: 13 } }}
+          {...register("confirmPassword", { required: true })}
+        />
 
-      <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between" }}>
-        Please enter a password
-      </div>
+        <div className={s.supportText}>
+          <div>The password must contain:</div>
+          <div className={s.bottomText}>• at least 8 characters</div>
+          <div className={s.bottomText}>• numbers</div>
+          <div className={s.bottomText}>• upper and lower case</div>
+        </div>
 
-      <div className={s.buttons}>
-        <button className="Button" style={{ marginTop: 10 }}>
-          Cancel
-        </button>
-        <button className="Button" style={{ marginTop: 10 }}>
-          Sign Up
-        </button>
-      </div>
-
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <input className="divide-y divide-gray-200" placeholder={"email"} {...register("email", { required: true })} />
-        <input className="ml-3" placeholder={"password"} {...register("password", { required: true })} />
-        <input placeholder={"confirm password"} {...register("confirmPassword", { required: true })} />
-        {/*{errors.exampleRequired && <span>This field is required</span>}*/}
-        <input type="submit" />
+        <div className={s.buttons}>
+          {/*сделать навигацию!!!!!!!!!!!!!!!!!!!!*/}
+          <button className={s.bt} type="button" onClick={() => <Navigate to={"/login"} />}>
+            Cancel
+          </button>
+          <button className={s.bt} type="submit">
+            Sign Up
+          </button>
+        </div>
       </form>
     </div>
   );
