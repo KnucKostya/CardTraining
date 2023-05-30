@@ -1,8 +1,6 @@
 import React from "react";
-import logo from "../logo.svg";
-import { Counter } from "components/counter/Counter";
 import "./App.css";
-import { createBrowserRouter, Link, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Cards from "components/cards/cards";
 import ForgotEmail from "components/forgotPassword/forgotEmail";
 import CheckEmail from "components/checkEmail/checkEmail";
@@ -59,11 +57,12 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
+      <div className="mainContainer">
         {/*<img src={logo} className="App-logo" alt="logo" />*/}
+
         <RouterProvider router={router} />
         {/*<Counter />*/}
-      </header>
+      </div>
     </div>
   );
 }

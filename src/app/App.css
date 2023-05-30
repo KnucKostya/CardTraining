@@ -13,13 +13,13 @@
   }
 }
 
-.App-header {
-  min-height: 100vh;
+.mainContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
+  height: 100%;
 }
 
 .App-link {
