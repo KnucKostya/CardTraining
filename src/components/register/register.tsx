@@ -1,34 +1,62 @@
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import s from "./register.module.scss";
-import { Link } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useAppDispatch } from "../../common/hooks/hooks";
 import { registerThunks } from "../../redux/registrationSlice";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { appActions } from "../../features/appSlice";
+import { MuiButton } from "../../common/universal/button/MuiButton";
 
 export const Register = () => {
   const dispatch = useAppDispatch();
+
+  const schema = yup
+    .object({
+      email: yup.string().email().required(),
+      password: yup
+        .string()
+        .min(8, "Password must be 8 characters long")
+        .matches(/[0-9]/, "Password requires a number")
+        .matches(/[a-z]/, "Password requires a lowercase letter")
+        .matches(/[A-Z]/, "Password requires an uppercase letter"),
+      confirmPassword: yup.string().oneOf([yup.ref("password")], "Passwords must match"),
+    })
+    .required();
 
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
-    if (data.password === data.confirmPassword) {
-      dispatch(registerThunks.register({ email: data.email, password: data.password }));
-    }
-    // dispatch(registerActions.setError(e?.))
+  } = useForm<Inputs>({
+    resolver: yupResolver(schema),
+  });
 
-    //установить еррор если !==      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    try {
+      dispatch(registerThunks.register({ email: data.email, password: data.password }));
+      dispatch(appActions.setIsLoading({ isLoading: true }));
+    } catch (e: any) {
+      console.log(e);
+      dispatch(appActions.setError({ error: e }));
+    } finally {
+      dispatch(appActions.setIsLoading({ isLoading: false }));
+    }
+
+    // dispatch(appActions.setError({ error: "your password confirmation is invalid" }));
+    // dispatch(registerActions.setError(e?.))
   };
 
   const theme = createTheme({
     palette: {
       primary: {
-        main: "rgb(154 145 200)", // Здесь можно указать желаемый цвет
+        main:
+          errors.password || errors.email || errors.confirmPassword
+            ? "rgb(222, 0, 145)"
+            : "rgb(154 145 200)",
       },
     },
   });
@@ -42,22 +70,23 @@ export const Register = () => {
         <ThemeProvider theme={theme}>
           <TextField
             id="standard-basic"
-            label="email"
+            label={errors.email ? errors.email.message : "email"}
             variant="standard"
             InputLabelProps={{ style: { fontSize: 13 } }}
             {...register("email", { required: true })}
           />
+          <p></p>
           <TextField
             id="standard-basic"
-            label="password"
+            label={errors.password ? errors.password.message : "password"}
             variant="standard"
             InputLabelProps={{ style: { fontSize: 13 } }}
             {...register("password", { required: true })}
           />
+
           <TextField
-            // sx={s.input}
             id="standard-basic"
-            label="confirm password"
+            label={errors.confirmPassword ? errors.confirmPassword.message : "confirm password"}
             variant="standard"
             InputLabelProps={{ style: { fontSize: 13 } }}
             {...register("confirmPassword", { required: true })}
@@ -72,16 +101,18 @@ export const Register = () => {
 
           <div className={s.buttons}>
             <button type="button" className={s.bt}>
-              <Link to={"/login"} style={{ textDecoration: "none", color: "black" }}>
-                Cancel
-              </Link>
-              {/*Cancel*/}
+              <MuiButton name={"Cancel"} route={"/login"} color={"inherit"} />
+
+              {/*  <Link to={"/login"} style={{ textDecoration: "none", color: "black" }}>*/}
+              {/*    Cancel*/}
+              {/*  </Link>*/}
             </button>
-            {/* <Link type="button" to={"/login"} style={linkStyle}>*/}
-            {/*  Cancel*/}
-            {/*</Link>*/}
             <button className={s.bt} type="submit">
-              Sign Up
+              <MuiButton
+                name={"Sign Up"}
+                // route={"/profile"}
+                color={"inherit"}
+              />
             </button>
           </div>
         </ThemeProvider>

@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { authApi, RegisterResponse } from "../common/api/authApi";
 import { createAppAsyncThunk } from "../common/utils/createAppAsyncThunk";
 
@@ -19,21 +19,11 @@ const slice = createSlice({
   initialState: {
     error: null as null | string,
   },
-  reducers: {
-    setError: (state, action: PayloadAction<{ error: string }>) => {
-      state.error = action.payload.error;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
-    builder
-      .addCase(register.fulfilled, () => {
-        // state = action.payload.
-      })
-      .addCase(register.rejected, (state, action) => {
-        debugger;
-        console.log(action.payload);
-        state.error = action.payload;
-      });
+    builder.addCase(register.fulfilled, () => {
+      // state = action.payload.
+    });
   },
 });
 
