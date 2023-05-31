@@ -9,9 +9,11 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { appActions } from "../../features/appSlice";
 import { MuiButton } from "../../common/universal/button/MuiButton";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export const Register = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const schema = yup
     .object({
@@ -39,6 +41,7 @@ export const Register = () => {
     try {
       dispatch(registerThunks.register({ email: data.email, password: data.password }));
       dispatch(appActions.setIsLoading({ isLoading: true }));
+      navigate("/profile");
     } catch (e: any) {
       console.log(e);
       dispatch(appActions.setError({ error: e }));
@@ -102,10 +105,6 @@ export const Register = () => {
           <div className={s.buttons}>
             <button type="button" className={s.bt}>
               <MuiButton name={"Cancel"} route={"/login"} color={"inherit"} />
-
-              {/*  <Link to={"/login"} style={{ textDecoration: "none", color: "black" }}>*/}
-              {/*    Cancel*/}
-              {/*  </Link>*/}
             </button>
             <button className={s.bt} type="submit">
               <MuiButton

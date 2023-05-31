@@ -10,6 +10,8 @@ import Login from "../components/login/login";
 import Packs from "../components/packs/packs";
 import Profile from "../components/profile/profile";
 import SetNewPassword from "../components/setNewPassword/setNewPassword";
+import { LinearProgress } from "@mui/material";
+import { useAppSelector } from "../common/hooks/hooks";
 
 const router = createBrowserRouter([
   {
@@ -55,8 +57,11 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  const isLoading = useAppSelector((state) => state.app.isLoading);
+
   return (
     <div className="App">
+      {isLoading && <LinearProgress color={"secondary"} />}
       <div className="mainContainer">
         <RouterProvider router={router} />
         {/*<GlobalError />*/}

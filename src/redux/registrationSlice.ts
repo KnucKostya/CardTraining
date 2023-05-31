@@ -7,7 +7,6 @@ const register = createAppAsyncThunk<RegisterResponse, { email: string; password
   async (arg, thunkAPI) => {
     const { rejectWithValue } = thunkAPI;
     try {
-      console.log(1);
       return await authApi.register(arg.email, arg.password);
     } catch (e: any) {
       return rejectWithValue(e.response.data.error);
