@@ -9,9 +9,11 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { appActions } from "../../features/appSlice";
 import { MuiButton } from "../../common/universal/button/MuiButton";
+import { useNavigate } from "react-router-dom";
 
 export const Register = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const schema = yup
     .object({
@@ -35,21 +37,16 @@ export const Register = () => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
-    try {
-      dispatch(registerThunks.register({ email: data.email, password: data.password }));
-      dispatch(appActions.setIsLoading({ isLoading: true }));
-    } catch (e: any) {
-      console.log(e);
-      dispatch(appActions.setError({ error: e }));
-    } finally {
-      dispatch(appActions.setIsLoading({ isLoading: false }));
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    const response: any = await dispatch(
+      registerThunks.register({ email: data.email, password: data.password })
+    );
+    if (response.payload.statusText === "Created") {
+      navigate("/profile");
+    } else {
+      dispatch(appActions.setError({ error: "check your network connection" }));
     }
-
-    // dispatch(appActions.setError({ error: "your password confirmation is invalid" }));
-    // dispatch(registerActions.setError(e?.))
   };
-
   const theme = createTheme({
     palette: {
       primary: {
@@ -99,20 +96,13 @@ export const Register = () => {
             <div className={s.bottomText}>• upper and lower case</div>
           </div>
 
+          {/*исправить вложенность кнопок!!!!!!!!!!!!!!*/}
           <div className={s.buttons}>
             <button type="button" className={s.bt}>
               <MuiButton name={"Cancel"} route={"/login"} color={"inherit"} />
-
-              {/*  <Link to={"/login"} style={{ textDecoration: "none", color: "black" }}>*/}
-              {/*    Cancel*/}
-              {/*  </Link>*/}
             </button>
             <button className={s.bt} type="submit">
-              <MuiButton
-                name={"Sign Up"}
-                // route={"/profile"}
-                color={"inherit"}
-              />
+              <MuiButton name={"Sign Up"} color={"inherit"} />
             </button>
           </div>
         </ThemeProvider>
