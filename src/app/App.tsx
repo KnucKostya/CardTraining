@@ -10,6 +10,8 @@ import { Packs } from "../components/packs/packs";
 import { Profile } from "../components/profile/profile";
 import { Register } from "../components/register/register";
 import { SetNewPassword } from "../components/setNewPassword/setNewPassword";
+import { useAppSelector } from "../common/hooks/hooks";
+import { LinearProgress } from "@mui/material";
 
 const router = createBrowserRouter([
   {
