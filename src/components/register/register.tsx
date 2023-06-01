@@ -12,6 +12,7 @@ import { MuiButton } from "../../common/components/MuiButton";
 import { Navigate, useNavigate } from "react-router-dom";
 import {SuperButton} from "common/components/super-button/SuperButton";
 
+
 export const Register = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -38,22 +39,16 @@ export const Register = () => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
-    try {
-      dispatch(registerThunks.register({ email: data.email, password: data.password }));
-      dispatch(appActions.setIsLoading({ isLoading: true }));
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    const response: any = await dispatch(
+      registerThunks.register({ email: data.email, password: data.password })
+    );
+    if (response.payload.statusText === "Created") {
       navigate("/profile");
-    } catch (e: any) {
-      console.log(e);
-      dispatch(appActions.setError({ error: e }));
-    } finally {
-      dispatch(appActions.setIsLoading({ isLoading: false }));
+    } else {
+      dispatch(appActions.setError({ error: "check your network connection" }));
     }
-
-    // dispatch(appActions.setError({ error: "your password confirmation is invalid" }));
-    // dispatch(registerActions.setError(e?.))
   };
-
   const theme = createTheme({
     palette: {
       primary: {
@@ -103,7 +98,6 @@ export const Register = () => {
             <div className={s.bottomText}>• upper and lower case</div>
           </div>
 
-
           <div className={s.buttons}>
             <SuperButton name="Cancel" redirectPath={"/login"}  borderRadius={"5px"}
             width={'120px'} height={'38px'}
@@ -111,6 +105,7 @@ export const Register = () => {
             <SuperButton name="Sign Up" type={"submit"}  borderRadius={"5px"}
                          width={'120px'} height={'38px'}
             />
+
           </div>
         </ThemeProvider>
       </form>
