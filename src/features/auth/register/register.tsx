@@ -3,13 +3,13 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import s from "./register.module.scss";
 import TextField from "@mui/material/TextField";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useAppDispatch } from "../../common/hooks/hooks";
-import { registerThunks } from "../../redux/registrationSlice";
+import { registerThunks } from "../registrationSlice";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { appActions } from "../../features/appSlice";
-import { MuiButton } from "../../common/universal/button/MuiButton";
+import { appActions } from "../../../app/appSlice";
+import { MuiButton } from "../../../common/universal/button/MuiButton";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../../../common/hooks/useAppDispatch";
 
 export const Register = () => {
   const dispatch = useAppDispatch();

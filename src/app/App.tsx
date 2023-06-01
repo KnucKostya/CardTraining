@@ -1,15 +1,15 @@
 import React from "react";
 import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Cards } from "../components/cards/cards";
-import { CheckEmail } from "../components/checkEmail/checkEmail";
-import { ForgotEmail } from "../components/forgotPassword/forgotEmail";
-import { Learn } from "../components/learn/learn";
-import { Login } from "../components/login/login";
-import { Packs } from "../components/packs/packs";
-import { Profile } from "../components/profile/profile";
-import { Register } from "../components/register/register";
-import { SetNewPassword } from "../components/setNewPassword/setNewPassword";
+import { Cards } from "../features/cards/cards";
+import { CheckEmail } from "../features/auth/checkEmail/checkEmail";
+import { ForgotEmail } from "../features/auth/forgotPassword/forgotEmail";
+import { Learn } from "../features/learn/learn";
+import { Login } from "../features/login/login";
+import { Packs } from "../features/packs/packs";
+import { Profile } from "../features/profile/profile";
+import { Register } from "../features/auth/register/register";
+import { SetNewPassword } from "../features/auth/setNewPassword/setNewPassword";
 
 const router = createBrowserRouter([
   {
