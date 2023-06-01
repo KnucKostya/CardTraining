@@ -7,11 +7,13 @@ import CheckEmail from "../components/checkEmail/checkEmail";
 import ForgotEmail from "../components/forgotPassword/forgotEmail";
 import Learn from "../components/learn/learn";
 import Login from "../components/login/login";
-import Packs from "../components/packs/packs";
-import Profile from "../components/profile/profile";
 import SetNewPassword from "../components/setNewPassword/setNewPassword";
 import { LinearProgress } from "@mui/material";
-import { useAppSelector } from "../common/hooks/hooks";
+import { useAppSelector } from "common/hooks/hooks";
+import {Profile} from "components/profile/Profile";
+import {ErrorSnackbar} from "common/components/error-snack-bar/ErrorSnackBar";
+import {Header} from "features/Header/Header";
+import Packs from "components/packs/packs";
 
 const router = createBrowserRouter([
   {
@@ -61,6 +63,8 @@ function App() {
 
   return (
     <div className="App">
+      <ErrorSnackbar />
+      <Header />
       {isLoading && <LinearProgress color={"secondary"} />}
       <div className="mainContainer">
         <RouterProvider router={router} />
