@@ -7,11 +7,13 @@ import { ForgotEmail } from "../components/forgotPassword/forgotEmail";
 import { Learn } from "../components/learn/learn";
 import { Login } from "../components/login/login";
 import { Packs } from "../components/packs/packs";
-import { Profile } from "../components/profile/profile";
 import { Register } from "../components/register/register";
 import { SetNewPassword } from "../components/setNewPassword/setNewPassword";
 import { useAppSelector } from "../common/hooks/hooks";
 import { LinearProgress } from "@mui/material";
+import { Profile } from "../components/profile/Profile";
+import { ErrorSnackbar } from "../common/components/error-snack-bar/ErrorSnackBar";
+import { Header } from "../features/Header/Header";
 
 const router = createBrowserRouter([
   {
