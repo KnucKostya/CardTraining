@@ -7,9 +7,9 @@ import { registerThunks } from "../registrationSlice";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { appActions } from "../../../app/appSlice";
-import { MuiButton } from "../../../common/universal/button/MuiButton";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../../common/hooks/useAppDispatch";
+import { useAppDispatch } from "common/hooks/useAppDispatch";
+import { SuperButton } from "common/components/super-button/SuperButton";
 
 export const Register = () => {
   const dispatch = useAppDispatch();
@@ -72,7 +72,6 @@ export const Register = () => {
             InputLabelProps={{ style: { fontSize: 13 } }}
             {...register("email", { required: true })}
           />
-          <p></p>
           <TextField
             id="standard-basic"
             label={errors.password ? errors.password.message : "password"}
@@ -96,14 +95,21 @@ export const Register = () => {
             <div className={s.bottomText}>• upper and lower case</div>
           </div>
 
-          {/*исправить вложенность кнопок!!!!!!!!!!!!!!*/}
           <div className={s.buttons}>
-            <button type="button" className={s.bt}>
-              <MuiButton name={"Cancel"} route={"/login"} color={"inherit"} />
-            </button>
-            <button className={s.bt} type="submit">
-              <MuiButton name={"Sign Up"} color={"inherit"} />
-            </button>
+            <SuperButton
+              name="Cancel"
+              redirectPath={"/login"}
+              borderRadius={"5px"}
+              width={"120px"}
+              height={"38px"}
+            />
+            <SuperButton
+              name="Sign Up"
+              type={"submit"}
+              borderRadius={"5px"}
+              width={"120px"}
+              height={"38px"}
+            />
           </div>
         </ThemeProvider>
       </form>
