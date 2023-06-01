@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { authApi, RegisterResponse } from "../common/api/authApi";
+import { authApi, RegisterResponse } from "../features/auth/authApi";
 import { createAppAsyncThunk } from "../common/utils/createAppAsyncThunk";
-import { appActions } from "../features/appSlice";
+import {appActions} from "app/appSlice";
 
 const register = createAppAsyncThunk<RegisterResponse, { email: string; password: string }>(
   "auth/register",

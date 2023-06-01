@@ -61,6 +61,8 @@ function App() {
 
   return (
     <div className="App">
+      <ErrorSnackbar />
+      <Header />
       {isLoading && <LinearProgress color={"secondary"} />}
       <div className="mainContainer">
         <RouterProvider router={router} />

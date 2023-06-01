@@ -43,6 +43,8 @@
     .buttons {
       @include form(flex, "", "", space-between);
       width: 100%;
+        gap: 20px;
+
       .bt {
         margin-top: 10%;
       }
