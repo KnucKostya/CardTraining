@@ -1,7 +1,5 @@
 import React from "react";
 
-const CheckEmail = () => {
+export const CheckEmail = () => {
   return <div>CheckEmail</div>;
 };
-
-export default CheckEmail;

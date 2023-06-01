@@ -110,7 +110,6 @@ export const Register = () => {
     </div>
   );
 };
-export default Register;
 
 type Inputs = {
   email: string;

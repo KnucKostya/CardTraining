@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../common/hooks/hooks";
 import { appActions } from "../../features/appSlice";
 
-const Cards = () => {
+export const Cards = () => {
   const loading = useAppSelector((state) => state.app.isLoading);
   const dispatch = useAppDispatch();
 
@@ -18,5 +18,3 @@ const Cards = () => {
 
   return <div>Cards</div>;
 };
-
-export default Cards;
