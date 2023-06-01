@@ -1,7 +1,5 @@
 import React from "react";
 
-const ForgotEmail = () => {
+export const ForgotEmail = () => {
   return <div>ForgotEmail</div>;
 };
-
-export default ForgotEmail;

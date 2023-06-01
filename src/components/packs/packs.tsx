@@ -1,7 +1,5 @@
 import React from "react";
 
-const Packs = () => {
+export const Packs = () => {
   return <div>Packs</div>;
 };
-
-export default Packs;

@@ -1,36 +1,27 @@
 @import "./src/common/styles/variables";
+@import "./src/common/styles/mixins/auth";
 
 .regForm {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-evenly;
-  //width: %;
-  min-height: 60%;
+  @include form(flex, column, center, space-evenly);
+  min-height: 25%;
+  width: 300px;
   border: 1px solid black;
   background-color: $sec-color;
-  padding: 20px;
+  padding: 15px;
   border-radius: 10px;
 
   .cards {
-    color: $base-color;
-    font-family: $base-font;
-    font-weight: 700;
+    @include formStyle($base-color, $base-font, "", 700);
     opacity: 1;
   }
 
   .signIn {
-    color: $base-color;
-    font-family: font-semibold;
-    font-size: 20px;
-    font-weight: 400;
+    @include formStyle($base-color, font-semibold, 20px, 400);
     margin-top: 5%;
   }
 
   .form {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    @include form(flex, column, flex-start, end);
     margin-top: 10%;
 
     .input {
@@ -38,13 +29,8 @@
     }
 
     .supportText {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      font-size: 14px;
-      font-weight: bold;
-      font-family: font-semibold;
-      color: #151414;
+      @include form(flex, column, flex-start, "");
+      @include formStyle(#151414, font-semibold, 14px, bold);
       opacity: 30%;
       margin-top: 10%;
 
@@ -55,10 +41,8 @@
     }
 
     .buttons {
-      display: flex;
+      @include form(flex, "", "", space-between);
       width: 100%;
-      justify-content: space-between;
-
       .bt {
         margin-top: 10%;
       }
