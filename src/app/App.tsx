@@ -11,9 +11,9 @@ import { Register } from "../components/register/register";
 import { SetNewPassword } from "../components/setNewPassword/setNewPassword";
 import { useAppSelector } from "../common/hooks/hooks";
 import { LinearProgress } from "@mui/material";
-import { Profile } from "../components/profile/Profile";
 import { ErrorSnackbar } from "../common/components/error-snack-bar/ErrorSnackBar";
 import { Header } from "../features/Header/Header";
+import { Profile } from "../components/profile/profile";
 
 const router = createBrowserRouter([
   {
@@ -69,7 +69,8 @@ function App() {
       <div className="mainContainer">
         <RouterProvider router={router} />
         {/*<GlobalError />*/}
-        {/*//error handling!!!!!!!!!!*/}
+        {/*error handling!!!!!!!!!!*/}
+        {/*error handling!!!!!!!!!!*/}
         {/*<Counter />*/}
       </div>
     </div>
