@@ -69,6 +69,7 @@ function App() {
       <div className="mainContainer">
         <RouterProvider router={router} />
         {/*<GlobalError />*/}
+        {/*//error handling!!!!!!!!!!*/}
         {/*<Counter />*/}
       </div>
     </div>
