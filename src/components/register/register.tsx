@@ -7,9 +7,10 @@ import { useAppDispatch } from "../../common/hooks/hooks";
 import { registerThunks } from "../../redux/registrationSlice";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { appActions } from "../../features/appSlice";
-import { MuiButton } from "../../common/universal/button/MuiButton";
+import { appActions } from "app/appSlice";
+import { MuiButton } from "../../common/components/MuiButton";
 import { Navigate, useNavigate } from "react-router-dom";
+import {SuperButton} from "common/components/super-button/SuperButton";
 
 export const Register = () => {
   const dispatch = useAppDispatch();
@@ -102,17 +103,14 @@ export const Register = () => {
             <div className={s.bottomText}>• upper and lower case</div>
           </div>
 
+
           <div className={s.buttons}>
-            <button type="button" className={s.bt}>
-              <MuiButton name={"Cancel"} route={"/login"} color={"inherit"} />
-            </button>
-            <button className={s.bt} type="submit">
-              <MuiButton
-                name={"Sign Up"}
-                // route={"/profile"}
-                color={"inherit"}
-              />
-            </button>
+            <SuperButton name="Cancel" redirectPath={"/login"}  borderRadius={"5px"}
+            width={'120px'} height={'38px'}
+            />
+            <SuperButton name="Sign Up" type={"submit"}  borderRadius={"5px"}
+                         width={'120px'} height={'38px'}
+            />
           </div>
         </ThemeProvider>
       </form>
