@@ -69,6 +69,7 @@ export const Register = () => {
             id="standard-basic"
             label={errors.email ? errors.email.message : "email"}
             variant="standard"
+            style={{ width: "100%" }}
             InputLabelProps={{ style: { fontSize: 13 } }}
             {...register("email", { required: true })}
           />
@@ -76,6 +77,7 @@ export const Register = () => {
             id="standard-basic"
             label={errors.password ? errors.password.message : "password"}
             variant="standard"
+            style={{ width: "100%" }}
             InputLabelProps={{ style: { fontSize: 13 } }}
             {...register("password", { required: true })}
           />
@@ -84,6 +86,7 @@ export const Register = () => {
             id="standard-basic"
             label={errors.confirmPassword ? errors.confirmPassword.message : "confirm password"}
             variant="standard"
+            style={{ width: "100%" }}
             InputLabelProps={{ style: { fontSize: 13 } }}
             {...register("confirmPassword", { required: true })}
           />
