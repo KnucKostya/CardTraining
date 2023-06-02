@@ -13,7 +13,7 @@ import { useAppSelector } from "../common/hooks/useAppSelector";
 import { LinearProgress } from "@mui/material";
 import { ErrorSnackbar } from "../common/components/error-snack-bar/ErrorSnackBar";
 import { Header } from "../features/Header/Header";
-import { Profile } from "features/profile/Profile";
+import { Profile } from "../features/profile/profile";
 
 const router = createBrowserRouter([
   {
@@ -69,7 +69,7 @@ function App() {
       <div className="mainContainer">
         <RouterProvider router={router} />
         {/*<GlobalError />*/}
-        {/*!!!!!!!!!ERROR HANDLING!!!!!!!!!!!*/}
+        {/*error handling!!!!!!!!!!*/}
         {/*<Counter />*/}
       </div>
     </div>
