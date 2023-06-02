@@ -3,15 +3,13 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import s from "./register.module.scss";
 import TextField from "@mui/material/TextField";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useAppDispatch } from "../../common/hooks/hooks";
-import { registerThunks } from "../../redux/registrationSlice";
+import { registerThunks } from "../registrationSlice";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { appActions } from "app/appSlice";
-import { MuiButton } from "../../common/components/MuiButton";
-import { Navigate, useNavigate } from "react-router-dom";
-import {SuperButton} from "common/components/super-button/SuperButton";
-
+import { appActions } from "../../../app/appSlice";
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "common/hooks/useAppDispatch";
+import { SuperButton } from "common/components/super-button/SuperButton";
 
 export const Register = () => {
   const dispatch = useAppDispatch();
@@ -74,7 +72,6 @@ export const Register = () => {
             InputLabelProps={{ style: { fontSize: 13 } }}
             {...register("email", { required: true })}
           />
-          <p></p>
           <TextField
             id="standard-basic"
             label={errors.password ? errors.password.message : "password"}
@@ -99,13 +96,20 @@ export const Register = () => {
           </div>
 
           <div className={s.buttons}>
-            <SuperButton name="Cancel" redirectPath={"/login"}  borderRadius={"5px"}
-            width={'120px'} height={'38px'}
+            <SuperButton
+              name="Cancel"
+              redirectPath={"/login"}
+              borderRadius={"5px"}
+              width={"120px"}
+              height={"38px"}
             />
-            <SuperButton name="Sign Up" type={"submit"}  borderRadius={"5px"}
-                         width={'120px'} height={'38px'}
+            <SuperButton
+              name="Sign Up"
+              type={"submit"}
+              borderRadius={"5px"}
+              width={"120px"}
+              height={"38px"}
             />
-
           </div>
         </ThemeProvider>
       </form>

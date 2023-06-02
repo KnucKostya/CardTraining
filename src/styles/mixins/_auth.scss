@@ -1,0 +1,13 @@
+@mixin form($display, $direction, $align, $justify) {
+  display: $display;
+  flex-direction: $direction;
+  align-items: $align;
+  justify-content: $justify;
+}
+
+@mixin formStyle($color, $font-family, $font-size, $font-weight) {
+  color: $color;
+  font-family: $font-family;
+  font-size: $font-size;
+  font-weight: $font-weight;
+}

@@ -1,20 +1,21 @@
-import React, { useEffect } from "react";
+import React from "react";
 import s from "./Profile.module.scss";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { RootState } from "app/store";
 import ava from "../../assets/images/ava.png";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { IconButton } from "@mui/material";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
-import {useAppDispatch, useAppSelector} from "common/hooks/hooks";
-import {authThunks} from "features/auth/authSlice";
-import {SuperButton} from "common/components/super-button/SuperButton";
-import {EditableSpan} from "common/components/EditableSpan/EditableSpan";
+import { authThunks } from "features/auth/authSlice";
+import { SuperButton } from "common/components/super-button/SuperButton";
+import { EditableSpan } from "common/components/EditableSpan/EditableSpan";
+import { useAppDispatch } from "common/hooks/useAppDispatch";
+import { useAppSelector } from "common/hooks/useAppSelector";
 
 export const Profile = () => {
   const dispatch = useAppDispatch();
-  const { profile, isAuth } = useAppSelector((state: RootState) => state.auth)
+  const { profile, isAuth } = useAppSelector((state: RootState) => state.auth);
 
   const onClickLogoutHandler = () => {
     dispatch(authThunks.logoutTC());

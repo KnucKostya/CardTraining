@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../../common/hooks/hooks";
-import { appActions } from "app/appSlice";
+import { appActions } from "../../app/appSlice";
+import { useAppDispatch } from "../../common/hooks/useAppDispatch";
+import { useAppSelector } from "../../common/hooks/useAppSelector";
 
 export const Cards = () => {
   const loading = useAppSelector((state) => state.app.isLoading);
@@ -18,3 +19,5 @@ export const Cards = () => {
 
   return <div>Cards</div>;
 };
+
+export default Cards;

@@ -1,4 +1,4 @@
-import {instance} from "../../common/api/common.api";
+import { instance } from "../../common/instance/instance";
 
 export const authApi = {
   register: (email: string, password: string) => {

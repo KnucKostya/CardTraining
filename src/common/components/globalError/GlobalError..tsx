@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import { toast, ToastContainer } from "react-toastify";
-import { appActions } from "app/appSlice";
+import { appActions } from "../../../app/appSlice";
+import { useAppSelector } from "../../hooks/useAppSelector";
+import { useAppDispatch } from "../../hooks/useAppDispatch";
 
 const GlobalError = () => {
   const error = useAppSelector((state) => state.app.error);

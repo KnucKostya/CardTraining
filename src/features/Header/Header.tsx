@@ -1,7 +1,7 @@
 import React from "react";
-import { useAppDispatch, useAppSelector } from "common/hooks/hooks";
 import s from "features/Header/Header.module.scss";
-
+import { useAppSelector } from "common/hooks/useAppSelector";
+import { useAppDispatch } from "common/hooks/useAppDispatch";
 
 export const Header = () => {
   const dispatch = useAppDispatch();

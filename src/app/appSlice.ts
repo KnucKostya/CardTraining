@@ -10,40 +10,41 @@ const slice = createSlice({
     isAppInitialized: false,
   },
   reducers: {
-    setError: (state, action: PayloadAction<{ error: ErrorType }>) => {
-      state.error = action.payload.error;
-    },
-    setIsLoading: (state, action: PayloadAction<{ isLoading: boolean }>) => {
-      state.isLoading = action.payload.isLoading;
-    },
+      setError: (state, action: PayloadAction<{ error: ErrorType }>) => {
+          state.error = action.payload.error;
+      },
+      setIsLoading: (state, action: PayloadAction<{ isLoading: boolean }>) => {
+          state.isLoading = action.payload.isLoading;
+      },
   },
   extraReducers: (builder) => {
-    builder
-        .addMatcher(
-            (action) => {
-              return action.type.endsWith("/pending");
-            },
-            (state, action) => {
-              state.isLoading = true;
-            }
-        )
-        .addMatcher(
-            (action) => {
-              return action.type.endsWith("/fulfilled");
-            },
-            (state, action) => {
-              state.isLoading = false;
-            }
-        )
-        .addMatcher(
-            (action) => {
-              return action.type.endsWith("/rejected"); // любой экшн с реджектом
-            },
-            (state, action) => {
-              state.isLoading = false; // убираем лоадер
-              state.error = action.payload; // передаем значение ошибки в снакбар
-            }
-        );
+
+      builder
+          .addMatcher(
+              (action) => {
+                  return action.type.endsWith("/pending");
+              },
+              (state, action) => {
+                  state.isLoading = true;
+              }
+          )
+          .addMatcher(
+              (action) => {
+                  return action.type.endsWith("/fulfilled");
+              },
+              (state, action) => {
+                  state.isLoading = false;
+              }
+          )
+          .addMatcher(
+              (action) => {
+                  return action.type.endsWith("/rejected"); // любой экшн с реджектом
+              },
+              (state, action) => {
+                  state.isLoading = false; // убираем лоадер
+                  state.error = action.payload; // передаем значение ошибки в снакбар
+              }
+          );
   },
 });
 
