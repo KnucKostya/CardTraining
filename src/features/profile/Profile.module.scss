@@ -2,20 +2,16 @@
 
 .profileBlock {
   height: 100%;
-  width: 100%;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  position: relative;
+  @include flex-block(flex, column, center, center);
+
   .profileContainer {
     @include flex-block(); //(flex, row, center, center)
   }
-
   .headActions {
     position: absolute;
-    top: 70px;
-    left: 10px;
+    left: 20px;
+    top: 20px;
   }
 
   .profile {
@@ -51,3 +47,4 @@
     }
   }
 }
+
