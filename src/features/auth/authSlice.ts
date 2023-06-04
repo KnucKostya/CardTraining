@@ -48,11 +48,7 @@ const slice = createSlice({
     profile: null as ProfileType | null,
     isAuth: false,
   },
-  reducers: {
-    // setErrorMessage: (state, action: PayloadAction<{ message: string }>) => {
-    //   state.errorMessage = action.payload.message;
-    // },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       // .addCase(loginTC.fulfilled, (state, action) => {

@@ -1,79 +1,105 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Cards } from "../features/cards/cards";
-import { CheckEmail } from "../features/auth/checkEmail/checkEmail";
-import { ForgotEmail } from "../features/auth/forgotPassword/forgotEmail";
-import { Learn } from "../features/learn/learn";
-import { Login } from "../features/login/login";
-import { Packs } from "../features/packs/packs";
-import { Register } from "../features/auth/register/register";
-import { SetNewPassword } from "../features/auth/setNewPassword/setNewPassword";
+import { Outlet, useNavigate } from "react-router-dom";
 import { useAppSelector } from "../common/hooks/useAppSelector";
 import { LinearProgress } from "@mui/material";
-import { ErrorSnackbar } from "../common/components/error-snack-bar/ErrorSnackBar";
 import { Header } from "../features/Header/Header";
-import { Profile } from "../features/profile/profile";
+import { authThunks } from "../features/auth/authSlice";
+import { RouteNames } from "./routes";
+import { useAppDispatch } from "../common/hooks/useAppDispatch";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Register />,
-  },
-  {
-    path: "/cards",
-    element: <Cards />,
-  },
-  {
-    path: "/checkEmail",
-    element: <CheckEmail />,
-  },
-  {
-    path: "forgotEmail/",
-    element: <ForgotEmail />,
-  },
-  {
-    path: "/learn",
-    element: <Learn />,
-  },
-  {
-    path: "/login",
-    element: <Login />,
-  },
-  {
-    path: "/packs",
-    element: <Packs />,
-  },
-  {
-    path: "/profile",
-    element: <Profile />,
-  },
-  {
-    path: "/register",
-    element: <Register />,
-  },
-  {
-    path: "/setNewPassword",
-    element: <SetNewPassword />,
-  },
-]);
 
 function App() {
   const isLoading = useAppSelector((state) => state.app.isLoading);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+
+  useEffect(() => {
+    dispatch(authThunks.isAuthTC())
+      .unwrap()
+      .then((res) => {
+        if (res.profile._id) {
+          navigate(RouteNames.PROFILE);
+        }
+      })
+      .catch((e) => console.error(e));
+  }, []);
+
 
   return (
     <div className="App">
-      <ErrorSnackbar />
+      <ToastContainer
+        position="bottom-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <Header />
       {isLoading && <LinearProgress color={"secondary"} />}
       <div className="mainContainer">
-        <RouterProvider router={router} />
-        {/*<GlobalError />*/}
-        {/*error handling!!!!!!!!!!*/}
-        {/*<Counter />*/}
+        <Outlet />{/*routes.tsx*/}
+        {/*Outlet используется для рендеринга вложенных маршрутов внутри родительского маршрута*/}
       </div>
     </div>
   );
 }
 
 export default App;
+
+
+
+
+
+// const router = createBrowserRouter([
+//   {
+//     path: "/",
+//     element: <Register />,
+//   },
+//   {
+//     path: "/cards",
+//     element: <Cards />,
+//   },
+//   {
+//     path: "/checkEmail",
+//     element: <CheckEmail />,
+//   },
+//   {
+//     path: "forgotEmail/",
+//     element: <ForgotEmail />,
+//   },
+//   {
+//     path: "/learn",
+//     element: <Learn />,
+//   },
+//   {
+//     path: "/login",
+//     element: <Login />,
+//   },
+//   {
+//     path: "/packs",
+//     element: <Packs />,
+//   },
+//   {
+//     path: "/profile",
+//     element: <Profile />,
+//   },
+//   {
+//     path: "/register",
+//     element: <Register />,
+//   },
+//   {
+//     path: "/setNewPassword",
+//     element: <SetNewPassword />,
+//   },
+// ]);
+
+

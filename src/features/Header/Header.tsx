@@ -1,11 +1,18 @@
 import React from "react";
 import s from "features/Header/Header.module.scss";
 import { useAppSelector } from "common/hooks/useAppSelector";
-import { useAppDispatch } from "common/hooks/useAppDispatch";
+import { useLocation } from "react-router-dom";
+import { RouteNames } from "../../app/routes";
+import { SuperButton } from "../../common/components/super-button/SuperButton";
+import { ProgressBar } from "../app/ProgressBar/ProgressBar";
+import ava from "../../assets/images/ava.png";
 
 export const Header = () => {
-  const dispatch = useAppDispatch();
   const isLoading = useAppSelector<boolean>((state) => state.app.isLoading);
+  const user = useAppSelector((state) => state.auth.profile);
+
+  const location = useLocation();
+  const profilePage = location.pathname === RouteNames.PROFILE;
 
   return (
     <>
@@ -14,13 +21,21 @@ export const Header = () => {
           <div>
             <h1>Cards</h1>
           </div>
-          <div className={s.actions}>
-            <button> to smth</button>
-            <span>nick</span>
-            <img src="src/features/Header#" alt="logo" />
-          </div>
+          {!profilePage && ( //если страница профайл , то кнопку не показывать
+            <div className={s.actions}>
+              <SuperButton name={"Sign In"} redirectPath={RouteNames.LOGIN} />
+            </div>
+          )}
+          {profilePage && (
+            <div className={s.actions}>
+              <div className={s.userName}>{user && user.name ? user.name : "user"}</div>
+              <div className={s.avatar}>
+                <img src={user && user.avatar ? user.avatar : ava} alt="userAva" />
+              </div>
+            </div>
+          )}
         </div>
-        {/*{isLoading && <ProgressBar />}*/}
+        {isLoading && <ProgressBar />}
       </div>
     </>
   );
