@@ -41,7 +41,7 @@ export const Profile = () => {
       </div>
       <div className={`container ${s.profileContainer}`}>
         <div className={s.profile}>
-          <h2>Personal Information</h2>
+          <h3>Profile</h3>
           <div className={s.info}>
             <div className={s.avatarBlock}>
               <img
@@ -54,12 +54,12 @@ export const Profile = () => {
               </IconButton>
             </div>
             <EditableSpan
-              value={profile ? profile.name : "User name"}
+              value={profile ? profile.name : "Change name input (not Logged in)"}
               onChange={onChangeNameHandler}
               // disabled={props.taskEntityStatus === 'loading'}
               disabled={false}
             />
-            <span style={{ opacity: 0.5 }}>{profile ? profile.email : "example@mail.com"}</span>
+            <span className={s.email}>{profile ? profile.email : "Your email here"}</span>
           </div>
           <SuperButton
             onClickCallBack={onClickLogoutHandler}

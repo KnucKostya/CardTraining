@@ -1,18 +1,22 @@
-import { instance } from "../../common/instance/instance";
+import { instance, instanceHeroku } from "../../common/instance/instance";
 
 export const authApi = {
+
   register: (email: string, password: string) => {
-    return instance.post<{ email: string; password: string }, RegisterResponse>("/auth/register", {
+    return instanceHeroku.post<{ email: string; password: string }, RegisterResponse>("/auth/register", {
       email,
       password,
     });
   },
+
   logout: () => {
     return instance.delete<LogoutResType>("auth/me");
   },
+
   isAuth: () => {
     return instance.post<ProfileType>("auth/me");
   },
+
   updateUser: (data: UpdateProfilePayloadType) => {
     return instance.put<UpdatedProfileType>("auth/me", data);
   },
