@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
+import { getErrorMessage } from "../common/utils/getErrorMessage";
 
 export type ErrorType = string | null | undefined;
 
@@ -11,41 +12,43 @@ const slice = createSlice({
     isAppInitialized: false,
   },
   reducers: {
-      setError: (state, action: PayloadAction<{ error: ErrorType }>) => {
-          state.error = action.payload.error;
-      },
-      setIsLoading: (state, action: PayloadAction<{ isLoading: boolean }>) => {
-          state.isLoading = action.payload.isLoading;
-      },
+    setError: (state, action: PayloadAction<{ error: ErrorType }>) => {
+      state.error = action.payload.error;
+    },
+    setIsLoading: (state, action: PayloadAction<{ isLoading: boolean }>) => {
+      state.isLoading = action.payload.isLoading;
+    },
   },
   extraReducers: (builder) => {
-
-      builder
-          .addMatcher(
-              (action) => {
-                  return action.type.endsWith("/pending");
-              },
-              (state, action) => {
-                  state.isLoading = true;
-              }
-          )
-          .addMatcher(
-              (action) => {
-                  return action.type.endsWith("/fulfilled");
-              },
-              (state, action) => {
-                  state.isLoading = false;
-              }
-          )
-          .addMatcher(
-              (action) => {
-                  return action.type.endsWith("/rejected"); // любой экшн с реджектом
-              },
-              (state, action) => {
-                  state.isLoading = false; // убираем лоадер
-                  toast.error(action.payload);
-              }
-          );
+    builder
+      .addMatcher(
+        (action) => {
+          return action.type.endsWith("/pending");
+        },
+        (state, action) => {
+          state.isLoading = true;
+        }
+      )
+      .addMatcher(
+        (action) => {
+          return action.type.endsWith("/fulfilled");
+        },
+        (state, action) => {
+          state.isLoading = false;
+        }
+      )
+      .addMatcher(
+        (action) => {
+          return action.type.endsWith("/rejected"); // любой экшн с реджектом
+        },
+        (state, action) => {
+          state.isLoading = false;
+          let { error } = action.payload;
+          const errorMessage = getErrorMessage(error);
+          if (error.message === null) return;
+          toast.error(errorMessage);
+        }
+      );
   },
 });
 

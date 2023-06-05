@@ -6,9 +6,8 @@ import {
   UpdatedProfileType,
   UpdateProfilePayloadType,
 } from "features/auth/authApi";
-import { AxiosError } from "axios";
-import { errorUtils } from "common/utils/error-utils";
-import {createAppAsyncThunk} from "common/utils/createAppAsyncThunk";
+import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
+import { thunkTryCatch } from "../../common/utils/thunkTryCatch";
 
 //THUNKS =================================================================================================
 
@@ -30,13 +29,22 @@ const updateUserTC = createAppAsyncThunk<{ profile: UpdatedProfileType }, Update
 export const isAuthTC = createAppAsyncThunk<{ profile: ProfileType }>(
   "auth/isAuth",
   async (arg, thunkAPI) => {
-    const { rejectWithValue } = thunkAPI;
-    try {
-      const res = await authApi.isAuth();
-      return { profile: res.data };
-    } catch (e) {
-      return rejectWithValue(errorUtils(e as AxiosError<{ error: string }>));
-    }
+    // const { rejectWithValue } = thunkAPI;
+    // try {
+    //   const res = await authApi.isAuth();
+    //   return { profile: res.data };
+    // } catch (e) {
+    //   return rejectWithValue(errorUtils(e as AxiosError<{ error: string }>));
+    // }
+    // }
+    return thunkTryCatch(
+      thunkAPI,
+      async () => {
+        const res = await authApi.isAuth();
+        return { profile: res.data };
+      },
+      false
+    );
   }
 );
 
