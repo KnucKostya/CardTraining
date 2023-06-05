@@ -1,0 +1,93 @@
+@import "../../styles/variables";
+.packContainer {
+  width: 70%;
+  border-radius: 10px;
+  height: auto;
+  background-color: $white-color;
+
+  .insideContainer {
+    padding: 20px;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: flex-start;
+    .packName {
+      font-weight: 600;
+      font-size: 22px;
+    }
+
+    input {
+      margin-top: 3%;
+      width: 100%;
+      position: relative;
+      border: $sec-color;
+      height: 35px;
+      background-color: $sec-color;
+    }
+    input:hover {
+      border: 1px solid #b6b6b6;
+    }
+    input:focus:not(:hover) {
+      border: none;
+    }
+    .cardsContainer {
+      margin-top: 3%;
+      background-color: $sec-color;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      text-align: center;
+      width: 100%;
+
+      .firstContainer {
+        padding: 10px;
+        display: grid;
+        grid-auto-flow: column;
+        font-weight: 600;
+        font-size: 15px;
+        justify-items: start;
+
+        .questionParagraph {
+          background-color: $base-color;
+
+          display: grid;
+          justify-items: start;
+
+          .question {
+            width: 100%;
+            background-color: $base-color;
+            display: grid;
+            justify-items: start;
+            margin-top: 10px;
+            font-weight: 400;
+            font-size: 15px;
+          }
+        }
+        .answerParagraph {
+          background-color: $base-color;
+          display: grid;
+          justify-items: start;
+          .answer {
+            width: 100%;
+            background-color: $sec-color;
+            display: grid;
+            justify-items: start;
+            margin-top: 10px;
+            font-weight: 400;
+            font-size: 15px;
+          }
+        }
+      }
+      .secondContainer {
+        padding: 10px;
+        display: grid;
+        grid-auto-flow: column;
+        font-weight: 600;
+        font-size: 15px;
+        justify-items: start;
+      }
+    }
+  }
+  .paginationContainer {
+    margin-top: 3%;
+  }
+}
