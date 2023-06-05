@@ -2,20 +2,17 @@ import React, { useEffect } from "react";
 import "./App.css";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useAppSelector } from "../common/hooks/useAppSelector";
-import { LinearProgress } from "@mui/material";
 import { Header } from "../features/Header/Header";
 import { authThunks } from "../features/auth/authSlice";
 import { RouteNames } from "./routes";
 import { useAppDispatch } from "../common/hooks/useAppDispatch";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const isLoading = useAppSelector((state) => state.app.isLoading);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
 
   useEffect(() => {
     dispatch(authThunks.isAuthTC())
@@ -26,8 +23,7 @@ function App() {
         }
       })
       .catch((e) => console.error(e));
-  }, []);
-
+  }, [dispatch]);
 
   return (
     <div className="App">
@@ -44,9 +40,9 @@ function App() {
         theme="light"
       />
       <Header />
-      {isLoading && <LinearProgress color={"secondary"} />}
       <div className="mainContainer">
-        <Outlet />{/*routes.tsx*/}
+        <Outlet />
+        {/*routes.tsx*/}
         {/*Outlet используется для рендеринга вложенных маршрутов внутри родительского маршрута*/}
       </div>
     </div>
@@ -54,10 +50,6 @@ function App() {
 }
 
 export default App;
-
-
-
-
 
 // const router = createBrowserRouter([
 //   {
@@ -101,5 +93,3 @@ export default App;
 //     element: <SetNewPassword />,
 //   },
 // ]);
-
-
