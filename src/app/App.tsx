@@ -1,5 +1,6 @@
 import React from "react";
 import "./App.css";
+import "react-toastify/dist/ReactToastify.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Cards } from "../features/cards/cards";
 import { CheckEmail } from "../features/auth/checkEmail/checkEmail";
@@ -14,6 +15,7 @@ import { LinearProgress } from "@mui/material";
 import { ErrorSnackbar } from "../common/components/error-snack-bar/ErrorSnackBar";
 import { Header } from "../features/Header/Header";
 import { Profile } from "../features/profile/profile";
+import { ToastContainer } from "react-toastify";
 
 const router = createBrowserRouter([
   {
@@ -68,9 +70,21 @@ function App() {
       {isLoading && <LinearProgress color={"secondary"} />}
       <div className="mainContainer">
         <RouterProvider router={router} />
-        {/*<GlobalError />*/}
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
+        {/* Same as */}
+        <ToastContainer />
         {/*error handling!!!!!!!!!!*/}
-        {/*<Counter />*/}
       </div>
     </div>
   );
