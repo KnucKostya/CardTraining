@@ -2,7 +2,11 @@ import { instance } from "../../common/instance/instance";
 
 export const cardsApi = {
   getCards: () => {
-    return instance.get<GetCardsResponse>("cards/card");
+    return instance.get<GetCardsResponse>(`cards/card `, {
+      params: {
+        cardsPack_id: "64820d3d8f5de40420e18921",
+      },
+    });
   },
 };
 

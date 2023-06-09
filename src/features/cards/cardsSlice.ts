@@ -4,6 +4,7 @@ import { cardsApi, GetCardsResponse } from "./cardsApi";
 
 const getCards = createAppAsyncThunk<GetCardsResponse>("cards/get", async (arg, thunkAPI) => {
   const res = await cardsApi.getCards();
+  console.log(res);
   return res.data;
 });
 
@@ -15,9 +16,10 @@ const slice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getCards.fulfilled, (state, action) => {
+      console.log(action.payload);
       state.cards = action.payload;
     });
   },
 });
-
+export const cardsReducer = slice.reducer;
 export const cardsThunks = { getCards };
