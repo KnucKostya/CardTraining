@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
+  ArgLoginType,
   authApi,
   LogoutResType,
   ProfileType,
   UpdatedProfileType,
-  UpdateProfilePayloadType,
+  UpdateProfilePayloadType
 } from "features/auth/authApi";
 import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
 import { thunkTryCatch } from "../../common/utils/thunkTryCatch";
@@ -14,6 +15,14 @@ import { thunkTryCatch } from "../../common/utils/thunkTryCatch";
 // const registerTC = createAppAsyncThunk("auth/register", async (arg: RegPayloadType, thunkAPI) => {
 //   const res = await authApi.register(arg);
 // });
+const login = createAppAsyncThunk<{ profile: ProfileType }, ArgLoginType>
+("auth/login", (arg, thunkAPI) => {
+  return thunkTryCatch(thunkAPI, () => {
+    return authApi.login(arg).then((res) => {
+      return { profile: res.data };
+    });
+  });
+});
 
 const logoutTC = createAppAsyncThunk<LogoutResType>("auth/logout", async (arg) => {
   const res = await authApi.logout();
@@ -54,15 +63,15 @@ const slice = createSlice({
   name: "auth",
   initialState: {
     profile: null as ProfileType | null,
-    isAuth: false,
+    isAuth: false
   },
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // .addCase(loginTC.fulfilled, (state, action) => {
-      //   state.profile = action.payload.profile;
-      //   state.isAuth = true;
-      // })
+      .addCase(login.fulfilled, (state, action) => {
+        state.profile = action.payload.profile;
+        state.isAuth = true;
+      })
       .addCase(logoutTC.fulfilled, (state, action) => {
         state.isAuth = false;
       })
@@ -73,7 +82,7 @@ const slice = createSlice({
       .addCase(updateUserTC.fulfilled, (state, action) => {
         state.profile = action.payload.profile.updatedUser;
       });
-  },
+  }
 });
 
 export const authReducer = slice.reducer;
@@ -86,4 +95,5 @@ export const authThunks = {
   updateUserTC,
   isAuthTC,
   logoutTC,
+  login
 };
