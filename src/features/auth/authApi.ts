@@ -7,7 +7,9 @@ export const authApi = {
       password,
     });
   },
-
+  login: (arg: ArgLoginType) => {
+    return instance.post<ProfileType>("auth/login", arg);
+  },
   logout: () => {
     return instance.delete<LogoutResType>("auth/me");
   },
@@ -21,6 +23,11 @@ export const authApi = {
   },
 };
 
+export type ArgLoginType = {
+  email: string;
+  password: string;
+  rememberMe: boolean;
+};
 export type RegisterResponse = {
   addedUser: RegisterResponseAddedUser;
 };
