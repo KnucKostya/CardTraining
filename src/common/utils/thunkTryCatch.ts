@@ -12,7 +12,7 @@ export const thunkTryCatch = async (
     dispatch(appActions.setIsLoading({ isLoading: true }));
     return await logic();
   } catch (error) {
-    return rejectWithValue({ error: error, showGlobalError: true });
+    return rejectWithValue({ error: error, showGlobalError /*: true*/ });
   } finally {
     dispatch(appActions.setIsLoading({ isLoading: false }));
   }

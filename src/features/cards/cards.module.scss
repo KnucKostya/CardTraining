@@ -1,0 +1,78 @@
+@import "../../styles/variables";
+.packContainer {
+  width: 70%;
+  border-radius: 10px;
+  height: auto;
+  background-color: $white-color;
+
+  .insideContainer {
+    padding: 20px;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: flex-start;
+    .packName {
+      font-weight: 600;
+      font-size: 22px;
+    }
+    .searchContainer {
+      margin-top: 3%;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .bal {
+        width: 80%;
+        position: relative;
+        .searchIcon {
+          line-height: 26px;
+          text-align: center;
+          margin-right: -26px;
+          position: absolute;
+          top: 27%;
+          left: 7px;
+          z-index: 1;
+        }
+        .searchIcon + input {
+          padding-left: 35px;
+        }
+        .input {
+          margin-right: 4%;
+          width: 100%;
+          position: relative;
+          border: $sec-color;
+          height: 35px;
+          background-color: $sec-color;
+        }
+        .input:hover {
+          border: 1px solid #b6b6b6;
+        }
+        .input:focus {
+          outline: none;
+          border: 1px solid #b6b6b6;
+        }
+        .closeIcon {
+          line-height: 26px;
+          text-align: center;
+          margin-left: -10px;
+          position: absolute;
+          top: 27%;
+          right: 7px;
+          z-index: 1;
+          cursor: pointer;
+        }
+      }
+    }
+
+    .cardsContainer {
+      margin-top: 3%;
+      display: grid;
+      text-align: center;
+      width: 100%;
+    }
+  }
+
+  .paginationContainer {
+    margin-top: 3%;
+  }
+}

@@ -10,6 +10,7 @@ import React from "react";
 import App from "./App";
 import { ForgotPassword } from "../features/auth/forgotPassword/forgotPassword";
 import { Packs } from "../features/packs/Packs";
+import { Cards } from "../features/cards/cards";
 
 export enum RouteNames {
   START_PAGE = "/",
@@ -22,6 +23,7 @@ export enum RouteNames {
   PROFILE = "/profile",
   PACKS = "/packs",
   LEARN = "/learn",
+  CARDS = "/cards",
 }
 export const router = createHashRouter(
   createRoutesFromElements(
@@ -34,9 +36,10 @@ export const router = createHashRouter(
       <Route path={RouteNames.CHECK_EMAIL} element={<CheckEmail />} />
       <Route path={RouteNames.SET_NEW_PASSWORD} element={<SetNewPassword />} />
       <Route path={`${RouteNames.SET_NEW_PASSWORD}/:token`} element={<SetNewPassword />} />
-      <Route path={RouteNames.FORGOT_PASSWORD} element={<ForgotPassword/>} />
+      <Route path={RouteNames.FORGOT_PASSWORD} element={<ForgotPassword />} />
       <Route path={RouteNames.PACKS} element={<Packs />} />
       <Route path={RouteNames.LEARN} element={<Learn />} />
+      <Route path={RouteNames.CARDS} element={<Cards />} />
     </Route>
   )
 );

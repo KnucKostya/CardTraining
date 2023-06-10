@@ -1,9 +1,8 @@
 import { instance, instanceHeroku } from "../../common/instance/instance";
 
 export const authApi = {
-
   register: (email: string, password: string) => {
-    return instanceHeroku.post<{ email: string; password: string }, RegisterResponse>("/auth/register", {
+    return instance.post<{ email: string; password: string }, RegisterResponse>("/auth/register", {
       email,
       password,
     });
@@ -22,7 +21,6 @@ export const authApi = {
   updateUser: (data: UpdateProfilePayloadType) => {
     return instance.put<UpdatedProfileType>("auth/me", data);
   },
-
 };
 
 export type ArgLoginType = {
