@@ -5,11 +5,11 @@ import { Login } from "../features/login/login";
 import { Register } from "../features/auth/register/register";
 import { CheckEmail } from "../features/auth/checkEmail/checkEmail";
 import { SetNewPassword } from "../features/auth/setNewPassword/setNewPassword";
-import { Packs } from "../features/packs/packs";
 import { Learn } from "../features/learn/learn";
 import React from "react";
 import App from "./App";
 import { ForgotPassword } from "../features/auth/forgotPassword/forgotPassword";
+import { Packs } from "../features/packs/Packs";
 
 export enum RouteNames {
   START_PAGE = "/",

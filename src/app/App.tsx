@@ -19,7 +19,7 @@ function App() {
       .unwrap()
       .then((res) => {
         if (res.profile._id) {
-          navigate(RouteNames.PROFILE);
+          navigate(RouteNames.PACKS);
         }
       })
       .catch((e) => console.error(e));

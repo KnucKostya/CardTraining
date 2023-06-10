@@ -37,7 +37,7 @@ export const Login = () => {
     console.log(data);
     dispatch(authThunks.login(data))
       .unwrap()
-      .then(() => navigate("/profile"));
+      .then(() => navigate("/packs"));
   };
   const handleShowPassword = () => {
     setShowPassword((prev) => !prev);
