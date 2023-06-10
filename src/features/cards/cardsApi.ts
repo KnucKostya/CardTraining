@@ -13,8 +13,14 @@ export const cardsApi = {
       },
     });
   },
+  // removeCard: (cardId: string) => {
+  //   return instance.delete("cards/card", { id: cardId });
+  // },
   addCard: (packId: string, question?: string, answer?: string) => {
-    return instance.post("/cards/card", { cardsPack_id: packId, question, answer });
+    return instance.post("cards/card", { card: { cardsPack_id: packId } });
+  },
+  editCard: (cardId: string, question: string) => {
+    return instance.put("/cards/card", { card: { _id: cardId, question } });
   },
 };
 

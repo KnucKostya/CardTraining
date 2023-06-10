@@ -10,11 +10,9 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { instance } from "../../common/instance/instance";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 import { useAppSelector } from "../../common/hooks/useAppSelector";
-import { GetCardsResponse } from "./cardsApi";
 
 function createData(
   question: string,
@@ -29,7 +27,6 @@ function createData(
 export const Cards = () => {
   const cards = useAppSelector((state) => state.cards?.cards?.cards);
   const dispatch = useAppDispatch();
-  console.log(cards);
 
   const [inputValue, setInputValue] = useState<string>("");
 
@@ -43,23 +40,41 @@ export const Cards = () => {
   };
 
   const addNewCard = (cardsPackId: string, question?: string, answer?: string) => {
-    dispatch(cardsThunks.addNewCard({ packId: "64820d3d8f5de40420e18921" }));
-    dispatch(cardsThunks.getCards({ packId: "64820d3d8f5de40420e18921" }));
+    dispatch(cardsThunks.addNewCard({ packId: cardsPackId }));
+    dispatch(cardsThunks.getCards({ packId: cardsPackId }));
+  };
+
+  const editCardHandle = (cardsPackId: string, cardId: string, question: string) => {
+    dispatch(cardsThunks.editCard({ cardId, question: " Question" }));
+    dispatch(cardsThunks.getCards({ packId: cardsPackId }));
   };
 
   useEffect(() => {
-    instance
-      .post("auth/login", {
-        email: "knuckostya@gmail.com",
-        password: "12Dff22313",
-        rememberMe: true,
-      })
-      .then(() => {
-        instance.post("auth/me");
-      })
-      .then(() => {
-        dispatch(cardsThunks.getCards({ packId: "64820d3d8f5de40420e18921" }));
-      });
+    // dispatch(
+    //   authThunks.login({
+    //     email: "knuckostya@gmail.com",
+    //     password: "12Dff22313",
+    //     rememberMe: true,
+    //   })
+    // )
+    //   .unwrap()
+    //   .then(() => {
+    dispatch(cardsThunks.getCards({ packId: "64820d3d8f5de40420e18921" }));
+    // });
+    // instance
+    //   .post("auth/login", {
+    //     email: "knuckostya@gmail.com",
+    //     password: "12Dff22313",
+    //     rememberMe: true,
+    //   })
+    //   .then(() => {
+    //     instance.post("auth/me");
+    //   })
+    //   .then(() => {
+    //     dispatch(cardsThunks.getCards({ packId: "64820d3d8f5de40420e18921" }))
+    //       .unwrap()
+    //       .catch();
+    //   })
   }, [dispatch]);
 
   return (
@@ -131,6 +146,9 @@ export const Cards = () => {
                           color={"primary"}
                           width={"15px"}
                           height={"25px"}
+                          onClickCallBack={() =>
+                            editCardHandle(row.cardsPack_id, row._id, row.question)
+                          }
                         />
                       </div>
                     </TableCell>

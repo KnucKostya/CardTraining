@@ -43,10 +43,13 @@ const slice = createSlice({
         },
         (state, action) => {
           state.isLoading = false;
-          // let { error } = action.payload;
-          // const errorMessage = getErrorMessage(error);
-          // if (error.message === null) return;
-          // toast.error(errorMessage);
+          const error = action.payload?.error;
+
+          if (!error) return;
+
+          const errorMessage = getErrorMessage(error);
+          if (error.message === null) return;
+          toast.error(errorMessage);
         }
       );
   },

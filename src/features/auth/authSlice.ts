@@ -83,6 +83,10 @@ const slice = createSlice({
       })
       .addCase(updateUserTC.fulfilled, (state, action) => {
         state.profile = action.payload.profile.updatedUser;
+      })
+      .addCase(isAuthTC.rejected, (state, action) => {
+        console.log("isAuth ", action.payload);
+        return action.payload;
       });
   },
 });

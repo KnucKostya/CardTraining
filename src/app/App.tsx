@@ -4,10 +4,10 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useAppSelector } from "../common/hooks/useAppSelector";
 import { Header } from "../features/Header/Header";
 import { authThunks } from "../features/auth/authSlice";
-import { RouteNames } from "./routes";
 import { useAppDispatch } from "../common/hooks/useAppDispatch";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { RouteNames } from "./routes";
 
 function App() {
   const isLoading = useAppSelector((state) => state.app.isLoading);
