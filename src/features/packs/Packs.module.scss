@@ -1,0 +1,64 @@
+@import "src/common/styles/mixins/mixins.scss";
+
+.packs {
+  @include flex-block(flex, row, center, top);
+  width: 100%;
+  height: 100%;
+  .packsContainer {
+    width: 1000px;
+    .noPacksError {
+      text-align: center;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+    .titleBlock {
+      margin-top: 40px;
+      @include flex-block(flex, row, space-between, center);
+      .title {
+        display: block;
+        font-weight: 600;
+        font-size: 22px;
+        line-height: 27px;
+      }
+    }
+    .actionsBlock {
+      margin-top: 40px;
+      margin-bottom: 24px;
+      @include flex-block(flex, row, space-between, center);
+      .showCards {
+        @include flex-block(flex, column, center, center);
+        .buttons {
+          @include flex-block(flex, row, center, center);
+          gap: 2px;
+        }
+      }
+      .slider {
+        @include flex-block(flex, column, space-between, center);
+        .sliderContent {
+          @include flex-block(flex, row, space-between, center);
+          gap: 20px;
+          .sliderNumber {
+            @include flex-block(flex, row, center, center);
+            background: #ffffff;
+            border: 1px solid #d9d9d9;
+            border-radius: 2px;
+            width: 36px;
+            height: 36px;
+            font-weight: 600;
+            font-size: 16px;
+            line-height: 20px;
+            color: #000000;
+          }
+        }
+      }
+      .resetFilter {
+        @include flex-block(flex, row, space-between, center);
+      }
+    }
+    .paginationBlock {
+      @include flex-block(flex, row, left, center);
+      gap: 20px;
+      margin-top: 36px;
+    }
+  }
+}
