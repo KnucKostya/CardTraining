@@ -5,24 +5,26 @@ import {
   LogoutResType,
   ProfileType,
   UpdatedProfileType,
-  UpdateProfilePayloadType
+  UpdateProfilePayloadType,
 } from "features/auth/authApi";
 import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
 import { thunkTryCatch } from "../../common/utils/thunkTryCatch";
 
-//THUNKS =================================================================================================
+//THUNKS ===============================================================================================
 
 // const registerTC = createAppAsyncThunk("auth/register", async (arg: RegPayloadType, thunkAPI) => {
 //   const res = await authApi.register(arg);
 // });
-const login = createAppAsyncThunk<{ profile: ProfileType }, ArgLoginType>
-("auth/login", (arg, thunkAPI) => {
-  return thunkTryCatch(thunkAPI, () => {
-    return authApi.login(arg).then((res) => {
-      return { profile: res.data };
+const login = createAppAsyncThunk<{ profile: ProfileType }, ArgLoginType>(
+  "auth/login",
+  (arg, thunkAPI) => {
+    return thunkTryCatch(thunkAPI, () => {
+      return authApi.login(arg).then((res) => {
+        return { profile: res.data };
+      });
     });
-  });
-});
+  }
+);
 
 const logoutTC = createAppAsyncThunk<LogoutResType>("auth/logout", async (arg) => {
   const res = await authApi.logout();
@@ -57,13 +59,13 @@ export const isAuthTC = createAppAsyncThunk<{ profile: ProfileType }>(
   }
 );
 
-//REDUCER =================================================================================================
+//REDUCER ============================================================================
 
 const slice = createSlice({
   name: "auth",
   initialState: {
     profile: null as ProfileType | null,
-    isAuth: false
+    isAuth: false,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -82,7 +84,7 @@ const slice = createSlice({
       .addCase(updateUserTC.fulfilled, (state, action) => {
         state.profile = action.payload.profile.updatedUser;
       });
-  }
+  },
 });
 
 export const authReducer = slice.reducer;
@@ -95,5 +97,5 @@ export const authThunks = {
   updateUserTC,
   isAuthTC,
   logoutTC,
-  login
+  login,
 };

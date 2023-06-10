@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { useAppDispatch } from "../../common/hooks/useAppDispatch";
 import s from "./cards.module.scss";
 import { SuperButton } from "../../common/components/super-button/SuperButton";
@@ -12,7 +12,9 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { instance } from "../../common/instance/instance";
 import SearchIcon from "@mui/icons-material/Search";
+import CloseIcon from "@mui/icons-material/Close";
 import { useAppSelector } from "../../common/hooks/useAppSelector";
+import { GetCardsResponse } from "./cardsApi";
 
 function createData(
   question: string,
@@ -25,39 +27,39 @@ function createData(
 }
 
 export const Cards = () => {
-  const cards = useAppSelector((state) => state.cards.cards);
+  const cards = useAppSelector((state) => state.cards?.cards?.cards);
   const dispatch = useAppDispatch();
+  console.log(cards);
 
-  console.log("cards", cards);
+  const [inputValue, setInputValue] = useState<string>("");
 
-  // const {answer,question, ...} = selector
-  const rows = [createData("question", "answer", 6.0, 24)];
+  const removeCardHandle = (cardId: string, packId: string) => {
+    dispatch(cardsThunks.removeCard({ cardId }));
+    dispatch(cardsThunks.getCards({ packId }));
+  };
+
+  const onInputChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.currentTarget.value);
+  };
+
+  const addNewCard = (cardsPackId: string, question?: string, answer?: string) => {
+    dispatch(cardsThunks.addNewCard({ packId: "64820d3d8f5de40420e18921" }));
+    dispatch(cardsThunks.getCards({ packId: "64820d3d8f5de40420e18921" }));
+  };
 
   useEffect(() => {
-    setTimeout(() => {
-      instance.post("auth/login", {
+    instance
+      .post("auth/login", {
         email: "knuckostya@gmail.com",
         password: "12Dff22313",
         rememberMe: true,
+      })
+      .then(() => {
+        instance.post("auth/me");
+      })
+      .then(() => {
+        dispatch(cardsThunks.getCards({ packId: "64820d3d8f5de40420e18921" }));
       });
-    }, 1000);
-    setTimeout(() => {
-      instance.post("auth/me");
-    }, 2500);
-
-    // setTimeout(() => {
-    //   instance.post("cards/card", {
-    //     card: {
-    //       cardsPack_id: "64820d3d8f5de40420e18921",
-    //       question: "question",
-    //       answer: "answer",
-    //     },
-    //   });
-    // }, 6500);
-
-    setTimeout(() => {
-      dispatch(cardsThunks.getCards());
-    }, 4000);
   }, [dispatch]);
 
   return (
@@ -65,16 +67,28 @@ export const Cards = () => {
       <div className={s.insideContainer}>
         <h2 className={s.packName}>Pack Name</h2>
         <div className={s.searchContainer}>
-          <div>
+          <div className={s.bal}>
             <SearchIcon className={s.searchIcon} />
-            <input placeholder="Search..."></input>
+            <input
+              className={s.input}
+              placeholder="Search..."
+              value={inputValue}
+              onChange={onInputChangeHandler}
+            ></input>
+            <CloseIcon className={s.closeIcon} onClick={() => setInputValue("")} />
           </div>
 
           <span>
-            <SuperButton name={"Add New Card"} color={"secondary"} height={"40px"} width={"auto"} />
+            <SuperButton
+              name={"Add New Card"}
+              color={"secondary"}
+              height={"40px"}
+              width={"auto"}
+              onClickCallBack={() => addNewCard("64820d3d8f5de40420e18921")}
+            />
           </span>
         </div>
-
+        {/*{cards.map}*/}
         <div className={s.cardsContainer}>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -88,16 +102,18 @@ export const Cards = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
+                {cards?.map((row) => (
                   <TableRow
-                    key={row.question}
+                    key={row._id}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell component="th" scope="row">
                       {row.question}
                     </TableCell>
                     <TableCell align="right">{row.answer}</TableCell>
-                    <TableCell align="right">{row.updated}</TableCell>
+                    <TableCell align="right">
+                      <div>{row.updated.slice(5, 10).replace("-", ".")}</div>
+                    </TableCell>
                     <TableCell align="right">{row.grade}</TableCell>
                     <TableCell align="right">
                       <div>
@@ -106,6 +122,7 @@ export const Cards = () => {
                           color={"error"}
                           width={"15px"}
                           height={"25px"}
+                          onClickCallBack={() => removeCardHandle(row._id, row.cardsPack_id)}
                         />
                       </div>
                       <div>
