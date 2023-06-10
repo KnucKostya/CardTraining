@@ -50,31 +50,7 @@ export const Cards = () => {
   };
 
   useEffect(() => {
-    // dispatch(
-    //   authThunks.login({
-    //     email: "knuckostya@gmail.com",
-    //     password: "12Dff22313",
-    //     rememberMe: true,
-    //   })
-    // )
-    //   .unwrap()
-    //   .then(() => {
     dispatch(cardsThunks.getCards({ packId: "64820d3d8f5de40420e18921" }));
-    // });
-    // instance
-    //   .post("auth/login", {
-    //     email: "knuckostya@gmail.com",
-    //     password: "12Dff22313",
-    //     rememberMe: true,
-    //   })
-    //   .then(() => {
-    //     instance.post("auth/me");
-    //   })
-    //   .then(() => {
-    //     dispatch(cardsThunks.getCards({ packId: "64820d3d8f5de40420e18921" }))
-    //       .unwrap()
-    //       .catch();
-    //   })
   }, [dispatch]);
 
   return (
