@@ -1,70 +1,95 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.css";
-import Register from "../components/register/register";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Cards from "../components/cards/cards";
-import CheckEmail from "../components/checkEmail/checkEmail";
-import ForgotEmail from "../components/forgotPassword/forgotEmail";
-import Learn from "../components/learn/learn";
-import Login from "../components/login/login";
-import Packs from "../components/packs/packs";
-import Profile from "../components/profile/profile";
-import SetNewPassword from "../components/setNewPassword/setNewPassword";
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Register />,
-  },
-  {
-    path: "/cards",
-    element: <Cards />,
-  },
-  {
-    path: "/checkEmail",
-    element: <CheckEmail />,
-  },
-  {
-    path: "forgotEmail/",
-    element: <ForgotEmail />,
-  },
-  {
-    path: "/learn",
-    element: <Learn />,
-  },
-  {
-    path: "/login",
-    element: <Login />,
-  },
-  {
-    path: "/packs",
-    element: <Packs />,
-  },
-  {
-    path: "/profile",
-    element: <Profile />,
-  },
-  {
-    path: "/register",
-    element: <Register />,
-  },
-  {
-    path: "/setNewPassword",
-    element: <SetNewPassword />,
-  },
-]);
+import { Outlet, useNavigate } from "react-router-dom";
+import { useAppSelector } from "../common/hooks/useAppSelector";
+import { Header } from "../features/Header/Header";
+import { authThunks } from "../features/auth/authSlice";
+import { useAppDispatch } from "../common/hooks/useAppDispatch";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { RouteNames } from "./routes";
 
 function App() {
+  const isLoading = useAppSelector((state) => state.app.isLoading);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    dispatch(authThunks.isAuthTC())
+      .unwrap()
+      .then((res) => {
+        if (res.profile._id) {
+          navigate(RouteNames.PACKS);
+        }
+      })
+      .catch((e) => console.error(e));
+  }, [dispatch]);
+
   return (
     <div className="App">
+      <ToastContainer
+        position="bottom-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      <Header />
       <div className="mainContainer">
-        <RouterProvider router={router} />
-        {/*<GlobalError />*/}
-        {/*!!!!!!!!!ERROR HANDLING!!!!!!!!!!!*/}
-        {/*<Counter />*/}
+        <Outlet />
+        {/*routes.tsx*/}
+        {/*Outlet используется для рендеринга вложенных маршрутов внутри родительского маршрута*/}
       </div>
     </div>
   );
 }
 
 export default App;
+
+// const router = createBrowserRouter([
+//   {
+//     path: "/",
+//     element: <Register />,
+//   },
+//   {
+//     path: "/cards",
+//     element: <Cards />,
+//   },
+//   {
+//     path: "/checkEmail",
+//     element: <CheckEmail />,
+//   },
+//   {
+//     path: "forgotEmail/",
+//     element: <ForgotEmail />,
+//   },
+//   {
+//     path: "/learn",
+//     element: <Learn />,
+//   },
+//   {
+//     path: "/login",
+//     element: <Login />,
+//   },
+//   {
+//     path: "/packs",
+//     element: <Packs />,
+//   },
+//   {
+//     path: "/profile",
+//     element: <Profile />,
+//   },
+//   {
+//     path: "/register",
+//     element: <Register />,
+//   },
+//   {
+//     path: "/setNewPassword",
+//     element: <SetNewPassword />,
+//   },
+// ]);
