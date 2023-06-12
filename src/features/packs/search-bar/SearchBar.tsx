@@ -4,7 +4,7 @@ import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import { QueryParamsType } from "features/packs/Packs";
-import { ChangeEvent, useEffect } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 
 type SearchBarPropsType = {
@@ -21,14 +21,22 @@ export const SearchBar = ({
   setSearchValue,
 }: SearchBarPropsType) => {
   const [debouncedPackName] = useDebounce(searchValue, 1000);
-
+  const [isMounted, setIsMounted] = useState(false);
   const changeSearchHandler = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setSearchValue(e.target.value);
   };
+
   useEffect(() => {
-    //TODO  !!! fix problem with rerender packs after this usee ( cause edit object queryParams)
-    //TODO with condition - no request after deleting input
-    if (debouncedPackName !== "") setQueryParams({ ...queryParams, packName: debouncedPackName });
+    setIsMounted(true);
+    return () => {
+      setIsMounted(false);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isMounted) {
+      setQueryParams({ ...queryParams, packName: debouncedPackName });
+    }
   }, [debouncedPackName]);
 
   return (

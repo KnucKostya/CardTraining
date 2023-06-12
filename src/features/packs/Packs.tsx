@@ -24,8 +24,8 @@ import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
 import { PacksSlider } from "features/packs/slider/PacksSlider";
-import { makeStyles } from "@mui/styles";
 import { BearLoader } from "../../common/components/BearLoader/BearLoader";
+import TableSortLabel from "@mui/material/TableSortLabel";
 
 export type QueryParamsType = {
   packName: string;
@@ -39,7 +39,6 @@ export type QueryParamsType = {
 
 export const Packs = () => {
   const dispatch = useAppDispatch();
-  const classes = useStyles();
   const isLoading = useAppSelector((state) => state.app.isLoading);
   const cardPacks = useAppSelector((state: RootState) => state.packs.cardPacks);
   const packsCount = useAppSelector((state: RootState) => state.packs.cardPacksTotalCount);
@@ -65,8 +64,23 @@ export const Packs = () => {
     dispatch(packsThunks.fetchCardPacksTC(queryParams));
   }, [queryParams]);
 
+  const updatedSortHandler = () => {
+    if (queryParams.sortPacks === "1updated" || queryParams.sortPacks === "") {
+      setQueryParams((prevState) => ({
+        ...prevState,
+        sortPacks: "0updated",
+        page: 1,
+      }));
+    } else {
+      setQueryParams((prevState) => ({
+        ...prevState,
+        sortPacks: "1updated",
+        page: 1,
+      }));
+    }
+  };
+
   const showMyPacks = () => {
-    console.log(userId);
     if (userId) setQueryParams({ ...queryParams, user_id: userId });
   };
   const showFriendsPacks = () => {
@@ -109,6 +123,12 @@ export const Packs = () => {
   };
   const changeRowsNumber = (event: SelectChangeEvent) => {
     setQueryParams({ ...queryParams, pageCount: +event.target.value });
+  };
+  const changeDateFormat = (date: Date) => {
+    const newDate = new Date(date);
+    return `${newDate.getDate().toString().padStart(2, "0")}.${(newDate.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}.${newDate.getFullYear().toString()}`;
   };
 
   return (
@@ -159,12 +179,26 @@ export const Packs = () => {
           </div>
         ) : (
           <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <Table sx={{overflowWrap: "break-word", tableLayout: 'fixed'}}>
+              <colgroup>
+                <col style={{width:'30%'}}/>
+                <col style={{width:'10%'}}/>
+                <col style={{width:'20%'}}/>
+                <col style={{width:'20%'}}/>
+                <col style={{width:'15%'}}/>
+              </colgroup>
               <TableHead sx={{ background: "#EFEFEF" }}>
-                <TableRow>
-                  <TableCell sx={{ padding: "16px 16px 16px 36px" }}>Name</TableCell>
+                <TableRow  hover={true} >
+                  <TableCell sx={{ padding: "16px 16px 16px 36px" ,width: '200px'}}>Name</TableCell>
                   <TableCell align="left">Cards</TableCell>
-                  <TableCell align="left">Last updated</TableCell>
+                  <TableCell align="left" onClick={updatedSortHandler} sx={{ display: "flex" }}>
+                    <TableSortLabel
+                      active={queryParams.sortPacks !== ""} //should be true for the sorted column
+                      direction={queryParams.sortPacks !== "0updated" ? "desc" : "asc"} // The current sort direction /"desc"
+                    >
+                      Last updated
+                    </TableSortLabel>
+                  </TableCell>
                   <TableCell align="left">Created By</TableCell>
                   <TableCell align="left" sx={{ padding: "16px 36px 16px 16px" }}>
                     Actions
@@ -178,24 +212,30 @@ export const Packs = () => {
                       {p.name}
                     </TableCell>
                     <TableCell align="left">{p.cardsCount}</TableCell>
-                    <TableCell align="left">{JSON.stringify(p.updated)}</TableCell>
-                    <TableCell className={classes.cell_short} align="left">
+                    <TableCell align="left">{changeDateFormat(p.updated)}</TableCell>
+                    <TableCell  align="left">
                       {p.user_name}
                     </TableCell>
                     <TableCell align="left" sx={{ padding: "16px 28px 16px 8px" }}>
-                      <IconButton aria-label="learn">
-                        <SchoolIcon />
-                      </IconButton>
-                      <IconButton
-                        aria-label="edit"
-                        onClick={() => updatePackHandler(p._id, "updatedPack13")}
-                        //TODO modal
-                      >
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton aria-label="delete" onClick={() => deletePackHandler(p._id)}>
-                        <DeleteOutlineIcon />
-                      </IconButton>
+                      <span style={{width: '33%'}}>
+                        { p.cardsCount!==0 &&
+                          <IconButton aria-label="learn">
+                            <SchoolIcon />
+                          </IconButton>}
+                      </span>
+                      {userId === p.user_id && (
+                        <span style={{width: '67%'}}>
+                          <IconButton
+                            aria-label="edit"
+                            onClick={() => updatePackHandler(p._id, "updatedPack13")}
+                          >
+                            <EditIcon />
+                          </IconButton>
+                          <IconButton aria-label="delete" onClick={() => deletePackHandler(p._id)}>
+                            <DeleteOutlineIcon />
+                          </IconButton>
+                        </span>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -227,9 +267,3 @@ export const Packs = () => {
   );
 };
 
-const useStyles = makeStyles((theme) => ({
-  cell_short: {
-    maxWidth: "200px",
-    overflowWrap: "break-word",
-  },
-}));
