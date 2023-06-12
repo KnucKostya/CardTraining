@@ -26,6 +26,8 @@ import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
 import { PacksSlider } from "features/packs/slider/PacksSlider";
 import { BearLoader } from "../../common/components/BearLoader/BearLoader";
 import TableSortLabel from "@mui/material/TableSortLabel";
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 
 export type QueryParamsType = {
   packName: string;
@@ -171,14 +173,12 @@ export const Packs = () => {
             </IconButton>
           </div>
         </div>
-        {isLoading ? (
-          <BearLoader />
-        ) : cardPacks.length === 0 ? (
+        {cardPacks.length === 0 ? (
           <div className={s.noPacksError}>
             Колоды не найдены. Измените параметры фильтра / поиска
           </div>
         ) : (
-          <TableContainer component={Paper}>
+          <TableContainer component={Paper} sx={{position: 'relative'}}>
             <Table sx={{overflowWrap: "break-word", tableLayout: 'fixed'}}>
               <colgroup>
                 <col style={{width:'30%'}}/>
@@ -241,6 +241,18 @@ export const Packs = () => {
                 ))}
               </TableBody>
             </Table>
+            <Backdrop
+              sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1,
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+              }}
+              open={isLoading}
+            >
+              <CircularProgress color="inherit" />
+            </Backdrop>
           </TableContainer>
         )}
         <div className={s.paginationBlock}>
