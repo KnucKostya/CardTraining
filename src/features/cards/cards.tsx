@@ -13,6 +13,9 @@ import Paper from "@mui/material/Paper";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 import { useAppSelector } from "../../common/hooks/useAppSelector";
+import { authApi } from "../auth/authApi";
+
+// my UserID 6484c990b61ce7c3677f4356
 
 function createData(
   question: string,
@@ -30,27 +33,42 @@ export const Cards = () => {
 
   const [inputValue, setInputValue] = useState<string>("");
 
-  const removeCardHandle = (cardId: string, packId: string) => {
-    dispatch(cardsThunks.removeCard({ cardId }));
-    dispatch(cardsThunks.getCards({ packId }));
-  };
-
   const onInputChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.currentTarget.value);
   };
 
+  const removeCardHandle = (cardId: string, packId: string) => {
+    dispatch(cardsThunks.removeCard({ cardId }))
+      .unwrap()
+      .then(() => dispatch(cardsThunks.getCards({ packId })));
+    //TODO catch for every handler
+  };
+
   const addNewCard = (cardsPackId: string, question?: string, answer?: string) => {
-    dispatch(cardsThunks.addNewCard({ packId: cardsPackId }));
-    dispatch(cardsThunks.getCards({ packId: cardsPackId }));
+    dispatch(cardsThunks.addNewCard({ packId: cardsPackId }))
+      .unwrap()
+      .then(() => dispatch(cardsThunks.getCards({ packId: cardsPackId })));
   };
 
   const editCardHandle = (cardsPackId: string, cardId: string, question: string) => {
-    dispatch(cardsThunks.editCard({ cardId, question: " Question" }));
-    dispatch(cardsThunks.getCards({ packId: cardsPackId }));
+    dispatch(cardsThunks.editCard({ cardId, question: " Question" }))
+      .unwrap()
+      .then(() => dispatch(cardsThunks.getCards({ packId: cardsPackId })));
   };
 
   useEffect(() => {
-    dispatch(cardsThunks.getCards({ packId: "64820d3d8f5de40420e18921" }));
+    authApi
+      .login({
+        email: "knuckostya1@gmail.com",
+        password: "Sends777",
+        rememberMe: true,
+      })
+      .then(() => authApi.isAuth)
+      .then(() => dispatch(cardsThunks.getCards({ packId: "6487562faa11d8a942e76123" })));
+
+    // dispatch(packsThunks.fetchCardPacksTC({ user_id: "6484c990b61ce7c3677f4356" })).then((res) =>
+    //   console.log(res)
+    // );
   }, [dispatch]);
 
   return (
@@ -75,7 +93,7 @@ export const Cards = () => {
               color={"secondary"}
               height={"40px"}
               width={"auto"}
-              onClickCallBack={() => addNewCard("64820d3d8f5de40420e18921")}
+              onClickCallBack={() => addNewCard("6487562faa11d8a942e76123")}
             />
           </span>
         </div>
