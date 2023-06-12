@@ -20,7 +20,7 @@ export const FogotPassword = () => {
   const navigate = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm<FormInputType>();
 
-  const message = `<div style={{ backgroundColor: "lime"; padding: "15px"}}>password recovery link: <a href="http://localhost:3000/set-password/$token$"> Link</a></div>`;
+  const message = `<div style={{ backgroundColor: "lime"; padding: "15px"}}>password recovery link: <a href="http://localhost:3001/#/set-new-password/$token$"> Link</a></div>`;
 
   const onSubmit: SubmitHandler<FormInputType> = data => {
     console.log(data);
