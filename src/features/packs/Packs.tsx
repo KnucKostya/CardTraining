@@ -22,24 +22,19 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
 import { PacksSlider } from "features/packs/slider/PacksSlider";
 import TableSortLabel from "@mui/material/TableSortLabel";
-import Backdrop from '@mui/material/Backdrop';
-import CircularProgress from '@mui/material/CircularProgress';
-import { isLoading_Selector } from "../../app/appSelector";
-import { maxCardsCount_Selector, minCardsCount_Selector, packs_Selector, packsCount_Selector } from "./packsSelector";
-import { userId_Selector } from "../auth/authSelector";
 import { useActions } from "../../common/hooks/useActions";
-import Backdrop from "@mui/material/Backdrop";
-import CircularProgress from "@mui/material/CircularProgress";
 import { Link } from "react-router-dom";
 import { authApi } from "../auth/authApi";
-import { isLoading_Selector } from "../../app/app.selector";
+import { isLoading_Selector } from "../../app/appSelector";
 import {
   maxCardsCount_Selector,
   minCardsCount_Selector,
   packs_Selector,
   packsCount_Selector,
-} from "./packs.selector";
-import { userId_Selector } from "../auth/auth.selector";
+} from "./packsSelector";
+import { userId_Selector } from "../auth/authSelector";
+import { useAppDispatch } from "../../common/hooks/useAppDispatch";
+import { Backdrop, CircularProgress } from "@mui/material";
 
 export type QueryParamsType = {
   packName: string;
@@ -54,6 +49,7 @@ export type QueryParamsType = {
 export const Packs = () => {
   const { fetchPacks, removePack, updatePack, addPack } = useActions(packsThunks);
   const isLoading = useAppSelector(isLoading_Selector);
+  const dispatch = useAppDispatch();
   const packs = useAppSelector(packs_Selector);
   const packsCount = useAppSelector(packsCount_Selector);
   const userId = useAppSelector(userId_Selector);
@@ -75,7 +71,7 @@ export const Packs = () => {
     : 10;
 
   useEffect(() => {
-    fetchPacks(queryParams)
+    fetchPacks(queryParams);
     authApi
       .login({
         email: "knuckostya1@gmail.com",
@@ -83,7 +79,7 @@ export const Packs = () => {
         rememberMe: true,
       })
       .then(() => authApi.isAuth);
-    dispatch(packsThunks.fetchCardPacksTC(queryParams));
+    dispatch(packsThunks.fetchPacks(queryParams));
     // .then(() => dispatch(packsThunks.fetchCardPacksTC(queryParams)));
   }, [queryParams]);
 
@@ -130,13 +126,13 @@ export const Packs = () => {
   };
 
   const addPackHandler = () => {
-    addPack({ name: "test14" })
+    addPack({ name: "test14" });
   };
   const removePackHandler = (id: string) => {
-    removePack(id)
+    removePack(id);
   };
   const updatePackHandler = (_id: string, name: string) => {
-    updatePack({ _id, name })
+    updatePack({ _id, name });
   };
   const paginationChangeHandler = (event: React.ChangeEvent<unknown>, value: number) => {
     setQueryParams({ ...queryParams, page: value });
@@ -262,11 +258,15 @@ export const Packs = () => {
                           >
                             <EditIcon />
                           </IconButton>
-                          <IconButton aria-label="delete" onClick={() => removePackHandler(p._id)}>
-                            <DeleteOutlineIcon color={'primary'}/>
-                          <IconButton aria-label="delete" onClick={() => deletePackHandler(p._id)}>
-                            <DeleteOutlineIcon color={"primary"} />
-                          </IconButton>
+                          <IconButton
+                            aria-label="delete"
+                            onClick={() => removePackHandler(p._id)}
+                          />
+                          {/*TODO выбрать правильную кнопку на удаление, какая-то хуйня при мёрдже получилaсь*/}
+                          {/*<DeleteOutlineIcon color={"primary"} />*/}
+                          {/*<IconButton aria-label="delete" onClick={() => removePackHandler(p._id)}>*/}
+                          {/*  <DeleteOutlineIcon color={"primary"} />*/}
+                          {/*</IconButton>*/}
                         </span>
                       )}
                     </TableCell>
