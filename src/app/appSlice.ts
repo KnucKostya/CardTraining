@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import { getErrorMessage } from "../common/utils/getErrorMessage";
+import { AxiosError, isAxiosError } from "axios";
 
 export type ErrorType = string | null | undefined;
 
@@ -38,17 +39,19 @@ const slice = createSlice({
       )
       .addMatcher(
         (action) => {
-          return action.type.endsWith("/rejected"); // любой экшн с реджектом
+          return action.type.endsWith("/rejected");
         },
         (state, action) => {
           state.isLoading = false;
-          const error = action.payload?.error;
-
-          if (!error) return;
-
-          const errorMessage = getErrorMessage(error);
-          if (error.message === null) return;
-          toast.error(errorMessage);
+          const { errorMessage, showGlobalError = true } = action.payload;
+          if (!showGlobalError) return;
+          if (errorMessage) {
+            state.error = errorMessage
+          } else {
+            state.error = `Undefined error occurred`;
+          }
+          toast.error(state.error);
+          state.error = "";
         }
       );
   },

@@ -12,9 +12,6 @@ import { thunkTryCatch } from "../../common/utils/thunkTryCatch";
 
 //THUNKS =================================================================================================
 
-// const registerTC = createAppAsyncThunk("auth/register", async (arg: RegPayloadType, thunkAPI) => {
-//   const res = await authApi.register(arg);
-// });
 const login = createAppAsyncThunk<{ profile: ProfileType }, ArgLoginType>
 ("auth/login", (arg, thunkAPI) => {
   return thunkTryCatch(thunkAPI, () => {
@@ -50,21 +47,12 @@ const updateUserTC = createAppAsyncThunk<{ profile: UpdatedProfileType }, Update
 export const isAuthTC = createAppAsyncThunk<{ profile: ProfileType }>(
   "auth/isAuth",
   async (arg, thunkAPI) => {
-    // const { rejectWithValue } = thunkAPI;
-    // try {
-    //   const res = await authApi.isAuth();
-    //   return { profile: res.data };
-    // } catch (e) {
-    //   return rejectWithValue(errorUtils(e as AxiosError<{ error: string }>));
-    // }
-    // }
     return thunkTryCatch(
       thunkAPI,
       async () => {
         const res = await authApi.isAuth();
         return { profile: res.data };
       },
-      false
     );
   }
 );
@@ -97,16 +85,16 @@ const slice = createSlice({
         state.profile = action.payload.profile.updatedUser;
       })
       .addCase(sendResetPassword.fulfilled, (state, action) => {
-        console.log(action);
         state.email = action.meta.arg.email;
       })
       .addCase(setNewPassword.fulfilled, (state, action) => {
         state.password = action.meta.arg.password;
       })
-      .addCase(isAuthTC.rejected, (state, action) => {
-        console.log("isAuth ", action.payload);
-        return action.payload;
-      })
+    //TODO
+      // .addCase(isAuthTC.rejected, (state, action) => {
+      //   console.log("isAuth ", action.payload);
+      //   return action.payload;
+      // })
 
   }
 });

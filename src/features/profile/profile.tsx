@@ -46,8 +46,8 @@ export const Profile = () => {
             <div className={s.avatarBlock}>
               <img
                 className={s.avatar}
-                src={userId? userAvatar : ava}
-                alt="userAva"
+                src={userId && userAvatar? userAvatar : ava}
+                alt="avatar"
               />
               <IconButton className={s.photoIcon} aria-label="change photo">
                 <AddAPhotoIcon />

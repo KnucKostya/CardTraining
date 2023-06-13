@@ -23,7 +23,8 @@ function App() {
           navigate(RouteNames.PACKS);
         }
       })
-      .catch((e) => console.error(e));
+      .catch((e) => console.log(e.errorMessage));
+    //TODO:  how to delete log ?
   }, [dispatch]);
 
   return (
