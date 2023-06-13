@@ -12,7 +12,7 @@ import { thunkTryCatch } from "../../common/utils/thunkTryCatch";
 
 //THUNKS =================================================================================================
 
-export const fetchCardPacksTC = createAppAsyncThunk<{ packs: PacksResType }, GetPacksParamsType>(
+export const fetchPacks = createAppAsyncThunk<{ packs: PacksResType }, GetPacksParamsType>(
   "packs/getPacks",
   async (arg, thunkAPI) => {
     return thunkTryCatch(thunkAPI, async () => {
@@ -21,35 +21,35 @@ export const fetchCardPacksTC = createAppAsyncThunk<{ packs: PacksResType }, Get
     });
   }
 );
-export const addCardPackTC = createAppAsyncThunk<{pack: CardPackType}, AddPackPayloadType>(
+export const addPack = createAppAsyncThunk<{pack: CardPackType}, AddPackPayloadType>(
   "packs/addPack",
   async (arg, thunkAPI) => {
     const { dispatch } = thunkAPI;
     return thunkTryCatch(thunkAPI, async () => {
       await packsApi.addPack(arg);
-      await dispatch(fetchCardPacksTC({}));
+      await dispatch(fetchPacks({}));
       // return { pack: res.data.newCardsPack}
     });
   }
 );
-export const deleteCardPackTC = createAppAsyncThunk<{packId: string}, string>(
+export const removePack = createAppAsyncThunk<{packId: string}, string>(
   "packs/deletePack",
   async (id, thunkAPI) => {
     const { dispatch } = thunkAPI;
     return thunkTryCatch(thunkAPI, async () => {
-      await packsApi.deletePack(id);
-      await dispatch(fetchCardPacksTC({}));
+      await packsApi.removePack(id);
+      await dispatch(fetchPacks({}));
        // return {packId: res.data.deletedCardsPack._id}
     });
   }
 );
-export const updateCardPackTC = createAppAsyncThunk<{pack: CardPackType}, UpdatePackPayloadType>(
+export const updatePack = createAppAsyncThunk<{pack: CardPackType}, UpdatePackPayloadType>(
   "packs/updatePack",
   async (arg, thunkAPI) => {
     const { dispatch } = thunkAPI;
     return thunkTryCatch(thunkAPI, async () => {
       await packsApi.updatePack(arg);
-      await dispatch(fetchCardPacksTC({}));
+      await dispatch(fetchPacks({}));
       // return {pack: res.data.updatedCardsPack}
     });
   }
@@ -72,7 +72,7 @@ const slice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchCardPacksTC.fulfilled, (state, action) => {
+      .addCase(fetchPacks.fulfilled, (state, action) => {
       state.cardPacks = action.payload.packs.cardPacks;
       state.cardPacksTotalCount = action.payload.packs.cardPacksTotalCount;
       state.maxCardsCount = action.payload.packs.maxCardsCount;
@@ -80,25 +80,29 @@ const slice = createSlice({
       state.page = action.payload.packs.page;
       state.pageCount = action.payload.packs.pageCount;
     })
-      // .addCase(addCardPackTC.fulfilled,(state, action)=> {
-      //   state.cardPacks.unshift(action.payload.pack)
-      // })
-      // .addCase(deleteCardPackTC.fulfilled,(state, action)=> {
-      //   const index=state.cardPacks.findIndex(p=> p._id===action.payload.packId)
-      //   if (index!==-1) state.cardPacks.splice(index,1)
-      // })
-      // .addCase(updateCardPackTC.fulfilled,(state, action)=> {
-      //   const index = state.cardPacks.findIndex(p => p._id === action.payload.pack._id)
-      //   if (index !== -1) state.cardPacks[index] = action.payload.pack
-      // })
   },
 });
 
 export const packsReducer = slice.reducer;
 export const packsActions = slice.actions;
 export const packsThunks = {
-  fetchCardPacksTC,
-  addCardPackTC,
-  deleteCardPackTC,
-  updateCardPackTC,
+  fetchPacks,
+  addPack,
+  removePack,
+  updatePack,
 };
+
+
+
+
+// .addCase(addCardPackTC.fulfilled,(state, action)=> {
+//   state.cardPacks.unshift(action.payload.pack)
+// })
+// .addCase(deleteCardPackTC.fulfilled,(state, action)=> {
+//   const index=state.cardPacks.findIndex(p=> p._id===action.payload.packId)
+//   if (index!==-1) state.cardPacks.splice(index,1)
+// })
+// .addCase(updateCardPackTC.fulfilled,(state, action)=> {
+//   const index = state.cardPacks.findIndex(p => p._id === action.payload.pack._id)
+//   if (index !== -1) state.cardPacks[index] = action.payload.pack
+// })

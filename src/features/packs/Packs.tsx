@@ -9,7 +9,6 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { useAppDispatch } from "common/hooks/useAppDispatch";
 import { packsThunks } from "features/packs/packsSlice";
 import IconButton from "@mui/material/IconButton";
 import SchoolIcon from "@mui/icons-material/School";
@@ -26,9 +25,10 @@ import { PacksSlider } from "features/packs/slider/PacksSlider";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
-import { isLoading_Selector } from "../../app/app.selector";
-import { maxCardsCount_Selector, minCardsCount_Selector, packs_Selector, packsCount_Selector } from "./packs.selector";
-import { userId_Selector } from "../auth/auth.selector";
+import { isLoading_Selector } from "../../app/appSelector";
+import { maxCardsCount_Selector, minCardsCount_Selector, packs_Selector, packsCount_Selector } from "./packsSelector";
+import { userId_Selector } from "../auth/authSelector";
+import { useActions } from "../../common/hooks/useActions";
 
 export type QueryParamsType = {
   packName: string;
@@ -41,7 +41,7 @@ export type QueryParamsType = {
 };
 
 export const Packs = () => {
-  const dispatch = useAppDispatch();
+  const { fetchPacks, removePack, updatePack, addPack } = useActions(packsThunks);
   const isLoading = useAppSelector(isLoading_Selector);
   const packs = useAppSelector(packs_Selector);
   const packsCount = useAppSelector(packsCount_Selector);
@@ -64,7 +64,7 @@ export const Packs = () => {
     : 10;
 
   useEffect(() => {
-    dispatch(packsThunks.fetchCardPacksTC(queryParams));
+    fetchPacks(queryParams)
   }, [queryParams]);
 
   const updatedSortHandler = () => {
@@ -110,17 +110,13 @@ export const Packs = () => {
   };
 
   const addPackHandler = () => {
-    dispatch(
-      packsThunks.addCardPackTC({
-        name: "test14", //TODO modal
-      })
-    );
+    addPack({ name: "test14" })
   };
-  const deletePackHandler = (id: string) => {
-    dispatch(packsThunks.deleteCardPackTC(id));
+  const removePackHandler = (id: string) => {
+    removePack(id)
   };
   const updatePackHandler = (_id: string, name: string) => {
-    dispatch(packsThunks.updateCardPackTC({ _id, name }));
+    updatePack({ _id, name })
   };
   const paginationChangeHandler = (event: React.ChangeEvent<unknown>, value: number) => {
     setQueryParams({ ...queryParams, page: value });
@@ -233,7 +229,7 @@ export const Packs = () => {
                           >
                             <EditIcon />
                           </IconButton>
-                          <IconButton aria-label="delete" onClick={() => deletePackHandler(p._id)}>
+                          <IconButton aria-label="delete" onClick={() => removePackHandler(p._id)}>
                             <DeleteOutlineIcon color={'primary'}/>
                           </IconButton>
                         </span>

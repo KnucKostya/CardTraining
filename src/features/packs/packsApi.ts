@@ -12,7 +12,7 @@ export const packsApi = {
       cardsPack: { ...payload },
     });
   },
-  deletePack: (id: string) => {
+  removePack: (id: string) => {
     return instance.delete(`cards/pack?id=${id}`);
   },
   updatePack: (payload: UpdatePackPayloadType) => {
@@ -57,7 +57,7 @@ export type CardPackType = {
   cardsCount: number;
   type: string;
   rating: number;
-  created: string;
+  created: Date;
   updated: Date;
   more_id: string;
   __v: number;

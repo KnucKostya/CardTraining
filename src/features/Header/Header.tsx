@@ -6,10 +6,13 @@ import { RouteNames } from "../../app/routes";
 import { SuperButton } from "../../common/components/super-button/SuperButton";
 import { ProgressBar } from "../app/ProgressBar/ProgressBar";
 import ava from "../../assets/images/ava.png";
+import { isLoading_Selector } from "../../app/appSelector";
+import { userAvatar_Selector, userEmail_Selector, userId_Selector, userName_Selector } from "../auth/authSelector";
 
 export const Header = () => {
-  const isLoading = useAppSelector<boolean>((state) => state.app.isLoading);
-  const user = useAppSelector((state) => state.auth.profile);
+  const isLoading = useAppSelector(isLoading_Selector);
+  const userAvatar= useAppSelector(userAvatar_Selector);
+  const userName= useAppSelector(userName_Selector);
 
   const location = useLocation();
   const profilePage = location.pathname === RouteNames.PROFILE;
@@ -21,16 +24,16 @@ export const Header = () => {
           <div>
             <h1>Cards</h1>
           </div>
-          {!profilePage && ( //если страница профайл , то кнопку не показывать
-            <div className={s.actions}>
+          {!profilePage &&
+            (<div className={s.actions}>
               <SuperButton name={"Sign In"} redirectPath={RouteNames.LOGIN} />
             </div>
           )}
           {profilePage && (
             <div className={s.actions}>
-              <div className={s.userName}>{user && user.name ? user.name : "user"}</div>
+              <div className={s.userName}>{userName ? userName : "user"}</div>
               <div className={s.avatar}>
-                <img src={user && user.avatar ? user.avatar : ava} alt="userAva" />
+                <img src={userAvatar ? userAvatar : ava} alt="userAva" />
               </div>
             </div>
           )}

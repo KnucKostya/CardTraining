@@ -64,5 +64,10 @@
   },
   "devDependencies": {
     "prettier": "2.8.8"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "axios": "axios/dist/node/axios.cjs"
+    }
   }
 }

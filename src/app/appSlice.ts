@@ -1,7 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-import { getErrorMessage } from "../common/utils/getErrorMessage";
-import { AxiosError, isAxiosError } from "axios";
 
 export type ErrorType = string | null | undefined;
 

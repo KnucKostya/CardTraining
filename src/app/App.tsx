@@ -8,7 +8,7 @@ import { useAppDispatch } from "../common/hooks/useAppDispatch";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { RouteNames } from "./routes";
-import { isLoading_Selector } from "./app.selector";
+import { isLoading_Selector } from "./appSelector";
 
 function App() {
   const isLoading = useAppSelector(isLoading_Selector);

@@ -10,7 +10,7 @@ import { SuperButton } from "common/components/super-button/SuperButton";
 import { EditableSpan } from "common/components/EditableSpan/EditableSpan";
 import { useAppDispatch } from "common/hooks/useAppDispatch";
 import { useAppSelector } from "common/hooks/useAppSelector";
-import { userAvatar_Selector, userEmail_Selector, userId_Selector, userName_Selector } from "../auth/auth.selector";
+import { userAvatar_Selector, userEmail_Selector, userId_Selector, userName_Selector } from "../auth/authSelector";
 
 export const Profile = () => {
   const dispatch = useAppDispatch();
