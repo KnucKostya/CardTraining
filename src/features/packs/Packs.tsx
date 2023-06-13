@@ -24,10 +24,17 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
 import { PacksSlider } from "features/packs/slider/PacksSlider";
 import TableSortLabel from "@mui/material/TableSortLabel";
-import Backdrop from '@mui/material/Backdrop';
-import CircularProgress from '@mui/material/CircularProgress';
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+import { Link, Route, Routes } from "react-router-dom";
+import { authApi } from "../auth/authApi";
 import { isLoading_Selector } from "../../app/app.selector";
-import { maxCardsCount_Selector, minCardsCount_Selector, packs_Selector, packsCount_Selector } from "./packs.selector";
+import {
+  maxCardsCount_Selector,
+  minCardsCount_Selector,
+  packs_Selector,
+  packsCount_Selector,
+} from "./packs.selector";
 import { userId_Selector } from "../auth/auth.selector";
 
 export type QueryParamsType = {
@@ -64,7 +71,14 @@ export const Packs = () => {
     : 10;
 
   useEffect(() => {
-    dispatch(packsThunks.fetchCardPacksTC(queryParams));
+    authApi
+      .login({
+        email: "knuckostya1@gmail.com",
+        password: "Sends777",
+        rememberMe: true,
+      })
+      .then(() => authApi.isAuth)
+      .then(() => dispatch(packsThunks.fetchCardPacksTC(queryParams)));
   }, [queryParams]);
 
   const updatedSortHandler = () => {
@@ -135,6 +149,8 @@ export const Packs = () => {
       .padStart(2, "0")}.${newDate.getFullYear().toString()}`;
   };
 
+  const onClickPackHandler = () => {};
+
   return (
     <div className={s.packs}>
       <div className={`container ${s.packsContainer}`}>
@@ -180,18 +196,20 @@ export const Packs = () => {
             Колоды не найдены. Измените параметры фильтра / поиска
           </div>
         ) : (
-          <TableContainer component={Paper} sx={{position: 'relative'}}>
-            <Table sx={{overflowWrap: "break-word", tableLayout: 'fixed'}}>
+          <TableContainer component={Paper} sx={{ position: "relative" }}>
+            <Table sx={{ overflowWrap: "break-word", tableLayout: "fixed" }}>
               <colgroup>
-                <col style={{width:'30%'}}/>
-                <col style={{width:'10%'}}/>
-                <col style={{width:'20%'}}/>
-                <col style={{width:'20%'}}/>
-                <col style={{width:'15%'}}/>
+                <col style={{ width: "30%" }} />
+                <col style={{ width: "10%" }} />
+                <col style={{ width: "20%" }} />
+                <col style={{ width: "20%" }} />
+                <col style={{ width: "15%" }} />
               </colgroup>
               <TableHead sx={{ background: "#EFEFEF" }}>
-                <TableRow  hover={true} >
-                  <TableCell sx={{ padding: "16px 16px 16px 36px" ,width: '200px'}}>Name</TableCell>
+                <TableRow hover={true}>
+                  <TableCell sx={{ padding: "16px 16px 16px 36px", width: "200px" }}>
+                    Name
+                  </TableCell>
                   <TableCell align="left">Cards</TableCell>
                   <TableCell align="left" onClick={updatedSortHandler} sx={{ display: "flex" }}>
                     <TableSortLabel
@@ -209,24 +227,33 @@ export const Packs = () => {
               </TableHead>
               <TableBody>
                 {packs.map((p) => (
-                  <TableRow key={p._id} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+                  <TableRow
+                    key={p._id}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    onClick={onClickPackHandler}
+                  >
                     <TableCell component="th" scope="row" sx={{ padding: "16px 16px 16px 36px" }}>
-                      {p.name}
+                      <Link
+                        to={`/cards/pack/${p._id}`}
+                        style={{ textDecoration: "none", color: "inherit" }}
+                      >
+                        {p.name}
+                      </Link>
                     </TableCell>
+
                     <TableCell align="left">{p.cardsCount}</TableCell>
                     <TableCell align="left">{changeDateFormat(p.updated)}</TableCell>
-                    <TableCell  align="left">
-                      {p.user_name}
-                    </TableCell>
+                    <TableCell align="left">{p.user_name}</TableCell>
                     <TableCell align="left" sx={{ padding: "16px 28px 16px 8px" }}>
-                      <span style={{width: '33%'}}>
-                        { p.cardsCount!==0 &&
+                      <span style={{ width: "33%" }}>
+                        {p.cardsCount !== 0 && (
                           <IconButton aria-label="learn">
                             <SchoolIcon />
-                          </IconButton>}
+                          </IconButton>
+                        )}
                       </span>
                       {userId === p.user_id && (
-                        <span style={{width: '67%'}}>
+                        <span style={{ width: "67%" }}>
                           <IconButton
                             aria-label="edit"
                             onClick={() => updatePackHandler(p._id, "updatedPack13")}
@@ -234,7 +261,7 @@ export const Packs = () => {
                             <EditIcon />
                           </IconButton>
                           <IconButton aria-label="delete" onClick={() => deletePackHandler(p._id)}>
-                            <DeleteOutlineIcon color={'primary'}/>
+                            <DeleteOutlineIcon color={"primary"} />
                           </IconButton>
                         </span>
                       )}
@@ -244,12 +271,14 @@ export const Packs = () => {
               </TableBody>
             </Table>
             <Backdrop
-              sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1,
-                position: 'absolute',
+              sx={{
+                color: "#fff",
+                zIndex: (theme) => theme.zIndex.drawer + 1,
+                position: "absolute",
                 top: 0,
                 left: 0,
-                width: '100%',
-                height: '100%',
+                width: "100%",
+                height: "100%",
               }}
               open={isLoading}
             >
@@ -280,4 +309,3 @@ export const Packs = () => {
     </div>
   );
 };
-

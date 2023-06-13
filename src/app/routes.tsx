@@ -1,4 +1,10 @@
-import { createHashRouter, createRoutesFromElements, Navigate, Route } from "react-router-dom";
+import {
+  createHashRouter,
+  createRoutesFromElements,
+  Navigate,
+  Route,
+  useParams,
+} from "react-router-dom";
 import ErrorPage from "../common/error-page/ErrorPage";
 import { Profile } from "../features/profile/profile";
 import { Login } from "../features/login/login";
@@ -7,7 +13,6 @@ import { CheckEmail } from "../features/auth/checkEmail/checkEmail";
 import { Learn } from "../features/learn/learn";
 import React from "react";
 import App from "./App";
-
 import { Packs } from "../features/packs/Packs";
 import { Cards } from "../features/cards/cards";
 import { FogotPassword } from "../features/auth/forgotPassword/forgotPassword";
@@ -25,6 +30,7 @@ export enum RouteNames {
   PACKS = "/packs",
   LEARN = "/learn",
   CARDS = "/cards",
+  CARDS_PACK_ID = "/cards/pack/:packId",
 }
 export const router = createHashRouter(
   createRoutesFromElements(
@@ -41,6 +47,7 @@ export const router = createHashRouter(
       <Route path={RouteNames.PACKS} element={<Packs />} />
       <Route path={RouteNames.LEARN} element={<Learn />} />
       <Route path={RouteNames.CARDS} element={<Cards />} />
+      <Route path={RouteNames.CARDS_PACK_ID} element={<Cards />} />
     </Route>
   )
 );
