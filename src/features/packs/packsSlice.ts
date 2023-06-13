@@ -1,5 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-// import { createAppAsyncThunk, thunkTryCatch } from "common/utils"
+import { createSlice } from "@reduxjs/toolkit";
 import {
   AddPackPayloadType,
   CardPackType,
@@ -8,7 +7,6 @@ import {
   PacksResType,
   UpdatePackPayloadType,
 } from "features/packs/packsApi";
-import { toast } from "react-toastify";
 import { createAppAsyncThunk } from "../../common/utils/createAppAsyncThunk";
 import { thunkTryCatch } from "../../common/utils/thunkTryCatch";
 
@@ -23,33 +21,36 @@ export const fetchCardPacksTC = createAppAsyncThunk<{ packs: PacksResType }, Get
     });
   }
 );
-export const addCardPackTC = createAppAsyncThunk(
+export const addCardPackTC = createAppAsyncThunk<{pack: CardPackType}, AddPackPayloadType>(
   "packs/addPack",
-  async (arg: AddPackPayloadType, thunkAPI) => {
+  async (arg, thunkAPI) => {
     const { dispatch } = thunkAPI;
     return thunkTryCatch(thunkAPI, async () => {
-      const res = await packsApi.addPack(arg); //добавляем пак
-      await dispatch(fetchCardPacksTC({})); //фетчим по новой
+      await packsApi.addPack(arg);
+      await dispatch(fetchCardPacksTC({}));
+      // return { pack: res.data.newCardsPack}
     });
   }
 );
-export const deleteCardPackTC = createAppAsyncThunk(
+export const deleteCardPackTC = createAppAsyncThunk<{packId: string}, string>(
   "packs/deletePack",
-  async (arg: string, thunkAPI) => {
+  async (id, thunkAPI) => {
     const { dispatch } = thunkAPI;
     return thunkTryCatch(thunkAPI, async () => {
-      const res = await packsApi.deletePack(arg);
+      await packsApi.deletePack(id);
       await dispatch(fetchCardPacksTC({}));
+       // return {packId: res.data.deletedCardsPack._id}
     });
   }
 );
-export const updateCardPackTC = createAppAsyncThunk(
-  "packs/deletePack",
-  async (arg: UpdatePackPayloadType, thunkAPI) => {
+export const updateCardPackTC = createAppAsyncThunk<{pack: CardPackType}, UpdatePackPayloadType>(
+  "packs/updatePack",
+  async (arg, thunkAPI) => {
     const { dispatch } = thunkAPI;
     return thunkTryCatch(thunkAPI, async () => {
-      const res = await packsApi.updatePack(arg);
+      await packsApi.updatePack(arg);
       await dispatch(fetchCardPacksTC({}));
+      // return {pack: res.data.updatedCardsPack}
     });
   }
 );
@@ -61,28 +62,35 @@ const packsInitialState = {
   cardPacksTotalCount: null as number | null,
   maxCardsCount: 100 as number,
   minCardsCount: 0 as number,
-  page: 1 as number, // выбранная страница
-  pageCount: 6 as number, // количество элементов на странице
+  page: 1 as number,
+  pageCount: 6 as number,
 };
 
 const slice = createSlice({
   name: "packs",
   initialState: packsInitialState,
-  reducers: {
-    // setMinMaxCardsCount: (state, action: PayloadAction<number[]>) => {
-    //   state.minCardsCount = action.payload[0];
-    //   state.maxCardsCount = action.payload[1];
-    // },
-  },
+  reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchCardPacksTC.fulfilled, (state, action) => {
+    builder
+      .addCase(fetchCardPacksTC.fulfilled, (state, action) => {
       state.cardPacks = action.payload.packs.cardPacks;
       state.cardPacksTotalCount = action.payload.packs.cardPacksTotalCount;
       state.maxCardsCount = action.payload.packs.maxCardsCount;
       state.minCardsCount = action.payload.packs.minCardsCount;
       state.page = action.payload.packs.page;
       state.pageCount = action.payload.packs.pageCount;
-    });
+    })
+      // .addCase(addCardPackTC.fulfilled,(state, action)=> {
+      //   state.cardPacks.unshift(action.payload.pack)
+      // })
+      // .addCase(deleteCardPackTC.fulfilled,(state, action)=> {
+      //   const index=state.cardPacks.findIndex(p=> p._id===action.payload.packId)
+      //   if (index!==-1) state.cardPacks.splice(index,1)
+      // })
+      // .addCase(updateCardPackTC.fulfilled,(state, action)=> {
+      //   const index = state.cardPacks.findIndex(p => p._id === action.payload.pack._id)
+      //   if (index !== -1) state.cardPacks[index] = action.payload.pack
+      // })
   },
 });
 

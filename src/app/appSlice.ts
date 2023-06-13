@@ -9,7 +9,6 @@ const slice = createSlice({
   initialState: {
     error: null as ErrorType,
     isLoading: false as boolean,
-    isAppInitialized: false,
   },
   reducers: {
     setError: (state, action: PayloadAction<{ error: ErrorType }>) => {
@@ -25,7 +24,7 @@ const slice = createSlice({
         (action) => {
           return action.type.endsWith("/pending");
         },
-        (state, action) => {
+        (state) => {
           state.isLoading = true;
         }
       )
@@ -33,7 +32,7 @@ const slice = createSlice({
         (action) => {
           return action.type.endsWith("/fulfilled");
         },
-        (state, action) => {
+        (state) => {
           state.isLoading = false;
         }
       )

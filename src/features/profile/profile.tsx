@@ -1,10 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import s from "./Profile.module.scss";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { RootState } from "app/store";
 import ava from "../../assets/images/ava.png";
-import { useNavigate } from "react-router-dom";
 import { IconButton } from "@mui/material";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import { authThunks } from "features/auth/authSlice";
@@ -12,10 +10,16 @@ import { SuperButton } from "common/components/super-button/SuperButton";
 import { EditableSpan } from "common/components/EditableSpan/EditableSpan";
 import { useAppDispatch } from "common/hooks/useAppDispatch";
 import { useAppSelector } from "common/hooks/useAppSelector";
+import { userAvatar_Selector, userEmail_Selector, userId_Selector, userName_Selector } from "../auth/auth.selector";
 
 export const Profile = () => {
   const dispatch = useAppDispatch();
-  const { profile, isAuth } = useAppSelector((state: RootState) => state.auth);
+
+  const userId= useAppSelector(userId_Selector);
+  const userAvatar= useAppSelector(userAvatar_Selector);
+  const userName= useAppSelector(userName_Selector);
+  const userEmail= useAppSelector(userEmail_Selector);
+
 
   const onClickLogoutHandler = () => {
     dispatch(authThunks.logoutTC());
@@ -23,11 +27,7 @@ export const Profile = () => {
   const onChangeNameHandler = (name: string) => {
     dispatch(authThunks.updateUserTC({ name }));
   };
-  const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   if (!isAuth) navigate("/login");
-  // }, [isAuth]);
 
   return (
     <div className={s.profileBlock} id="profile">
@@ -46,7 +46,7 @@ export const Profile = () => {
             <div className={s.avatarBlock}>
               <img
                 className={s.avatar}
-                src={profile && profile.avatar ? profile.avatar : ava}
+                src={userId? userAvatar : ava}
                 alt="userAva"
               />
               <IconButton className={s.photoIcon} aria-label="change photo">
@@ -54,12 +54,12 @@ export const Profile = () => {
               </IconButton>
             </div>
             <EditableSpan
-              value={profile ? profile.name : "Change name input (not Logged in)"}
+              value={userId && userName ? userName : "Change name input (not Logged in)"}
               onChange={onChangeNameHandler}
               // disabled={props.taskEntityStatus === 'loading'}
               disabled={false}
             />
-            <span className={s.email}>{profile ? profile.email : "Your email here"}</span>
+            <span className={s.email}>{userId ? userEmail : "Your email here"}</span>
           </div>
           <SuperButton
             onClickCallBack={onClickLogoutHandler}

@@ -26,6 +26,8 @@ export const SearchBar = ({
     setSearchValue(e.target.value);
   };
 
+
+  //second uE understand first/second mount of component - > no request on first (no rerender packs)
   useEffect(() => {
     setIsMounted(true);
     return () => {

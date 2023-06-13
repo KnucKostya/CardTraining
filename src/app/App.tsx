@@ -8,9 +8,10 @@ import { useAppDispatch } from "../common/hooks/useAppDispatch";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { RouteNames } from "./routes";
+import { isLoading_Selector } from "./app.selector";
 
 function App() {
-  const isLoading = useAppSelector((state) => state.app.isLoading);
+  const isLoading = useAppSelector(isLoading_Selector);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -42,8 +43,6 @@ function App() {
       <Header />
       <div className="mainContainer">
         <Outlet />
-        {/*routes.tsx*/}
-        {/*Outlet используется для рендеринга вложенных маршрутов внутри родительского маршрута*/}
       </div>
     </div>
   );
@@ -51,45 +50,3 @@ function App() {
 
 export default App;
 
-// const router = createBrowserRouter([
-//   {
-//     path: "/",
-//     element: <Register />,
-//   },
-//   {
-//     path: "/cards",
-//     element: <Cards />,
-//   },
-//   {
-//     path: "/checkEmail",
-//     element: <CheckEmail />,
-//   },
-//   {
-//     path: "forgotEmail/",
-//     element: <ForgotEmail />,
-//   },
-//   {
-//     path: "/learn",
-//     element: <Learn />,
-//   },
-//   {
-//     path: "/login",
-//     element: <Login />,
-//   },
-//   {
-//     path: "/packs",
-//     element: <Packs />,
-//   },
-//   {
-//     path: "/profile",
-//     element: <Profile />,
-//   },
-//   {
-//     path: "/register",
-//     element: <Register />,
-//   },
-//   {
-//     path: "/setNewPassword",
-//     element: <SetNewPassword />,
-//   },
-// ]);

@@ -1,7 +1,6 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { useAppSelector } from "common/hooks/useAppSelector";
-import { RootState } from "app/store";
 import s from "./Packs.module.scss";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -24,10 +23,12 @@ import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
 import { PacksSlider } from "features/packs/slider/PacksSlider";
-import { BearLoader } from "../../common/components/BearLoader/BearLoader";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
+import { isLoading_Selector } from "../../app/app.selector";
+import { maxCardsCount_Selector, minCardsCount_Selector, packs_Selector, packsCount_Selector } from "./packs.selector";
+import { userId_Selector } from "../auth/auth.selector";
 
 export type QueryParamsType = {
   packName: string;
@@ -41,12 +42,12 @@ export type QueryParamsType = {
 
 export const Packs = () => {
   const dispatch = useAppDispatch();
-  const isLoading = useAppSelector((state) => state.app.isLoading);
-  const cardPacks = useAppSelector((state: RootState) => state.packs.cardPacks);
-  const packsCount = useAppSelector((state: RootState) => state.packs.cardPacksTotalCount);
-  const userId = useAppSelector((state: RootState) => state.auth.profile?._id);
-  const minCardsCount = useAppSelector((state: RootState) => state.packs.minCardsCount);
-  const maxCardsCount = useAppSelector((state: RootState) => state.packs.maxCardsCount);
+  const isLoading = useAppSelector(isLoading_Selector);
+  const packs = useAppSelector(packs_Selector);
+  const packsCount = useAppSelector(packsCount_Selector);
+  const userId = useAppSelector(userId_Selector);
+  const minCardsCount = useAppSelector(minCardsCount_Selector);
+  const maxCardsCount = useAppSelector(maxCardsCount_Selector);
   const [sliderValuesLocal, setSliderValuesLocal] = useState([minCardsCount, maxCardsCount]);
   const [queryParams, setQueryParams] = useState<QueryParamsType>({
     packName: "",
@@ -94,6 +95,7 @@ export const Packs = () => {
   };
 
   const resetFiltersHandler = () => {
+    //TODO fix bug with double request
     setSearchBarValue("");
     setSliderValuesLocal([minCardsCount, maxCardsCount]);
     setQueryParams({
@@ -173,7 +175,7 @@ export const Packs = () => {
             </IconButton>
           </div>
         </div>
-        {cardPacks.length === 0 ? (
+        {packs.length === 0 ? (
           <div className={s.noPacksError}>
             Колоды не найдены. Измените параметры фильтра / поиска
           </div>
@@ -206,7 +208,7 @@ export const Packs = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {cardPacks.map((p) => (
+                {packs.map((p) => (
                   <TableRow key={p._id} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                     <TableCell component="th" scope="row" sx={{ padding: "16px 16px 16px 36px" }}>
                       {p.name}
@@ -232,7 +234,7 @@ export const Packs = () => {
                             <EditIcon />
                           </IconButton>
                           <IconButton aria-label="delete" onClick={() => deletePackHandler(p._id)}>
-                            <DeleteOutlineIcon />
+                            <DeleteOutlineIcon color={'primary'}/>
                           </IconButton>
                         </span>
                       )}
