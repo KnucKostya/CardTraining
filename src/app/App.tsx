@@ -7,6 +7,7 @@ import { authThunks } from "../features/auth/authSlice";
 import { useAppDispatch } from "../common/hooks/useAppDispatch";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { isLoading_Selector } from "./app.selector";
 import { RouteNames } from "./routes";
 import { isLoading_Selector } from "./appSelector";
 
@@ -20,7 +21,7 @@ function App() {
       .unwrap()
       .then((res) => {
         if (res.profile._id) {
-          navigate(RouteNames.PACKS);
+          // navigate(RouteNames.PACKS);
         }
       })
       .catch((e) => console.log(e.errorMessage));
@@ -50,4 +51,3 @@ function App() {
 }
 
 export default App;
-

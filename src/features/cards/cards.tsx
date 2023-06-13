@@ -14,7 +14,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 import { useAppSelector } from "../../common/hooks/useAppSelector";
 import { authApi } from "../auth/authApi";
-
+import { useLocation, useParams, useNavigate } from "react-router-dom";
+import StarPurple500SharpIcon from "@mui/icons-material/StarPurple500Sharp";
 // my UserID 6484c990b61ce7c3677f4356
 
 function createData(
@@ -29,7 +30,12 @@ function createData(
 
 export const Cards = () => {
   const cards = useAppSelector((state) => state.cards?.cards?.cards);
+  const userId = useAppSelector((state) => state.auth.profile?._id);
   const dispatch = useAppDispatch();
+  const { packId } = useParams();
+  const url = useLocation().pathname;
+  const navigate = useNavigate();
+  sessionStorage.setItem("url", url);
 
   const [inputValue, setInputValue] = useState<string>("");
 
@@ -42,12 +48,13 @@ export const Cards = () => {
       .unwrap()
       .then(() => dispatch(cardsThunks.getCards({ packId })));
     //TODO catch for every handler
+    //TODO remove all "!"
   };
 
-  const addNewCard = (cardsPackId: string, question?: string, answer?: string) => {
-    dispatch(cardsThunks.addNewCard({ packId: cardsPackId }))
+  const addNewCard = (question?: string, answer?: string) => {
+    dispatch(cardsThunks.addNewCard({ packId: packId! }))
       .unwrap()
-      .then(() => dispatch(cardsThunks.getCards({ packId: cardsPackId })));
+      .then(() => dispatch(cardsThunks.getCards({ packId: packId! })));
   };
 
   const editCardHandle = (cardsPackId: string, cardId: string, question: string) => {
@@ -56,20 +63,41 @@ export const Cards = () => {
       .then(() => dispatch(cardsThunks.getCards({ packId: cardsPackId })));
   };
 
-  useEffect(() => {
-    authApi
-      .login({
-        email: "knuckostya1@gmail.com",
-        password: "Sends777",
-        rememberMe: true,
-      })
-      .then(() => authApi.isAuth)
-      .then(() => dispatch(cardsThunks.getCards({ packId: "6487562faa11d8a942e76123" })));
+  function StarsRating(count: number) {
+    let stars = [];
 
-    // dispatch(packsThunks.fetchCardPacksTC({ user_id: "6484c990b61ce7c3677f4356" })).then((res) =>
-    //   console.log(res)
-    // );
+    for (let i = 0; i < count; i++) {
+      stars.push(<StarPurple500SharpIcon key={i} />);
+    }
+    return (
+      <TableCell align="right" style={{ display: "flex", color: "yellow" }}>
+        {stars}
+      </TableCell>
+    );
+  }
+
+  useEffect(() => {
+    // authApi
+    //   .login({
+    //     email: "knuckostya1@gmail.com",
+    //     password: "Sends777",
+    //     rememberMe: true,
+    //   })
+    //   .then(() => authApi.isAuth)
+    //   .then(() => {
+    //     if (!packId) return;
+    //     dispatch(cardsThunks.getCards({ packId: packId }));
+    //   });
+    if (!packId) return;
+    dispatch(cardsThunks.getCards({ packId: packId }))
+      .unwrap()
+      .then(() => authApi.isAuth);
   }, [dispatch]);
+
+  useEffect(() => {
+    let getUrl = sessionStorage.getItem("url");
+    navigate(`${getUrl}`);
+  }, []);
 
   return (
     <div className={s.packContainer}>
@@ -86,18 +114,18 @@ export const Cards = () => {
             ></input>
             <CloseIcon className={s.closeIcon} onClick={() => setInputValue("")} />
           </div>
-
-          <span>
-            <SuperButton
-              name={"Add New Card"}
-              color={"secondary"}
-              height={"40px"}
-              width={"auto"}
-              onClickCallBack={() => addNewCard("6487562faa11d8a942e76123")}
-            />
-          </span>
+          {cards?.[0]?.user_id === userId ? (
+            <span>
+              <SuperButton
+                name={"Add New Card"}
+                color={"secondary"}
+                height={"40px"}
+                width={"auto"}
+                onClickCallBack={addNewCard}
+              />
+            </span>
+          ) : null}
         </div>
-        {/*{cards.map}*/}
         <div className={s.cardsContainer}>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -111,43 +139,56 @@ export const Cards = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {cards?.map((row) => (
-                  <TableRow
-                    key={row._id}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell component="th" scope="row">
-                      {row.question}
-                    </TableCell>
-                    <TableCell align="right">{row.answer}</TableCell>
-                    <TableCell align="right">
-                      <div>{row.updated.slice(5, 10).replace("-", ".")}</div>
-                    </TableCell>
-                    <TableCell align="right">{row.grade}</TableCell>
-                    <TableCell align="right">
-                      <div>
-                        <SuperButton
-                          name={"delete"}
-                          color={"error"}
-                          width={"15px"}
-                          height={"25px"}
-                          onClickCallBack={() => removeCardHandle(row._id, row.cardsPack_id)}
-                        />
-                      </div>
-                      <div>
-                        <SuperButton
-                          name={"edit"}
-                          color={"primary"}
-                          width={"15px"}
-                          height={"25px"}
-                          onClickCallBack={() =>
-                            editCardHandle(row.cardsPack_id, row._id, row.question)
-                          }
-                        />
-                      </div>
-                    </TableCell>
+                {cards?.length ? (
+                  cards.map((row) => (
+                    <TableRow
+                      key={row._id}
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      <TableCell component="th" scope="row">
+                        {row.question}
+                      </TableCell>
+                      <TableCell align="right">{row.answer}</TableCell>
+                      <TableCell align="right">
+                        <div>{row.updated.slice(5, 10).replace("-", ".")}</div>
+                      </TableCell>
+                      {!row.grade ? <TableCell>0</TableCell> : StarsRating(5)}
+                      {/*{!row.grade ? <TableCell align="right">0</TableCell> : StarsRating(5)}*/}
+                      <TableCell align="right">
+                        {userId === row.user_id ? (
+                          <div>
+                            <div>
+                              <SuperButton
+                                name={"delete"}
+                                color={"error"}
+                                width={"15px"}
+                                height={"25px"}
+                                onClickCallBack={() => removeCardHandle(row._id, row.cardsPack_id)}
+                              />
+                            </div>
+                            <div>
+                              <SuperButton
+                                name={"edit"}
+                                color={"primary"}
+                                width={"15px"}
+                                height={"25px"}
+                                onClickCallBack={() =>
+                                  editCardHandle(row.cardsPack_id, row._id, row.question)
+                                }
+                              />
+                            </div>
+                          </div>
+                        ) : (
+                          "not your card"
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell>Cards not added yet</TableCell>
                   </TableRow>
-                ))}
+                )}
               </TableBody>
             </Table>
           </TableContainer>

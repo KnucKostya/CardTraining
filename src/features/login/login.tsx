@@ -14,6 +14,7 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
 import { authThunks } from "../auth/authSlice";
 import { useAppDispatch } from "../../common/hooks/useAppDispatch";
+import { RouteNames } from "../../app/routes";
 
 type FormInputType = {
   email: string;
@@ -42,7 +43,7 @@ export const Login = () => {
   const onSubmit: SubmitHandler<FormInputType> = (data) => {
     dispatch(authThunks.login(data))
       .unwrap()
-      .then(() => navigate("/packs"));
+      .then(() => navigate(RouteNames.PACKS));
   };
   const handleShowPassword = () => {
     setShowPassword((prev) => !prev);
