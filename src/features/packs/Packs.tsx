@@ -1,5 +1,4 @@
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppSelector } from "common/hooks/useAppSelector";
 import s from "./Packs.module.scss";
 import Table from "@mui/material/Table";
@@ -26,7 +25,7 @@ import { PacksSlider } from "features/packs/slider/PacksSlider";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
-import { Link, Route, Routes } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { authApi } from "../auth/authApi";
 import { isLoading_Selector } from "../../app/app.selector";
 import {
@@ -77,8 +76,9 @@ export const Packs = () => {
         password: "Sends777",
         rememberMe: true,
       })
-      .then(() => authApi.isAuth)
-      .then(() => dispatch(packsThunks.fetchCardPacksTC(queryParams)));
+      .then(() => authApi.isAuth);
+    dispatch(packsThunks.fetchCardPacksTC(queryParams));
+    // .then(() => dispatch(packsThunks.fetchCardPacksTC(queryParams)));
   }, [queryParams]);
 
   const updatedSortHandler = () => {

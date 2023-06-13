@@ -14,8 +14,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 import { useAppSelector } from "../../common/hooks/useAppSelector";
 import { authApi } from "../auth/authApi";
-import { useParams } from "react-router-dom";
-
+import { useLocation, useParams, useNavigate } from "react-router-dom";
+import StarPurple500SharpIcon from "@mui/icons-material/StarPurple500Sharp";
 // my UserID 6484c990b61ce7c3677f4356
 
 function createData(
@@ -33,6 +33,9 @@ export const Cards = () => {
   const userId = useAppSelector((state) => state.auth.profile?._id);
   const dispatch = useAppDispatch();
   const { packId } = useParams();
+  const url = useLocation().pathname;
+  const navigate = useNavigate();
+  sessionStorage.setItem("url", url);
 
   const [inputValue, setInputValue] = useState<string>("");
 
@@ -60,19 +63,41 @@ export const Cards = () => {
       .then(() => dispatch(cardsThunks.getCards({ packId: cardsPackId })));
   };
 
+  function StarsRating(count: number) {
+    let stars = [];
+
+    for (let i = 0; i < count; i++) {
+      stars.push(<StarPurple500SharpIcon key={i} />);
+    }
+    return (
+      <TableCell align="right" style={{ display: "flex", color: "yellow" }}>
+        {stars}
+      </TableCell>
+    );
+  }
+
   useEffect(() => {
-    authApi
-      .login({
-        email: "knuckostya1@gmail.com",
-        password: "Sends777",
-        rememberMe: true,
-      })
-      .then(() => authApi.isAuth)
-      .then(() => {
-        if (!packId) return;
-        dispatch(cardsThunks.getCards({ packId: packId }));
-      });
+    // authApi
+    //   .login({
+    //     email: "knuckostya1@gmail.com",
+    //     password: "Sends777",
+    //     rememberMe: true,
+    //   })
+    //   .then(() => authApi.isAuth)
+    //   .then(() => {
+    //     if (!packId) return;
+    //     dispatch(cardsThunks.getCards({ packId: packId }));
+    //   });
+    if (!packId) return;
+    dispatch(cardsThunks.getCards({ packId: packId }))
+      .unwrap()
+      .then(() => authApi.isAuth);
   }, [dispatch]);
+
+  useEffect(() => {
+    let getUrl = sessionStorage.getItem("url");
+    navigate(`${getUrl}`);
+  }, []);
 
   return (
     <div className={s.packContainer}>
@@ -127,7 +152,8 @@ export const Cards = () => {
                       <TableCell align="right">
                         <div>{row.updated.slice(5, 10).replace("-", ".")}</div>
                       </TableCell>
-                      <TableCell align="right">{row.grade}</TableCell>
+                      {!row.grade ? <TableCell>0</TableCell> : StarsRating(5)}
+                      {/*{!row.grade ? <TableCell align="right">0</TableCell> : StarsRating(5)}*/}
                       <TableCell align="right">
                         {userId === row.user_id ? (
                           <div>
