@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/CardTraining/static/css/main.5d489e5a.css",
-    "main.js": "/CardTraining/static/js/main.66903cc1.js",
+    "main.js": "/CardTraining/static/js/main.f2456127.js",
     "static/js/787.584ad7dd.chunk.js": "/CardTraining/static/js/787.584ad7dd.chunk.js",
     "static/media/404.svg": "/CardTraining/static/media/404.9ec31c0ba8d95b0480272e46af98c955.svg",
     "static/media/editIcon.svg": "/CardTraining/static/media/editIcon.0a0cefd2190b593b4f76bb1a5afe0c1f.svg",
     "index.html": "/CardTraining/index.html",
     "main.5d489e5a.css.map": "/CardTraining/static/css/main.5d489e5a.css.map",
-    "main.66903cc1.js.map": "/CardTraining/static/js/main.66903cc1.js.map",
+    "main.f2456127.js.map": "/CardTraining/static/js/main.f2456127.js.map",
     "787.584ad7dd.chunk.js.map": "/CardTraining/static/js/787.584ad7dd.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.5d489e5a.css",
-    "static/js/main.66903cc1.js"
+    "static/js/main.f2456127.js"
   ]
 }
