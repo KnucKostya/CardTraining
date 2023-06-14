@@ -1,5 +1,5 @@
 import Button from "@mui/material/Button";
-import {Navigate, useLocation, useNavigate} from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import React, { ReactNode } from "react";
 
 // EXAMPLE CALL with PROPS ===============
@@ -20,6 +20,7 @@ import React, { ReactNode } from "react";
 // =============================================
 
 type ButtonPropsType = {
+  variant?: "contained" | "outlined" | "text";
   name: string;
   redirectPath?: string;
   color?: "inherit" | "primary" | "secondary" | "success" | "error" | "info" | "warning";
@@ -44,9 +45,10 @@ export const SuperButton = (props: ButtonPropsType) => {
     borderRadius,
     onClickCallBack,
     type,
+    variant,
   } = props;
 
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   const location = useLocation();
   const isActive = (redirectPath: string | undefined) => {
     if (redirectPath) {
@@ -59,7 +61,7 @@ export const SuperButton = (props: ButtonPropsType) => {
   const handleClick = () => {
     //осуществляет вызов колбэка , +  переход на страницу если есть redirect в props
     if (props.redirectPath) {
-      navigate(`${redirectPath}`)
+      navigate(`${redirectPath}`);
     }
     if (onClickCallBack) {
       onClickCallBack();
@@ -72,12 +74,12 @@ export const SuperButton = (props: ButtonPropsType) => {
       sx={{
         width: width, //размеры из пропсов : "60px" либо стандартные
         height: height,
-        boxShadow:
-          "0px 2px 10px rgba(109, 109, 109, 0.25), inset 0px 1px 0px rgba(255, 255, 255, 0.3)",
+        boxShadow: "0px 2px 10px rgba(109, 109, 109, 0.25), inset 0px 1px 0px rgba(255, 255, 255, 0.3)",
         borderRadius: borderRadius, //из пропсов либо стандартные
       }}
       //если размеры не заданы то принимает размер медиум
-      variant={isActive(redirectPath) ? "contained" : "outlined"}
+      variant={isActive(redirectPath) ? "contained" : variant ? variant : "outlined"}
+      //if no redirectPath and variant in props , use  variant style
       onClick={handleClick} // props: onClickCallBack={onClickHandler}
       color={color}
       startIcon={startIcon} // передаем иконку как компоненту в пропсах startIcon={<Icon />}

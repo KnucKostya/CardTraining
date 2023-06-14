@@ -11,7 +11,6 @@ import Paper from "@mui/material/Paper";
 import { packsThunks } from "features/packs/packsSlice";
 import IconButton from "@mui/material/IconButton";
 import SchoolIcon from "@mui/icons-material/School";
-import EditIcon from "@mui/icons-material/Edit";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { SuperButton } from "common/components/super-button/SuperButton";
 import { SearchBar } from "features/packs/search-bar/SearchBar";
@@ -22,10 +21,9 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
 import { PacksSlider } from "features/packs/slider/PacksSlider";
 import TableSortLabel from "@mui/material/TableSortLabel";
-import { useActions } from "../../common/hooks/useActions";
+import { useActions } from "common/hooks/useActions";
 import { Link } from "react-router-dom";
-import { authApi } from "../auth/authApi";
-import { isLoading_Selector } from "../../app/appSelector";
+import { isLoading_Selector } from "app/appSelector";
 import {
   maxCardsCount_Selector,
   minCardsCount_Selector,
@@ -33,8 +31,9 @@ import {
   packsCount_Selector,
 } from "./packsSelector";
 import { userId_Selector } from "../auth/authSelector";
-import { useAppDispatch } from "../../common/hooks/useAppDispatch";
-import { Backdrop, CircularProgress } from "@mui/material";
+import { Backdrop } from "@mui/material";
+import { AddPackModal } from "common/components/BasicModal/AddPackModal";
+import { BaseModal } from "common/components/BasicModal/BaseModal";
 
 export type QueryParamsType = {
   packName: string;
@@ -49,7 +48,6 @@ export type QueryParamsType = {
 export const Packs = () => {
   const { fetchPacks, removePack, updatePack, addPack } = useActions(packsThunks);
   const isLoading = useAppSelector(isLoading_Selector);
-  const dispatch = useAppDispatch();
   const packs = useAppSelector(packs_Selector);
   const packsCount = useAppSelector(packsCount_Selector);
   const userId = useAppSelector(userId_Selector);
@@ -66,23 +64,20 @@ export const Packs = () => {
     user_id: "",
   });
   const [searchBarValue, setSearchBarValue] = useState(queryParams.packName);
-  const packsPaginationCount: number = packsCount
-    ? Math.ceil(packsCount / queryParams.pageCount)
-    : 10;
+  const packsPaginationCount: number = packsCount ? Math.ceil(packsCount / queryParams.pageCount) : 10;
 
   useEffect(() => {
     fetchPacks(queryParams);
-    authApi
-      .login({
-        email: "knuckostya1@gmail.com",
-        password: "Sends777",
-        rememberMe: true,
-      })
-      .then(() => authApi.isAuth);
-    dispatch(packsThunks.fetchPacks(queryParams));
-    // .then(() => dispatch(packsThunks.fetchCardPacksTC(queryParams)));
   }, [queryParams]);
 
+  // authApi
+  //   .login({
+  //     email: "knuckostya1@gmail.com",
+  //     password: "Sends777",
+  //     rememberMe: true,
+  //   })
+  //   .then(() => authApi.isAuth);
+  //    fetchPacks(queryParams));
   const updatedSortHandler = () => {
     if (queryParams.sortPacks === "1updated" || queryParams.sortPacks === "") {
       setQueryParams((prevState) => ({
@@ -111,8 +106,7 @@ export const Packs = () => {
   };
 
   const resetFiltersHandler = () => {
-    //TODO fix bug with double request
-    setSearchBarValue("");
+    setSearchBarValue(""); //TODO fix bug with double request in this setState/searchBar component
     setSliderValuesLocal([minCardsCount, maxCardsCount]);
     setQueryParams({
       packName: "",
@@ -125,9 +119,6 @@ export const Packs = () => {
     });
   };
 
-  const addPackHandler = () => {
-    addPack({ name: "test14" });
-  };
   const removePackHandler = (id: string) => {
     removePack(id);
   };
@@ -154,7 +145,9 @@ export const Packs = () => {
       <div className={`container ${s.packsContainer}`}>
         <div className={s.titleBlock}>
           <span className={s.title}>Packs List</span>
-          <SuperButton name={"Add new pack"} onClickCallBack={addPackHandler} />
+          <BaseModal modalTitle={"Add new pack"} buttonType={"base"}>
+            {(close) => <AddPackModal closeModal={close} />}
+          </BaseModal>
         </div>
         <div className={s.actionsBlock}>
           <div className={s.search}>
@@ -190,9 +183,7 @@ export const Packs = () => {
           </div>
         </div>
         {packs.length === 0 ? (
-          <div className={s.noPacksError}>
-            Колоды не найдены. Измените параметры фильтра / поиска
-          </div>
+          <div className={s.noPacksError}>Колоды не найдены. Измените параметры фильтра / поиска</div>
         ) : (
           <TableContainer component={Paper} sx={{ position: "relative" }}>
             <Table sx={{ overflowWrap: "break-word", tableLayout: "fixed" }}>
@@ -205,9 +196,7 @@ export const Packs = () => {
               </colgroup>
               <TableHead sx={{ background: "#EFEFEF" }}>
                 <TableRow hover={true}>
-                  <TableCell sx={{ padding: "16px 16px 16px 36px", width: "200px" }}>
-                    Name
-                  </TableCell>
+                  <TableCell sx={{ padding: "16px 16px 16px 36px", width: "200px" }}>Name</TableCell>
                   <TableCell align="left">Cards</TableCell>
                   <TableCell align="left" onClick={updatedSortHandler} sx={{ display: "flex" }}>
                     <TableSortLabel
@@ -231,14 +220,10 @@ export const Packs = () => {
                     onClick={onClickPackHandler}
                   >
                     <TableCell component="th" scope="row" sx={{ padding: "16px 16px 16px 36px" }}>
-                      <Link
-                        to={`/cards/pack/${p._id}`}
-                        style={{ textDecoration: "none", color: "inherit" }}
-                      >
+                      <Link to={`/cards/pack/${p._id}`} style={{ textDecoration: "none", color: "inherit" }}>
                         {p.name}
                       </Link>
                     </TableCell>
-
                     <TableCell align="left">{p.cardsCount}</TableCell>
                     <TableCell align="left">{changeDateFormat(p.updated)}</TableCell>
                     <TableCell align="left">{p.user_name}</TableCell>
@@ -246,27 +231,25 @@ export const Packs = () => {
                       <span style={{ width: "33%" }}>
                         {p.cardsCount !== 0 && (
                           <IconButton aria-label="learn">
-                            <SchoolIcon />
+                            <SchoolIcon color={"primary"} />
                           </IconButton>
                         )}
                       </span>
                       {userId === p.user_id && (
                         <span style={{ width: "67%" }}>
-                          <IconButton
-                            aria-label="edit"
-                            onClick={() => updatePackHandler(p._id, "updatedPack13")}
-                          >
-                            <EditIcon />
-                          </IconButton>
-                          <IconButton
-                            aria-label="delete"
-                            onClick={() => removePackHandler(p._id)}
-                          />
-                          {/*TODO выбрать правильную кнопку на удаление, какая-то хуйня при мёрдже получилaсь*/}
-                          {/*<DeleteOutlineIcon color={"primary"} />*/}
-                          {/*<IconButton aria-label="delete" onClick={() => removePackHandler(p._id)}>*/}
-                          {/*  <DeleteOutlineIcon color={"primary"} />*/}
+                          {/*<BaseModal modalTitle={"Edit pack"} buttonType={"icon"} packId={p._id}>*/}
+                          {/*  {(close) => <AddPackModal handleClose={close} />}*/}
+                          {/*</BaseModal>*/}
+
+                          {/*<IconButton*/}
+                          {/*  aria-label="edit"*/}
+                          {/*  onClick={() => updatePackHandler(p._id, "updatedPack13")}*/}
+                          {/*>*/}
+                          {/*  <EditIcon color={"primary"} />*/}
                           {/*</IconButton>*/}
+                          <IconButton aria-label="delete" onClick={() => removePackHandler(p._id)}>
+                            <DeleteOutlineIcon color={"primary"} />
+                          </IconButton>
                         </span>
                       )}
                     </TableCell>
@@ -286,7 +269,7 @@ export const Packs = () => {
               }}
               open={isLoading}
             >
-              <CircularProgress color="inherit" />
+              {/*<CircularProgress color="inherit" />*/}
             </Backdrop>
           </TableContainer>
         )}
