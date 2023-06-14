@@ -11,7 +11,6 @@ import Paper from "@mui/material/Paper";
 import { packsThunks } from "features/packs/packsSlice";
 import IconButton from "@mui/material/IconButton";
 import SchoolIcon from "@mui/icons-material/School";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { SuperButton } from "common/components/super-button/SuperButton";
 import { SearchBar } from "features/packs/search-bar/SearchBar";
 import Pagination from "@mui/material/Pagination";
@@ -32,8 +31,10 @@ import {
 } from "./packsSelector";
 import { userId_Selector } from "../auth/authSelector";
 import { Backdrop } from "@mui/material";
-import { AddPackModal } from "common/components/BasicModal/AddPackModal";
+import { AddPackModal } from "features/packs/modals/AddPackModal";
 import { BaseModal } from "common/components/BasicModal/BaseModal";
+import { EditPackModal } from "features/packs/modals/EditPackModal";
+import { DeletePackModal } from "features/packs/modals/DeletePackModal";
 
 export type QueryParamsType = {
   packName: string;
@@ -46,7 +47,7 @@ export type QueryParamsType = {
 };
 
 export const Packs = () => {
-  const { fetchPacks, removePack, updatePack, addPack } = useActions(packsThunks);
+  const { fetchPacks } = useActions(packsThunks);
   const isLoading = useAppSelector(isLoading_Selector);
   const packs = useAppSelector(packs_Selector);
   const packsCount = useAppSelector(packsCount_Selector);
@@ -119,12 +120,6 @@ export const Packs = () => {
     });
   };
 
-  const removePackHandler = (id: string) => {
-    removePack(id);
-  };
-  const updatePackHandler = (_id: string, name: string) => {
-    updatePack({ _id, name });
-  };
   const paginationChangeHandler = (event: React.ChangeEvent<unknown>, value: number) => {
     setQueryParams({ ...queryParams, page: value });
   };
@@ -237,19 +232,12 @@ export const Packs = () => {
                       </span>
                       {userId === p.user_id && (
                         <span style={{ width: "67%" }}>
-                          {/*<BaseModal modalTitle={"Edit pack"} buttonType={"icon"} packId={p._id}>*/}
-                          {/*  {(close) => <AddPackModal handleClose={close} />}*/}
-                          {/*</BaseModal>*/}
-
-                          {/*<IconButton*/}
-                          {/*  aria-label="edit"*/}
-                          {/*  onClick={() => updatePackHandler(p._id, "updatedPack13")}*/}
-                          {/*>*/}
-                          {/*  <EditIcon color={"primary"} />*/}
-                          {/*</IconButton>*/}
-                          <IconButton aria-label="delete" onClick={() => removePackHandler(p._id)}>
-                            <DeleteOutlineIcon color={"primary"} />
-                          </IconButton>
+                          <BaseModal modalTitle={"Edit pack"} buttonType={"iconEdit"}>
+                            {(close) => <EditPackModal closeModal={close} _id={p._id} />}
+                          </BaseModal>
+                          <BaseModal modalTitle={"Delete pack"} buttonType={"iconDelete"}>
+                            {(close) => <DeletePackModal closeModal={close} _id={p._id} packName={p.name} />}
+                          </BaseModal>
                         </span>
                       )}
                     </TableCell>

@@ -2,16 +2,17 @@ import * as React from "react";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import { SuperButton } from "../super-button/SuperButton";
+import { SuperButton } from "common/components/super-button/SuperButton";
 import { useActions } from "common/hooks/useActions";
 import { packsThunks } from "features/packs/packsSlice";
 
 type PropsType = {
   closeModal: () => void;
+  _id: string;
 };
 
-export const AddPackModal = ({ closeModal }: PropsType) => {
-  const { addPack } = useActions(packsThunks);
+export const EditPackModal = ({ closeModal, _id }: PropsType) => {
+  const { updatePack } = useActions(packsThunks);
   const [checked, setChecked] = React.useState(true);
   const [name, setName] = React.useState("");
 
@@ -22,7 +23,7 @@ export const AddPackModal = ({ closeModal }: PropsType) => {
     closeModal();
   };
   const saveHandler = () => {
-    addPack({ name: name });
+    updatePack({ _id, name });
     closeModal();
   };
 

@@ -9,12 +9,12 @@ import { SuperButton } from "../super-button/SuperButton";
 import { ReactNode, useState } from "react";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 type BaseModalPropsType = {
   children: (close: () => void) => ReactNode;
-  buttonType: "base" | "icon";
+  buttonType: "base" | "iconEdit" | "iconDelete";
   modalTitle: string;
-  packId?: string;
 };
 
 const style = {
@@ -29,7 +29,7 @@ const style = {
   padding: "19px 30px 47px 30px",
 };
 
-export function BaseModal({ children, modalTitle, buttonType, packId }: BaseModalPropsType) {
+export function BaseModal({ children, modalTitle, buttonType }: BaseModalPropsType) {
   const [showModal, setShowModal] = useState(false);
   const handleOpen = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
@@ -46,7 +46,11 @@ export function BaseModal({ children, modalTitle, buttonType, packId }: BaseModa
         />
       ) : (
         <IconButton onClick={handleOpen}>
-          <EditIcon color={"primary"} />
+          {buttonType === "iconEdit" ? (
+            <EditIcon color={"primary"} />
+          ) : (
+            <DeleteOutlineIcon color={"primary"} />
+          )}
         </IconButton>
       )}
       <Modal
@@ -64,7 +68,12 @@ export function BaseModal({ children, modalTitle, buttonType, packId }: BaseModa
       >
         <Fade in={showModal}>
           <Box sx={style}>
-            <Typography id="transition-modal-title" variant="h5" component="h1" sx={{ marginBottom: "19px" }}>
+            <Typography
+              id="transition-modal-title"
+              variant="h5"
+              component="h1"
+              sx={{ marginBottom: "19px", fontSize: "18px" }}
+            >
               {modalTitle}
             </Typography>
             <Divider sx={{ marginBottom: "35px" }} />
