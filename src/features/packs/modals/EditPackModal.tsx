@@ -9,12 +9,13 @@ import { packsThunks } from "features/packs/packsSlice";
 type PropsType = {
   closeModal: () => void;
   _id: string;
+  packName: string;
 };
 
-export const EditPackModal = ({ closeModal, _id }: PropsType) => {
+export const EditPackModal = ({ closeModal, _id, packName }: PropsType) => {
   const { updatePack } = useActions(packsThunks);
   const [checked, setChecked] = React.useState(true);
-  const [name, setName] = React.useState("");
+  const [name, setName] = React.useState(packName);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
