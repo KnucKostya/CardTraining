@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
-import { useAppDispatch } from "../../common/hooks/useAppDispatch";
+import { useAppDispatch } from "common/hooks/useAppDispatch";
 import s from "./cards.module.scss";
-import { SuperButton } from "../../common/components/super-button/SuperButton";
+import { SuperButton } from "common/components/super-button/SuperButton";
 import { cardsThunks } from "./cardsSlice";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -12,25 +12,18 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
-import { useAppSelector } from "../../common/hooks/useAppSelector";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { useAppSelector } from "common/hooks/useAppSelector";
 import { authApi } from "../auth/authApi";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import StarPurple500SharpIcon from "@mui/icons-material/StarPurple500Sharp";
-// my UserID 6484c990b61ce7c3677f4356
-
-function createData(
-  question: string,
-  answer: string,
-  updated: number,
-  grade: number,
-  actions?: any
-) {
-  return { question, answer, updated, grade, actions };
-}
+import { cardsSelector, cardUserIdSelector, packNameSelector } from "features/cards/cardsSelectors";
 
 export const Cards = () => {
-  const cards = useAppSelector((state) => state.cards?.cards?.cards);
-  const userId = useAppSelector((state) => state.auth.profile?._id);
+  const cards = useAppSelector(cardsSelector);
+  const userId = useAppSelector(cardUserIdSelector);
+  const packName = useAppSelector(packNameSelector);
   const dispatch = useAppDispatch();
   const { packId } = useParams();
   const url = useLocation().pathname;
@@ -102,7 +95,7 @@ export const Cards = () => {
   return (
     <div className={s.packContainer}>
       <div className={s.insideContainer}>
-        <h2 className={s.packName}>Pack Name</h2>
+        <h2 className={s.packName}>{packName}</h2>
         <div className={s.searchContainer}>
           <div className={s.bal}>
             <SearchIcon className={s.searchIcon} />
@@ -141,10 +134,7 @@ export const Cards = () => {
               <TableBody>
                 {cards?.length ? (
                   cards.map((row) => (
-                    <TableRow
-                      key={row._id}
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                    >
+                    <TableRow key={row._id} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                       <TableCell component="th" scope="row">
                         {row.question}
                       </TableCell>
@@ -152,31 +142,38 @@ export const Cards = () => {
                       <TableCell align="right">
                         <div>{row.updated.slice(5, 10).replace("-", ".")}</div>
                       </TableCell>
-                      {!row.grade ? <TableCell>0</TableCell> : StarsRating(5)}
-                      {/*{!row.grade ? <TableCell align="right">0</TableCell> : StarsRating(5)}*/}
+                      {!row.grade ? <TableCell align="right">0</TableCell> : StarsRating(row.grade)}
                       <TableCell align="right">
                         {userId === row.user_id ? (
                           <div>
-                            <div>
-                              <SuperButton
-                                name={"delete"}
-                                color={"error"}
-                                width={"15px"}
-                                height={"25px"}
-                                onClickCallBack={() => removeCardHandle(row._id, row.cardsPack_id)}
-                              />
-                            </div>
-                            <div>
-                              <SuperButton
-                                name={"edit"}
-                                color={"primary"}
-                                width={"15px"}
-                                height={"25px"}
-                                onClickCallBack={() =>
-                                  editCardHandle(row.cardsPack_id, row._id, row.question)
-                                }
-                              />
-                            </div>
+                            <EditIcon
+                              style={{ cursor: "pointer" }}
+                              onClick={() => editCardHandle(row.cardsPack_id, row._id, row.question)}
+                            />
+                            <DeleteIcon
+                              style={{ marginLeft: "7%", cursor: "pointer" }}
+                              onClick={() => removeCardHandle(row._id, row.cardsPack_id)}
+                            />
+                            {/*<div>*/}
+                            {/*  <SuperButton*/}
+                            {/*    name={"delete"}*/}
+                            {/*    color={"error"}*/}
+                            {/*    width={"15px"}*/}
+                            {/*    height={"25px"}*/}
+                            {/*    onClickCallBack={() => removeCardHandle(row._id, row.cardsPack_id)}*/}
+                            {/*  />*/}
+                            {/*</div>*/}
+                            {/*<div>*/}
+                            {/*  <SuperButton*/}
+                            {/*    name={"edit"}*/}
+                            {/*    color={"primary"}*/}
+                            {/*    width={"15px"}*/}
+                            {/*    height={"25px"}*/}
+                            {/*    onClickCallBack={() =>*/}
+                            {/*      editCardHandle(row.cardsPack_id, row._id, row.question)*/}
+                            {/*    }*/}
+                            {/*  />*/}
+                            {/*</div>*/}
                           </div>
                         ) : (
                           "not your card"

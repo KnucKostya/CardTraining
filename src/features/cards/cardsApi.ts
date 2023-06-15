@@ -36,7 +36,7 @@ export type GetCardsResponse = {
     updated: string;
     _id: string;
   }[];
-  cardsTotalCount: number;
+  packName: string;
   maxGrade: number;
   minGrade: number;
   page: number;
