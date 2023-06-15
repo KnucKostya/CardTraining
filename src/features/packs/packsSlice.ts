@@ -7,8 +7,8 @@ import {
   PacksResType,
   UpdatePackPayloadType,
 } from "features/packs/packsApi";
-import { createAppAsyncThunk } from "../../common/utils/createAppAsyncThunk";
-import { thunkTryCatch } from "../../common/utils/thunkTryCatch";
+import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
+import { thunkTryCatch } from "common/utils/thunkTryCatch";
 
 //THUNKS =================================================================================================
 
@@ -21,7 +21,7 @@ export const fetchPacks = createAppAsyncThunk<{ packs: PacksResType }, GetPacksP
     });
   }
 );
-export const addPack = createAppAsyncThunk<{pack: CardPackType}, AddPackPayloadType>(
+export const addPack = createAppAsyncThunk<{ pack: CardPackType }, AddPackPayloadType>(
   "packs/addPack",
   async (arg, thunkAPI) => {
     const { dispatch } = thunkAPI;
@@ -32,18 +32,18 @@ export const addPack = createAppAsyncThunk<{pack: CardPackType}, AddPackPayloadT
     });
   }
 );
-export const removePack = createAppAsyncThunk<{packId: string}, string>(
+export const removePack = createAppAsyncThunk<{ packId: string }, string>(
   "packs/deletePack",
   async (id, thunkAPI) => {
     const { dispatch } = thunkAPI;
     return thunkTryCatch(thunkAPI, async () => {
       await packsApi.removePack(id);
       await dispatch(fetchPacks({}));
-       // return {packId: res.data.deletedCardsPack._id}
+      // return {packId: res.data.deletedCardsPack._id}
     });
   }
 );
-export const updatePack = createAppAsyncThunk<{pack: CardPackType}, UpdatePackPayloadType>(
+export const updatePack = createAppAsyncThunk<{ pack: CardPackType }, UpdatePackPayloadType>(
   "packs/updatePack",
   async (arg, thunkAPI) => {
     const { dispatch } = thunkAPI;
@@ -71,15 +71,14 @@ const slice = createSlice({
   initialState: packsInitialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder
-      .addCase(fetchPacks.fulfilled, (state, action) => {
+    builder.addCase(fetchPacks.fulfilled, (state, action) => {
       state.cardPacks = action.payload.packs.cardPacks;
       state.cardPacksTotalCount = action.payload.packs.cardPacksTotalCount;
       state.maxCardsCount = action.payload.packs.maxCardsCount;
       state.minCardsCount = action.payload.packs.minCardsCount;
       state.page = action.payload.packs.page;
       state.pageCount = action.payload.packs.pageCount;
-    })
+    });
   },
 });
 
@@ -91,9 +90,6 @@ export const packsThunks = {
   removePack,
   updatePack,
 };
-
-
-
 
 // .addCase(addCardPackTC.fulfilled,(state, action)=> {
 //   state.cardPacks.unshift(action.payload.pack)

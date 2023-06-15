@@ -11,6 +11,12 @@
     justify-content: flex-start;
     flex-direction: column;
     align-items: flex-start;
+    .backToCards {
+      margin-bottom: 20px;
+      cursor: pointer;
+      font-family: $base-font;
+      font-size: 20px;
+    }
     .packName {
       font-weight: 600;
       font-size: 22px;

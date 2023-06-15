@@ -15,23 +15,32 @@ import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useAppSelector } from "common/hooks/useAppSelector";
-import { authApi } from "../auth/authApi";
-import { useLocation, useParams, useNavigate } from "react-router-dom";
+import { authApi } from "features/auth";
+import { useLocation, useParams, useNavigate, Link } from "react-router-dom";
 import StarPurple500SharpIcon from "@mui/icons-material/StarPurple500Sharp";
-import { cardsSelector, cardUserIdSelector, packNameSelector } from "features/cards/cardsSelectors";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
+import {
+  cardsSelector,
+  cardUserIdSelector,
+  packNameSelector,
+  packUserIdSelector,
+} from "features/cards/cardsSelectors";
+import { DropDownMenu } from "common/components/DropDownMenu/DropDownMenu";
 
 export const Cards = () => {
+  const dispatch = useAppDispatch();
   const cards = useAppSelector(cardsSelector);
   const userId = useAppSelector(cardUserIdSelector);
   const packName = useAppSelector(packNameSelector);
-  const dispatch = useAppDispatch();
+  const packUserId = useAppSelector(packUserIdSelector);
   const { packId } = useParams();
+  console.log(packId);
   const url = useLocation().pathname;
   const navigate = useNavigate();
   sessionStorage.setItem("url", url);
 
   const [inputValue, setInputValue] = useState<string>("");
-
   const onInputChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.currentTarget.value);
   };
@@ -95,7 +104,18 @@ export const Cards = () => {
   return (
     <div className={s.packContainer}>
       <div className={s.insideContainer}>
-        <h2 className={s.packName}>{packName}</h2>
+        <span>
+          <Link to={"/packs"} style={{ textDecoration: "none", color: "black" }}>
+            <div className={s.backToCards}>
+              <ArrowBackIcon style={{ position: "relative", top: "3px", fontSize: "medium" }} />
+              <span>Back to packs</span>
+            </div>
+          </Link>
+          <h2 className={s.packName}>
+            {packName}
+            <DropDownMenu packId={packId} />
+          </h2>
+        </span>
         <div className={s.searchContainer}>
           <div className={s.bal}>
             <SearchIcon className={s.searchIcon} />
@@ -107,7 +127,7 @@ export const Cards = () => {
             ></input>
             <CloseIcon className={s.closeIcon} onClick={() => setInputValue("")} />
           </div>
-          {cards?.[0]?.user_id === userId ? (
+          {packUserId === userId ? (
             <span>
               <SuperButton
                 name={"Add New Card"}

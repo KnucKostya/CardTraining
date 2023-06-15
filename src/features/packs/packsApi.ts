@@ -1,5 +1,4 @@
-import { instance } from "../../common/instance/instance";
-
+import { instance } from "common/instance/instance";
 
 export const packsApi = {
   getPacks: (par: GetPacksParamsType) => {
@@ -16,7 +15,7 @@ export const packsApi = {
     return instance.delete(`cards/pack?id=${id}`);
   },
   updatePack: (payload: UpdatePackPayloadType) => {
-    return instance.put("cards/pack", {
+    return instance.put<UpdatePackResponseType>("cards/pack", {
       cardsPack: { ...payload },
     });
   },
@@ -71,4 +70,27 @@ export type PacksResType = {
   maxCardsCount: number;
   token: string;
   tokenDeathTime: number;
+};
+
+export type UpdatePackResponseType = {
+  updatedCardsPack: RootObjectUpdatedCardsPack;
+  token: string;
+  tokenDeathTime: number;
+};
+export type RootObjectUpdatedCardsPack = {
+  _id: string;
+  user_id: string;
+  user_name: string;
+  name: string;
+  private: boolean;
+  path: string;
+  grade: number;
+  shots: number;
+  cardsCount: number;
+  type: string;
+  rating: number;
+  more_id: string;
+  created: string;
+  updated: string;
+  __v: number;
 };
