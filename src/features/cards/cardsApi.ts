@@ -24,18 +24,20 @@ export const cardsApi = {
   },
 };
 
+export type CardType = {
+  answer: string;
+  question: string;
+  cardsPack_id: string;
+  grade: number;
+  shots: number;
+  user_id: string;
+  created: string;
+  updated: string;
+  _id: string;
+};
+
 export type GetCardsResponse = {
-  cards: {
-    answer: string;
-    question: string;
-    cardsPack_id: string;
-    grade: number;
-    shots: number;
-    user_id: string;
-    created: string;
-    updated: string;
-    _id: string;
-  }[];
+  cards: CardType[];
   cardsTotalCount: number;
   maxGrade: number;
   minGrade: number;

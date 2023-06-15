@@ -18,34 +18,32 @@ export const Header = () => {
   const profilePage = location.pathname === RouteNames.PROFILE;
 
   return (
-    <>
-      <div className={s.header} id="header">
-        <div className={`container ${s.headerContainer}`}>
-          <div>
-            <h1>Cards</h1>
-          </div>
-          {!profilePage && (
-            <div className={s.actions}>
-              <SuperButton
-                name={"Sign In"}
-                redirectPath={RouteNames.LOGIN}
-                height={"36px"}
-                borderRadius={"30px"}
-                variant={"contained"}
-              />
-            </div>
-          )}
-          {profilePage && (
-            <div className={s.actions}>
-              <div className={s.userName}>{userName ? userName : "user"}</div>
-              <div className={s.avatar}>
-                <img src={userAvatar ? userAvatar : ava} alt="userAva" />
-              </div>
-            </div>
-          )}
+    <div className={s.header} id="header">
+      <div className={`container ${s.headerContainer}`}>
+        <div>
+          <h1>Cards</h1>
         </div>
-        {isLoading && <ProgressBar />}
+        {!profilePage && (
+          <div className={s.actions}>
+            <SuperButton
+              name={"Sign In"}
+              redirectPath={RouteNames.LOGIN}
+              height={"36px"}
+              borderRadius={"30px"}
+              variant={"contained"}
+            />
+          </div>
+        )}
+        {profilePage && (
+          <div className={s.actions}>
+            <div className={s.userName}>{userName ? userName : "user"}</div>
+            <div className={s.avatar}>
+              <img src={userAvatar ? userAvatar : ava} alt="userAva" />
+            </div>
+          </div>
+        )}
       </div>
-    </>
+      {isLoading && <ProgressBar />}
+    </div>
   );
 };

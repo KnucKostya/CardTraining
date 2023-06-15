@@ -1,16 +1,10 @@
-import {
-  createHashRouter,
-  createRoutesFromElements,
-  Navigate,
-  Route,
-  useParams,
-} from "react-router-dom";
+import { createHashRouter, createRoutesFromElements, Navigate, Route, useParams } from "react-router-dom";
 import ErrorPage from "../common/error-page/ErrorPage";
 import { Profile } from "../features/profile/profile";
 import { Login } from "../features/login/login";
 import { Register } from "../features/auth/register/register";
 import { CheckEmail } from "../features/auth/checkEmail/checkEmail";
-import { Learn } from "../features/learn/learn";
+import { Learn } from "features/learn/Learn";
 import React from "react";
 import App from "./App";
 import { Packs } from "../features/packs/Packs";
@@ -28,7 +22,7 @@ export enum RouteNames {
   FORGOT_PASSWORD = "/forgot-password",
   PROFILE = "/profile",
   PACKS = "/packs",
-  LEARN = "/learn",
+  LEARN = "/Learn",
   CARDS = "/cards",
   CARDS_PACK_ID = "/cards/pack/:packId",
 }

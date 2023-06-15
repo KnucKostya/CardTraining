@@ -50,16 +50,7 @@ export const SuperButton = (props: ButtonPropsType) => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const isActive = (redirectPath: string | undefined) => {
-    if (redirectPath) {
-      return redirectPath === location.pathname;
-    }
-    // роут из пропсов === текущему пути URL на котором находимся
-    // для подкрашивания кнопки в стиль "contained"
-  };
-
   const handleClick = () => {
-    //осуществляет вызов колбэка , +  переход на страницу если есть redirect в props
     if (props.redirectPath) {
       navigate(`${redirectPath}`);
     }
@@ -67,23 +58,27 @@ export const SuperButton = (props: ButtonPropsType) => {
       onClickCallBack();
     }
   };
+  const isActive = (redirectPath: string | undefined) => {
+    if (redirectPath) {
+      return redirectPath === location.pathname;
+    }
+  };
 
   return (
     <Button
       type={type === "submit" ? "submit" : "button"}
       sx={{
-        width: width, //размеры из пропсов : "60px" либо стандартные
-        height: height,
+        width: width ? width : "171px",
+        height: height ? height : "36px",
         boxShadow: "0px 2px 10px rgba(109, 109, 109, 0.25), inset 0px 1px 0px rgba(255, 255, 255, 0.3)",
-        borderRadius: borderRadius, //из пропсов либо стандартные
+        borderRadius: borderRadius,
+        textTransform: "none",
       }}
-      //если размеры не заданы то принимает размер медиум
       variant={isActive(redirectPath) ? "contained" : variant ? variant : "outlined"}
-      //if no redirectPath and variant in props , use  variant style
-      onClick={handleClick} // props: onClickCallBack={onClickHandler}
+      onClick={handleClick}
       color={color}
-      startIcon={startIcon} // передаем иконку как компоненту в пропсах startIcon={<Icon />}
-      endIcon={endIcon} // // передаем иконку как компоненту в пропсах endIcon={<Icon />}
+      startIcon={startIcon}
+      endIcon={endIcon}
     >
       {name ? name : "button"}
     </Button>

@@ -157,8 +157,14 @@ export const Packs = () => {
           <div className={s.showCards}>
             <span>Show packs cards</span>
             <div className={s.buttons}>
-              <SuperButton name={"My"} onClickCallBack={showMyPacks} height={"36px"} />
-              <SuperButton name={"All"} onClickCallBack={showFriendsPacks} height={"36px"} />
+              <SuperButton name={"My"} onClickCallBack={showMyPacks} width={"90px"} variant={"contained"} />
+              <SuperButton
+                name={"All"}
+                onClickCallBack={showFriendsPacks}
+                width={"90px"}
+                variant={"contained"}
+              />
+              {/*TODO contained of active my/all*/}
             </div>
           </div>
           <div className={s.slider}>
@@ -173,7 +179,7 @@ export const Packs = () => {
           </div>
           <div className={s.resetFilter}>
             <IconButton aria-label="filterOff" onClick={resetFiltersHandler}>
-              <FilterAltOffIcon />
+              <FilterAltOffIcon color={"primary"} />
             </IconButton>
           </div>
         </div>
