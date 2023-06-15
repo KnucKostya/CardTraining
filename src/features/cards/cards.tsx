@@ -174,26 +174,6 @@ export const Cards = () => {
                               style={{ marginLeft: "7%", cursor: "pointer" }}
                               onClick={() => removeCardHandle(row._id, row.cardsPack_id)}
                             />
-                            {/*<div>*/}
-                            {/*  <SuperButton*/}
-                            {/*    name={"delete"}*/}
-                            {/*    color={"error"}*/}
-                            {/*    width={"15px"}*/}
-                            {/*    height={"25px"}*/}
-                            {/*    onClickCallBack={() => removeCardHandle(row._id, row.cardsPack_id)}*/}
-                            {/*  />*/}
-                            {/*</div>*/}
-                            {/*<div>*/}
-                            {/*  <SuperButton*/}
-                            {/*    name={"edit"}*/}
-                            {/*    color={"primary"}*/}
-                            {/*    width={"15px"}*/}
-                            {/*    height={"25px"}*/}
-                            {/*    onClickCallBack={() =>*/}
-                            {/*      editCardHandle(row.cardsPack_id, row._id, row.question)*/}
-                            {/*    }*/}
-                            {/*  />*/}
-                            {/*</div>*/}
                           </div>
                         ) : (
                           "not your card"
