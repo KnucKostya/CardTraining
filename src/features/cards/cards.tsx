@@ -28,14 +28,42 @@ import {
 } from "features/cards/cardsSelectors";
 import { DropDownMenu } from "common/components/DropDownMenu/DropDownMenu";
 
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+import Button from "@mui/material/Button";
+import { isLoading_Selector } from "../../app/appSelector";
+
+// export default function SimpleBackdrop() {
+//   const [open, setOpen] = React.useState(false);
+//   const handleClose = () => {
+//     setOpen(false);
+//   };
+//   const handleOpen = () => {
+//     setOpen(true);
+//   };
+//
+//   return (
+//     <div>
+//       <Button onClick={handleOpen}>Show backdrop</Button>
+//       <Backdrop
+//         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+//         open={open}
+//         onClick={handleClose}
+//       >
+//         <CircularProgress color="inherit" />
+//       </Backdrop>
+//     </div>
+//   );
+// }
+
 export const Cards = () => {
   const dispatch = useAppDispatch();
   const cards = useAppSelector(cardsSelector);
   const userId = useAppSelector(cardUserIdSelector);
   const packName = useAppSelector(packNameSelector);
   const packUserId = useAppSelector(packUserIdSelector);
+  const isLoading = useAppSelector(isLoading_Selector);
   const { packId } = useParams();
-  console.log(packId);
   const url = useLocation().pathname;
   const navigate = useNavigate();
   sessionStorage.setItem("url", url);
@@ -188,6 +216,20 @@ export const Cards = () => {
                 )}
               </TableBody>
             </Table>
+            <Backdrop
+              sx={{
+                color: "#fff",
+                zIndex: (theme) => theme.zIndex.drawer + 1,
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+              }}
+              open={isLoading}
+            >
+              <CircularProgress color="inherit" />
+            </Backdrop>
           </TableContainer>
           <div className={s.paginationContainer}>
             -----------------pagination for Valentin----------------

@@ -9,6 +9,7 @@ import { packNameSelector } from "features/cards/cardsSelectors";
 import { useAppDispatch } from "common/hooks/useAppDispatch";
 import { cardsActions } from "features/cards/cardsSlice";
 import { AxiosResponse } from "axios";
+import { appActions } from "../../../app/appSlice";
 
 export function DropDownMenu(props: DropDownMenu) {
   const { packId } = props;
@@ -32,9 +33,10 @@ export function DropDownMenu(props: DropDownMenu) {
     isPackId((_id: string) =>
       packsApi
         .updatePack({ _id, name: `absolutely New Name ${number}` })
-        .then((res: AxiosResponse<UpdatePackResponseType>) =>
-          dispatch(cardsActions.addPackName(res.data.updatedCardsPack.name))
-        )
+        .then((res: AxiosResponse<UpdatePackResponseType>) => {
+          dispatch(appActions.setIsLoading({ isLoading: true }));
+          dispatch(cardsActions.addPackName(res.data.updatedCardsPack.name));
+        })
     );
     setAnchorEl(null);
   };

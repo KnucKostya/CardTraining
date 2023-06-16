@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
 import { cardsApi, GetCardsResponse } from "./cardsApi";
 import { thunkTryCatch } from "common/utils/thunkTryCatch";
+import { appActions } from "../../app/appSlice";
 
 const getCards = createAppAsyncThunk<GetCardsResponse, { packId: string }>(
   "cards/get",
