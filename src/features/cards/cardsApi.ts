@@ -1,4 +1,4 @@
-import { instance } from "../../common/instance/instance";
+import { instance } from "common/instance/instance";
 const testiD = "6487562faa11d8a942e76123";
 // 6487562faa11d8a942e76123
 
@@ -16,8 +16,7 @@ export const cardsApi = {
     });
   },
   addCard: (packId: string, question?: string, answer?: string) => {
-    console.log(packId);
-    return instance.post("cards/card", { card: { cardsPack_id: testiD } });
+    return instance.post("cards/card", { card: { cardsPack_id: packId } });
   },
   editCard: (cardId: string, question: string) => {
     return instance.put("/cards/card", { card: { _id: cardId, question } });
@@ -38,6 +37,7 @@ export type CardType = {
 
 export type GetCardsResponse = {
   cards: CardType[];
+  packName: string;
   cardsTotalCount: number;
   maxGrade: number;
   minGrade: number;

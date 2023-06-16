@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
-import { useAppDispatch } from "../../common/hooks/useAppDispatch";
+import { useAppDispatch } from "common/hooks/useAppDispatch";
 import s from "./cards.module.scss";
-import { SuperButton } from "../../common/components/super-button/SuperButton";
+import { SuperButton } from "common/components/super-button/SuperButton";
 import { cardsThunks } from "./cardsSlice";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -12,33 +12,35 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
-import { useAppSelector } from "../../common/hooks/useAppSelector";
-import { authApi } from "../auth/authApi";
-import { useLocation, useParams, useNavigate } from "react-router-dom";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { useAppSelector } from "common/hooks/useAppSelector";
+import { authApi } from "features/auth";
+import { useLocation, useParams, useNavigate, Link } from "react-router-dom";
 import StarPurple500SharpIcon from "@mui/icons-material/StarPurple500Sharp";
-// my UserID 6484c990b61ce7c3677f4356
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
-function createData(
-  question: string,
-  answer: string,
-  updated: number,
-  grade: number,
-  actions?: any
-) {
-  return { question, answer, updated, grade, actions };
-}
+import {
+  cardsSelector,
+  cardUserIdSelector,
+  packNameSelector,
+  packUserIdSelector,
+} from "features/cards/cardsSelectors";
+import { DropDownMenu } from "common/components/DropDownMenu/DropDownMenu";
 
 export const Cards = () => {
-  const cards = useAppSelector((state) => state.cards?.cards?.cards);
-  const userId = useAppSelector((state) => state.auth.profile?._id);
   const dispatch = useAppDispatch();
+  const cards = useAppSelector(cardsSelector);
+  const userId = useAppSelector(cardUserIdSelector);
+  const packName = useAppSelector(packNameSelector);
+  const packUserId = useAppSelector(packUserIdSelector);
   const { packId } = useParams();
+  console.log(packId);
   const url = useLocation().pathname;
   const navigate = useNavigate();
   sessionStorage.setItem("url", url);
 
   const [inputValue, setInputValue] = useState<string>("");
-
   const onInputChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.currentTarget.value);
   };
@@ -102,7 +104,18 @@ export const Cards = () => {
   return (
     <div className={s.packContainer}>
       <div className={s.insideContainer}>
-        <h2 className={s.packName}>Pack Name</h2>
+        <span>
+          <Link to={"/packs"} style={{ textDecoration: "none", color: "black" }}>
+            <div className={s.backToCards}>
+              <ArrowBackIcon style={{ position: "relative", top: "3px", fontSize: "medium" }} />
+              <span>Back to packs</span>
+            </div>
+          </Link>
+          <h2 className={s.packName}>
+            {packName}
+            <DropDownMenu packId={packId} />
+          </h2>
+        </span>
         <div className={s.searchContainer}>
           <div className={s.bal}>
             <SearchIcon className={s.searchIcon} />
@@ -114,7 +127,7 @@ export const Cards = () => {
             ></input>
             <CloseIcon className={s.closeIcon} onClick={() => setInputValue("")} />
           </div>
-          {cards?.[0]?.user_id === userId ? (
+          {packUserId === userId ? (
             <span>
               <SuperButton
                 name={"Add New Card"}
@@ -141,10 +154,7 @@ export const Cards = () => {
               <TableBody>
                 {cards?.length ? (
                   cards.map((row) => (
-                    <TableRow
-                      key={row._id}
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                    >
+                    <TableRow key={row._id} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                       <TableCell component="th" scope="row">
                         {row.question}
                       </TableCell>
@@ -152,31 +162,18 @@ export const Cards = () => {
                       <TableCell align="right">
                         <div>{row.updated.slice(5, 10).replace("-", ".")}</div>
                       </TableCell>
-                      {!row.grade ? <TableCell>0</TableCell> : StarsRating(5)}
-                      {/*{!row.grade ? <TableCell align="right">0</TableCell> : StarsRating(5)}*/}
+                      {!row.grade ? <TableCell align="right">0</TableCell> : StarsRating(row.grade)}
                       <TableCell align="right">
                         {userId === row.user_id ? (
                           <div>
-                            <div>
-                              <SuperButton
-                                name={"delete"}
-                                color={"error"}
-                                width={"15px"}
-                                height={"25px"}
-                                onClickCallBack={() => removeCardHandle(row._id, row.cardsPack_id)}
-                              />
-                            </div>
-                            <div>
-                              <SuperButton
-                                name={"edit"}
-                                color={"primary"}
-                                width={"15px"}
-                                height={"25px"}
-                                onClickCallBack={() =>
-                                  editCardHandle(row.cardsPack_id, row._id, row.question)
-                                }
-                              />
-                            </div>
+                            <EditIcon
+                              style={{ cursor: "pointer" }}
+                              onClick={() => editCardHandle(row.cardsPack_id, row._id, row.question)}
+                            />
+                            <DeleteIcon
+                              style={{ marginLeft: "7%", cursor: "pointer" }}
+                              onClick={() => removeCardHandle(row._id, row.cardsPack_id)}
+                            />
                           </div>
                         ) : (
                           "not your card"
