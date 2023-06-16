@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import { useAppSelector } from "common/hooks/useAppSelector";
 import { useActions } from "common/hooks/useActions";
 import { packs_Selector } from "features/packs/packsSelector";
-import { CardType } from "features/cards/cardsApi";
 import s from "features/learn/Learn.module.scss";
 import { SuperButton } from "common/components/super-button/SuperButton";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -14,6 +13,7 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import { RouteNames } from "app/routes";
 import GradeTwoToneIcon from "@mui/icons-material/GradeTwoTone";
+import { CardType } from "features/cards/cardsApi";
 
 const grades = [
   { answer: "Didn't know", id: 1 },

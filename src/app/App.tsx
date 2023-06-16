@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import "./App.css";
 import { Outlet, useNavigate } from "react-router-dom";
-import { useAppSelector } from "../common/hooks/useAppSelector";
-import { Header } from "../features/Header/Header";
-import { authThunks } from "../features/auth/authSlice";
-import { useAppDispatch } from "../common/hooks/useAppDispatch";
+import { useAppSelector } from "common/hooks/useAppSelector";
+import { Header } from "features/Header/Header";
+import { authThunks } from "features/auth/authSlice";
+import { useAppDispatch } from "common/hooks/useAppDispatch";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { isLoading_Selector } from "./appSelector";
@@ -24,7 +24,7 @@ function App() {
       })
       .catch((e) => console.log(e.errorMessage));
     //TODO:  how to delete log ?
-  }, [dispatch]);
+  }, []);
 
   return (
     <div className="App">

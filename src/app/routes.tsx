@@ -1,16 +1,16 @@
 import { createHashRouter, createRoutesFromElements, Navigate, Route, useParams } from "react-router-dom";
 import ErrorPage from "../common/error-page/ErrorPage";
-import { Profile } from "../features/profile/profile";
-import { Login } from "../features/login/login";
-import { Register } from "../features/auth/register/register";
-import { CheckEmail } from "../features/auth/checkEmail/checkEmail";
+import { Profile } from "features/profile/profile";
+import { Login } from "features/login/login";
+import { Register } from "features/auth/register/register";
+import { CheckEmail } from "features/auth/checkEmail/checkEmail";
 import { Learn } from "features/learn/Learn";
 import React from "react";
 import App from "./App";
-import { Packs } from "../features/packs/Packs";
-import { Cards } from "../features/cards/cards";
-import { FogotPassword } from "../features/auth/forgotPassword/forgotPassword";
-import { SetPassword } from "../features/auth/setNewPassword/setNewPassword";
+import { Packs } from "features/packs/Packs";
+import { Cards } from "features/cards";
+import { FogotPassword } from "features/auth/forgotPassword/forgotPassword";
+import { SetPassword } from "features/auth/setNewPassword/setNewPassword";
 
 export enum RouteNames {
   START_PAGE = "/",
