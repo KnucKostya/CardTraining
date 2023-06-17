@@ -1,7 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { useAppDispatch } from "common/hooks/useAppDispatch";
 import s from "./cards.module.scss";
-import { SuperButton } from "common/components/super-button/SuperButton";
 import { cardsThunks } from "./cardsSlice";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -12,14 +11,11 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { useAppSelector } from "common/hooks/useAppSelector";
 import { authApi } from "features/auth";
-import { useLocation, useParams, useNavigate, Link } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import StarPurple500SharpIcon from "@mui/icons-material/StarPurple500Sharp";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-
 import {
   cardsSelector,
   cardUserIdSelector,
@@ -27,34 +23,14 @@ import {
   packUserIdSelector,
 } from "features/cards/cardsSelectors";
 import { DropDownMenu } from "common/components/DropDownMenu/DropDownMenu";
-
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
-import Button from "@mui/material/Button";
 import { isLoading_Selector } from "../../app/appSelector";
-
-// export default function SimpleBackdrop() {
-//   const [open, setOpen] = React.useState(false);
-//   const handleClose = () => {
-//     setOpen(false);
-//   };
-//   const handleOpen = () => {
-//     setOpen(true);
-//   };
-//
-//   return (
-//     <div>
-//       <Button onClick={handleOpen}>Show backdrop</Button>
-//       <Backdrop
-//         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-//         open={open}
-//         onClick={handleClose}
-//       >
-//         <CircularProgress color="inherit" />
-//       </Backdrop>
-//     </div>
-//   );
-// }
+import { toast } from "react-toastify";
+import { BaseModal } from "../../common/components/BasicModal/BaseModal";
+import { AddCard } from "./modals/AddCard";
+import { EditCard } from "./modals/EditCard";
+import { DeleteCard } from "./modals/DeleteCard";
 
 export const Cards = () => {
   const dispatch = useAppDispatch();
@@ -81,16 +57,20 @@ export const Cards = () => {
     //TODO remove all "!"
   };
 
-  const addNewCard = (question?: string, answer?: string) => {
-    dispatch(cardsThunks.addNewCard({ packId: packId! }))
+  const addNewCardHandle = (question: string, answer: string) => {
+    console.log();
+    dispatch(cardsThunks.addNewCard({ packId: packId!, answer, question }))
       .unwrap()
       .then(() => dispatch(cardsThunks.getCards({ packId: packId! })));
   };
 
-  const editCardHandle = (cardsPackId: string, cardId: string, question: string) => {
-    dispatch(cardsThunks.editCard({ cardId, question: " Question" }))
+  const editCardHandle = (cardsPackId: string, cardId: string, question: string, answer: string) => {
+    dispatch(cardsThunks.editCard({ cardId, question, answer }))
       .unwrap()
-      .then(() => dispatch(cardsThunks.getCards({ packId: cardsPackId })));
+      .then(() => dispatch(cardsThunks.getCards({ packId: cardsPackId })))
+      .catch((e) => {
+        toast.error(e);
+      });
   };
 
   function StarsRating(count: number) {
@@ -141,7 +121,7 @@ export const Cards = () => {
           </Link>
           <h2 className={s.packName}>
             {packName}
-            <DropDownMenu packId={packId} />
+            {packUserId === userId && <DropDownMenu packId={packId} />}
           </h2>
         </span>
         <div className={s.searchContainer}>
@@ -157,13 +137,9 @@ export const Cards = () => {
           </div>
           {packUserId === userId ? (
             <span>
-              <SuperButton
-                name={"Add New Card"}
-                color={"secondary"}
-                height={"40px"}
-                width={"auto"}
-                onClickCallBack={addNewCard}
-              />
+              <BaseModal modalTitle={"Add new card"} buttonType={"base"}>
+                {(close) => <AddCard closeModal={close} addCardCallback={addNewCardHandle} />}
+              </BaseModal>
             </span>
           ) : null}
         </div>
@@ -194,14 +170,28 @@ export const Cards = () => {
                       <TableCell align="right">
                         {userId === row.user_id ? (
                           <div>
-                            <EditIcon
-                              style={{ cursor: "pointer" }}
-                              onClick={() => editCardHandle(row.cardsPack_id, row._id, row.question)}
-                            />
-                            <DeleteIcon
-                              style={{ marginLeft: "7%", cursor: "pointer" }}
-                              onClick={() => removeCardHandle(row._id, row.cardsPack_id)}
-                            />
+                            <BaseModal buttonType={"iconEdit"} modalTitle={"Edit card"}>
+                              {(close) => (
+                                <EditCard
+                                  closeModal={close}
+                                  editCardCallback={(question, answer) =>
+                                    editCardHandle(row.cardsPack_id, row._id, question, answer)
+                                  }
+                                />
+                              )}
+                            </BaseModal>
+                            <BaseModal buttonType={"iconDelete"} modalTitle={"Delete Card"}>
+                              {(close) => (
+                                <DeleteCard
+                                  closeModal={close}
+                                  deleteCardCallback={() => removeCardHandle(row._id, row.cardsPack_id)}
+                                />
+                              )}
+                            </BaseModal>
+                            {/*<DeleteIcon*/}
+                            {/*  style={{ marginLeft: "7%", cursor: "pointer" }}*/}
+                            {/*  onClick={() => removeCardHandle(row._id, row.cardsPack_id)}*/}
+                            {/*/>*/}
                           </div>
                         ) : (
                           "not your card"

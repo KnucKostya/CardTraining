@@ -38,7 +38,7 @@ export function BaseModal({ children, modalTitle, buttonType }: BaseModalPropsTy
     <>
       {buttonType === "base" ? (
         <SuperButton
-          name={"Add new pack"}
+          name={modalTitle}
           height={"36px"}
           borderRadius={"30px"}
           variant={"contained"}

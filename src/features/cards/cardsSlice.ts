@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
 import { cardsApi, GetCardsResponse } from "./cardsApi";
 import { thunkTryCatch } from "common/utils/thunkTryCatch";
-import { appActions } from "../../app/appSlice";
 
 const getCards = createAppAsyncThunk<GetCardsResponse, { packId: string }>(
   "cards/get",
@@ -28,23 +27,26 @@ const removeCard = createAppAsyncThunk<any, { cardId: string }>("cards/delete", 
     false
   );
 });
-const addNewCard = createAppAsyncThunk<any, { packId: string }>("cards/add", async (arg, thunkAPI) => {
-  return thunkTryCatch(
-    thunkAPI,
-    async () => {
-      const res = await cardsApi.addCard(arg.packId);
-      return res.data;
-    },
-    false
-  );
-});
-const editCard = createAppAsyncThunk<any, { cardId: string; question: string }>(
+const addNewCard = createAppAsyncThunk<any, { packId: string; question: string; answer: string }>(
+  "cards/add",
+  async (arg, thunkAPI) => {
+    return thunkTryCatch(
+      thunkAPI,
+      async () => {
+        const res = await cardsApi.addCard(arg.packId, arg.question, arg.answer);
+        return res.data;
+      },
+      false
+    );
+  }
+);
+const editCard = createAppAsyncThunk<any, { cardId: string; question: string; answer: string }>(
   "cards/edit",
   async (arg, thunkAPI) => {
     return thunkTryCatch(
       thunkAPI,
       async () => {
-        const res = await cardsApi.editCard(arg.cardId, arg.question);
+        const res = await cardsApi.editCard(arg.cardId, arg.question, arg.answer);
         return res.data;
       },
       false

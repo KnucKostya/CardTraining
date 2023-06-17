@@ -1,6 +1,4 @@
 import { instance } from "common/instance/instance";
-const testiD = "6487562faa11d8a942e76123";
-// 6487562faa11d8a942e76123
 
 export const cardsApi = {
   getCards: (packId: string) => {
@@ -15,13 +13,14 @@ export const cardsApi = {
       },
     });
   },
-  addCard: (packId: string, question?: string, answer?: string) => {
-    return instance.post("cards/card", { card: { cardsPack_id: packId } });
+  addCard: (packId: string, question: string, answer: string) => {
+    return instance.post<PostCard>("cards/card", { card: { cardsPack_id: packId, question, answer } });
   },
-  editCard: (cardId: string, question: string) => {
-    return instance.put("/cards/card", { card: { _id: cardId, question } });
+  editCard: (cardId: string, question: string, answer: string) => {
+    return instance.put("/cards/card", { card: { _id: cardId, question, answer } });
   },
 };
+//TODO typisate api Response
 
 export type CardType = {
   answer: string;
@@ -44,4 +43,18 @@ export type GetCardsResponse = {
   page: number;
   pageCount: number;
   packUserId: string;
+};
+
+export type PostCard = {
+  card: {
+    cardsPack_id: string;
+    question: string;
+    answer: string;
+    grade?: number;
+    shots?: number;
+    answerImg?: string;
+    questionImg?: string;
+    questionVideo?: string;
+    answerVideo?: string;
+  };
 };
