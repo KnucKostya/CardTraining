@@ -1,9 +1,9 @@
 import { instance } from "common/instance/instance";
 
 export const cardsApi = {
-  getCards: (packId: string) => {
+  getCards: (packId: string,page?:number,pageCount?:number,packName?: string) => {
     return instance.get<GetCardsResponse>(`cards/card`, {
-      params: { cardsPack_id: packId, pageCount: 6 },
+      params: { cardsPack_id: packId, page,pageCount, packName},
     });
   },
   removeCard: (cardId: string) => {
@@ -33,6 +33,7 @@ export type GetCardsResponse = {
     updated: string;
     _id: string;
   }[];
+  cardsTotalCount:number,
   packName: string;
   maxGrade: number;
   minGrade: number;

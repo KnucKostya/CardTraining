@@ -8,8 +8,8 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 
 type SearchBarPropsType = {
-  queryParams: QueryParamsType;
-  setQueryParams: React.Dispatch<React.SetStateAction<QueryParamsType>>;
+  queryParams: any;
+  setQueryParams: React.Dispatch<React.SetStateAction<any>>;
   searchValue: string;
   setSearchValue: React.Dispatch<React.SetStateAction<string>>;
 };
@@ -38,14 +38,14 @@ export const SearchBar = ({
 
   useEffect(() => {
     if (isMounted) {
-      setQueryParams({ ...queryParams, packName: debouncedPackName });
+      setQueryParams({ ...queryParams, cardName: debouncedPackName });
     }
   }, [debouncedPackName]);
 
   return (
     <Paper
       component="form"
-      sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: 413, height: 33 }}
+      sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: 910, height: 33 }}
     >
       <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
         <SearchIcon />

@@ -19,27 +19,53 @@ import { authApi } from "features/auth";
 import { useLocation, useParams, useNavigate, Link } from "react-router-dom";
 import StarPurple500SharpIcon from "@mui/icons-material/StarPurple500Sharp";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import TablePagination from '@mui/material/TablePagination';
+import { SearchBar } from "features/packs/search-bar/SearchBar";
 
 import {
+  cardsCountSelector,
   cardsSelector,
   cardUserIdSelector,
   packNameSelector,
-  packUserIdSelector,
+  packUserIdSelector
 } from "features/cards/cardsSelectors";
 import { DropDownMenu } from "common/components/DropDownMenu/DropDownMenu";
+import { SelectChangeEvent } from "@mui/material/Select";
 
+
+type QueryParamsType = {
+  cardName:string,
+  page: number;
+  pageCount: number;
+  };
 export const Cards = () => {
   const dispatch = useAppDispatch();
   const cards = useAppSelector(cardsSelector);
   const userId = useAppSelector(cardUserIdSelector);
   const packName = useAppSelector(packNameSelector);
   const packUserId = useAppSelector(packUserIdSelector);
+  const cardsCount=useAppSelector(cardsCountSelector);
   const { packId } = useParams();
   console.log(packId);
   const url = useLocation().pathname;
   const navigate = useNavigate();
   sessionStorage.setItem("url", url);
+  const [queryParams, setQueryParams] = useState<QueryParamsType>({
+    cardName:"",
+    page: 1,
+    pageCount: 4,
+   });
+  const [searchBarValue, setSearchBarValue] = useState(queryParams.cardName);
+  const cardsPaginationCount: number = cardsCount
+    ? Math.ceil(cardsCount / queryParams.pageCount)
+    : 10;
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setQueryParams({ ...queryParams, page: newPage });
+  };
 
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setQueryParams({ ...queryParams, pageCount: +event.target.value });
+  };
   const [inputValue, setInputValue] = useState<string>("");
   const onInputChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.currentTarget.value);
@@ -48,7 +74,7 @@ export const Cards = () => {
   const removeCardHandle = (cardId: string, packId: string) => {
     dispatch(cardsThunks.removeCard({ cardId }))
       .unwrap()
-      .then(() => dispatch(cardsThunks.getCards({ packId })));
+      .then(() => dispatch(cardsThunks.getCards({ packId,...queryParams })));
     //TODO catch for every handler
     //TODO remove all "!"
   };
@@ -56,13 +82,13 @@ export const Cards = () => {
   const addNewCard = (question?: string, answer?: string) => {
     dispatch(cardsThunks.addNewCard({ packId: packId! }))
       .unwrap()
-      .then(() => dispatch(cardsThunks.getCards({ packId: packId! })));
+      .then(() => dispatch(cardsThunks.getCards({ packId: packId!,...queryParams })));
   };
 
   const editCardHandle = (cardsPackId: string, cardId: string, question: string) => {
     dispatch(cardsThunks.editCard({ cardId, question: " Question" }))
       .unwrap()
-      .then(() => dispatch(cardsThunks.getCards({ packId: cardsPackId })));
+      .then(() => dispatch(cardsThunks.getCards({ packId: cardsPackId,...queryParams })));
   };
 
   function StarsRating(count: number) {
@@ -91,10 +117,10 @@ export const Cards = () => {
     //     dispatch(cardsThunks.getCards({ packId: packId }));
     //   });
     if (!packId) return;
-    dispatch(cardsThunks.getCards({ packId: packId }))
+    dispatch(cardsThunks.getCards({ packId: packId,...queryParams }))
       .unwrap()
       .then(() => authApi.isAuth);
-  }, [dispatch]);
+  }, [dispatch,queryParams]);
 
   useEffect(() => {
     let getUrl = sessionStorage.getItem("url");
@@ -118,13 +144,13 @@ export const Cards = () => {
         </span>
         <div className={s.searchContainer}>
           <div className={s.bal}>
-            <SearchIcon className={s.searchIcon} />
-            <input
-              className={s.input}
-              placeholder="Search..."
-              value={inputValue}
-              onChange={onInputChangeHandler}
-            ></input>
+            <span>Search</span>
+            <SearchBar
+              queryParams={queryParams}
+              setQueryParams={setQueryParams}
+              searchValue={searchBarValue}
+              setSearchValue={setSearchBarValue}
+            />
             <CloseIcon className={s.closeIcon} onClick={() => setInputValue("")} />
           </div>
           {packUserId === userId ? (
@@ -209,9 +235,16 @@ export const Cards = () => {
               </TableBody>
             </Table>
           </TableContainer>
-          <div className={s.paginationContainer}>
-            -----------------pagination for Valentin----------------
-          </div>
+          <TablePagination
+              rowsPerPageOptions={[4,6,8,10]}
+              component="div"
+              count={cardsPaginationCount}
+              rowsPerPage={queryParams.pageCount}
+              page={queryParams.page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+
         </div>
       </div>
     </div>
