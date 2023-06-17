@@ -19,9 +19,7 @@ import { authApi } from "features/auth";
 import { useLocation, useParams, useNavigate, Link } from "react-router-dom";
 import StarPurple500SharpIcon from "@mui/icons-material/StarPurple500Sharp";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import TablePagination from '@mui/material/TablePagination';
-import { SearchBar } from "features/packs/search-bar/SearchBar";
-
+import TablePagination from "@mui/material/TablePagination";
 import {
   cardsCountSelector,
   cardsSelector,
@@ -30,51 +28,59 @@ import {
   packUserIdSelector
 } from "features/cards/cardsSelectors";
 import { DropDownMenu } from "common/components/DropDownMenu/DropDownMenu";
-import { SelectChangeEvent } from "@mui/material/Select";
+import { SearchCards } from "features/cards/SearchCards/SearchCards";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import Pagination from "@mui/material/Pagination";
 
 
-type QueryParamsType = {
-  cardName:string,
+export type QueryParamsTypeCards = {
+  cardQuestion: string,
+  cardAnswer: string,
   page: number;
   pageCount: number;
-  };
+};
 export const Cards = () => {
   const dispatch = useAppDispatch();
   const cards = useAppSelector(cardsSelector);
   const userId = useAppSelector(cardUserIdSelector);
   const packName = useAppSelector(packNameSelector);
   const packUserId = useAppSelector(packUserIdSelector);
-  const cardsCount=useAppSelector(cardsCountSelector);
+  const cardsCount = useAppSelector(cardsCountSelector);
   const { packId } = useParams();
   console.log(packId);
   const url = useLocation().pathname;
   const navigate = useNavigate();
   sessionStorage.setItem("url", url);
-  const [queryParams, setQueryParams] = useState<QueryParamsType>({
-    cardName:"",
+  const [queryParams, setQueryParams] = useState<QueryParamsTypeCards>({
+    cardQuestion: "",
+    cardAnswer: "",
     page: 1,
-    pageCount: 4,
-   });
-  const [searchBarValue, setSearchBarValue] = useState(queryParams.cardName);
+    pageCount: 4
+  });
+  console.log("page",queryParams.page);
+  console.log("pageCount",queryParams.pageCount);
+  const [searchBarValue, setSearchBarValue] = useState(queryParams.cardQuestion);
   const cardsPaginationCount: number = cardsCount
     ? Math.ceil(cardsCount / queryParams.pageCount)
     : 10;
   const handleChangePage = (event: unknown, newPage: number) => {
     setQueryParams({ ...queryParams, page: newPage });
   };
-
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setQueryParams({ ...queryParams, pageCount: +event.target.value });
   };
-  const [inputValue, setInputValue] = useState<string>("");
-  const onInputChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.currentTarget.value);
+const paginationChangeHandler = (event: React.ChangeEvent<unknown>, value: number) => {
+    setQueryParams({ ...queryParams, page: value });
   };
-
+  const changeCountRows = (event: SelectChangeEvent) => {
+    setQueryParams({ ...queryParams, pageCount: +event.target.value });
+  };
   const removeCardHandle = (cardId: string, packId: string) => {
     dispatch(cardsThunks.removeCard({ cardId }))
       .unwrap()
-      .then(() => dispatch(cardsThunks.getCards({ packId,...queryParams })));
+      .then(() => dispatch(cardsThunks.getCards({ packId, ...queryParams })));
     //TODO catch for every handler
     //TODO remove all "!"
   };
@@ -82,13 +88,13 @@ export const Cards = () => {
   const addNewCard = (question?: string, answer?: string) => {
     dispatch(cardsThunks.addNewCard({ packId: packId! }))
       .unwrap()
-      .then(() => dispatch(cardsThunks.getCards({ packId: packId!,...queryParams })));
+      .then(() => dispatch(cardsThunks.getCards({ packId: packId!, ...queryParams })));
   };
 
   const editCardHandle = (cardsPackId: string, cardId: string, question: string) => {
     dispatch(cardsThunks.editCard({ cardId, question: " Question" }))
       .unwrap()
-      .then(() => dispatch(cardsThunks.getCards({ packId: cardsPackId,...queryParams })));
+      .then(() => dispatch(cardsThunks.getCards({ packId: cardsPackId, ...queryParams })));
   };
 
   function StarsRating(count: number) {
@@ -117,10 +123,10 @@ export const Cards = () => {
     //     dispatch(cardsThunks.getCards({ packId: packId }));
     //   });
     if (!packId) return;
-    dispatch(cardsThunks.getCards({ packId: packId,...queryParams }))
+    dispatch(cardsThunks.getCards({ packId: packId, ...queryParams }))
       .unwrap()
       .then(() => authApi.isAuth);
-  }, [dispatch,queryParams]);
+  }, [dispatch, queryParams]);
 
   useEffect(() => {
     let getUrl = sessionStorage.getItem("url");
@@ -145,13 +151,13 @@ export const Cards = () => {
         <div className={s.searchContainer}>
           <div className={s.bal}>
             <span>Search</span>
-            <SearchBar
+            <SearchCards
               queryParams={queryParams}
               setQueryParams={setQueryParams}
               searchValue={searchBarValue}
               setSearchValue={setSearchBarValue}
             />
-            <CloseIcon className={s.closeIcon} onClick={() => setInputValue("")} />
+            {/*<CloseIcon className={s.closeIcon} onClick={() => setInputValue("")} />*/}
           </div>
           {packUserId === userId ? (
             <span>
@@ -235,16 +241,34 @@ export const Cards = () => {
               </TableBody>
             </Table>
           </TableContainer>
-          <TablePagination
-              rowsPerPageOptions={[4,6,8,10]}
-              component="div"
+          <div className={s.paginationBlock}>
+            <Pagination
+              shape={"rounded"}
               count={cardsPaginationCount}
-              rowsPerPage={queryParams.pageCount}
+              color="primary"
               page={queryParams.page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-
+              onChange={paginationChangeHandler}
+            />
+            <span>Show</span>
+            <FormControl>
+              <Select value={queryParams.pageCount.toString()} onChange={changeCountRows} autoWidth>
+                <MenuItem value={"4"}>4</MenuItem>
+                <MenuItem value={"6"}>6</MenuItem>
+                <MenuItem value={"8"}>8</MenuItem>
+                <MenuItem value={"10"}>10</MenuItem>
+              </Select>
+            </FormControl>
+            <span>Packs per page</span>
+          </div>
+          {/*<TablePagination*/}
+          {/*  rowsPerPageOptions={[4, 6, 8, 10]}*/}
+          {/*  component="div"*/}
+          {/*  count={cardsPaginationCount}*/}
+          {/*  rowsPerPage={queryParams.pageCount}*/}
+          {/*  page={queryParams.page}*/}
+          {/*  onPageChange={handleChangePage}*/}
+          {/*  onRowsPerPageChange={handleChangeRowsPerPage}*/}
+          {/*/>*/}
         </div>
       </div>
     </div>
