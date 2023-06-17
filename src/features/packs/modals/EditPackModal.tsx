@@ -5,9 +5,10 @@ import Checkbox from "@mui/material/Checkbox";
 import { SuperButton } from "common/components/super-button/SuperButton";
 import { useActions } from "common/hooks/useActions";
 import { packsThunks } from "features/packs/packsSlice";
+import { ReactNode } from "react";
 
 type PropsType = {
-  closeModal: () => void;
+  closeModal: () => void | ReactNode;
   _id: string;
   packName: string;
 };

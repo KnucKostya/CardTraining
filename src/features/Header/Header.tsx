@@ -10,7 +10,6 @@ import { isLoading_Selector } from "app/appSelector";
 import { userAvatar_Selector, userName_Selector } from "../auth/authSelector";
 
 export const Header = () => {
-  console.log("header render");
   const isLoading = useAppSelector(isLoading_Selector);
   const userAvatar = useAppSelector(userAvatar_Selector);
   const userName = useAppSelector(userName_Selector);

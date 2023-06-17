@@ -48,6 +48,7 @@ export const updatePack = createAppAsyncThunk<{ pack: CardPackType }, UpdatePack
   async (arg, thunkAPI) => {
     const { dispatch } = thunkAPI;
     return thunkTryCatch(thunkAPI, async () => {
+      dispatch(packsActions.savePackName(arg.name));
       await packsApi.updatePack(arg);
       await dispatch(fetchPacks({}));
       // return {pack: res.data.updatedCardsPack}
@@ -69,7 +70,12 @@ const packsInitialState = {
 const slice = createSlice({
   name: "packs",
   initialState: packsInitialState,
-  reducers: {},
+  reducers: {
+    savePackName: (state, action) => {
+      let packName = state.cardPacks.find((f) => f.name);
+      packName = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchPacks.fulfilled, (state, action) => {
       state.cardPacks = action.payload.packs.cardPacks;

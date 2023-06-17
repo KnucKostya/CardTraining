@@ -16,12 +16,7 @@ import { authApi } from "features/auth";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import StarPurple500SharpIcon from "@mui/icons-material/StarPurple500Sharp";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import {
-  cardsSelector,
-  cardUserIdSelector,
-  packNameSelector,
-  packUserIdSelector,
-} from "features/cards/cardsSelectors";
+import { cardsSelector, cardUserIdSelector, packUserIdSelector } from "features/cards/cardsSelectors";
 import { DropDownMenu } from "common/components/DropDownMenu/DropDownMenu";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -36,7 +31,8 @@ export const Cards = () => {
   const dispatch = useAppDispatch();
   const cards = useAppSelector(cardsSelector);
   const userId = useAppSelector(cardUserIdSelector);
-  const packName = useAppSelector(packNameSelector);
+  // const packName = useAppSelector(packNameSelector);
+  const packName = useAppSelector((state) => state.packs.cardPacks.find((f) => f.name));
   const packUserId = useAppSelector(packUserIdSelector);
   const isLoading = useAppSelector(isLoading_Selector);
   const { packId } = useParams();
@@ -120,7 +116,7 @@ export const Cards = () => {
             </div>
           </Link>
           <h2 className={s.packName}>
-            {packName}
+            {packName?.name}
             {packUserId === userId && <DropDownMenu packId={packId} />}
           </h2>
         </span>

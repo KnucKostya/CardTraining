@@ -3,24 +3,20 @@ import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { packsApi, UpdatePackResponseType } from "features/packs/packsApi";
-import { useAppSelector } from "common/hooks/useAppSelector";
-import { packNameSelector } from "features/cards/cardsSelectors";
+import { packsApi } from "features/packs/packsApi";
 import { useAppDispatch } from "common/hooks/useAppDispatch";
-import { cardsActions } from "features/cards/cardsSlice";
-import { AxiosResponse } from "axios";
-import { appActions } from "../../../app/appSlice";
+import { EditPackModal } from "../../../features/packs/modals/EditPackModal";
+import { BaseModal } from "../BasicModal/BaseModal";
 
 export function DropDownMenu(props: DropDownMenu) {
   const { packId } = props;
   const dispatch = useAppDispatch();
-
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
-
   const isPackId = (fn: (_id: string) => void) => {
     if (packId) fn(packId);
   };
@@ -28,25 +24,18 @@ export function DropDownMenu(props: DropDownMenu) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const editHandle = () => {
-    let number = Math.random().toString();
-    isPackId((_id: string) =>
-      packsApi
-        .updatePack({ _id, name: `absolutely New Name ${number}` })
-        .then((res: AxiosResponse<UpdatePackResponseType>) => {
-          dispatch(appActions.setIsLoading({ isLoading: true }));
-          dispatch(cardsActions.addPackName(res.data.updatedCardsPack.name));
-        })
-    );
+
+  const editHandle = (close: any) => {
     setAnchorEl(null);
   };
+
   const deleteHandle = () => {
     setAnchorEl(null);
     isPackId((_id: string) => packsApi.removePack(_id));
   };
+
   const learnHandle = () => {
     setAnchorEl(null);
-    // packsApi.removePack()
   };
 
   return (
@@ -70,7 +59,12 @@ export function DropDownMenu(props: DropDownMenu) {
           "aria-labelledby": "basic-button",
         }}
       >
-        <MenuItem onClick={editHandle}>Edit</MenuItem>
+        {/*onClick={editHandle}*/}
+        <MenuItem onClick={editHandle}>
+          <BaseModal modalTitle={"Edit"} buttonType={"iconEdit"}>
+            {(close) => <EditPackModal closeModal={close} _id={packId!} packName={"Change pack name"} />}
+          </BaseModal>
+        </MenuItem>
         <MenuItem onClick={deleteHandle}>Delete</MenuItem>
         <MenuItem onClick={learnHandle}>Learn</MenuItem>
       </Menu>
