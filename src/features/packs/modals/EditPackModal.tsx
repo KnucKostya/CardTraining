@@ -1,32 +1,43 @@
 import * as React from "react";
+import { ReactNode } from "react";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { SuperButton } from "common/components/super-button/SuperButton";
 import { useActions } from "common/hooks/useActions";
 import { packsThunks } from "features/packs/packsSlice";
-import { ReactNode } from "react";
+import { useAppSelector } from "../../../common/hooks/useAppSelector";
+import { packNameSelector } from "../../cards/cardsSelectors";
+import { cardsActions } from "../../cards/cardsSlice";
+import { useAppDispatch } from "../../../common/hooks/useAppDispatch";
 
 type PropsType = {
   closeModal: () => void | ReactNode;
   _id: string;
-  packName: string;
+  closeSecondModalHandler?: (value: null | HTMLElement) => void;
 };
 
-export const EditPackModal = ({ closeModal, _id, packName }: PropsType) => {
+export const EditPackModal = ({ closeModal, _id, closeSecondModalHandler }: PropsType) => {
   const { updatePack } = useActions(packsThunks);
+  const dispatch = useAppDispatch();
   const [checked, setChecked] = React.useState(true);
-  const [name, setName] = React.useState(packName);
-
+  const packNameMy = useAppSelector(packNameSelector);
+  const [name, setName] = React.useState(packNameMy);
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
   };
+  const handleSetName = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setName(event.target.value);
+  };
   const cancelHandler = () => {
     closeModal();
+    closeSecondModalHandler && closeSecondModalHandler(null);
   };
   const saveHandler = () => {
     updatePack({ _id, name });
+    dispatch(cardsActions.addPackName(name));
     closeModal();
+    closeSecondModalHandler && closeSecondModalHandler(null);
   };
 
   return (
@@ -41,9 +52,7 @@ export const EditPackModal = ({ closeModal, _id, packName }: PropsType) => {
         sx={{ marginBottom: "29px" }}
         size={"medium"}
         value={name}
-        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-          setName(event.target.value);
-        }}
+        onChange={handleSetName}
         InputProps={{
           style: {
             fontSize: "20px",
