@@ -1,16 +1,16 @@
 import React, { useEffect } from "react";
 import "./App.css";
 import { Outlet, useNavigate } from "react-router-dom";
-import { useAppSelector } from "../common/hooks/useAppSelector";
-import { Header } from "../features/Header/Header";
-import { authThunks } from "../features/auth/authSlice";
-import { useAppDispatch } from "../common/hooks/useAppDispatch";
+import { useAppSelector } from "common/hooks/useAppSelector";
+import { Header } from "features/Header/Header";
+import { authThunks } from "features/auth/authSlice";
+import { useAppDispatch } from "common/hooks/useAppDispatch";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { RouteNames } from "./routes";
+import { isLoading_Selector } from "./appSelector";
 
 function App() {
-  const isLoading = useAppSelector((state) => state.app.isLoading);
+  const isLoading = useAppSelector(isLoading_Selector);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -19,11 +19,12 @@ function App() {
       .unwrap()
       .then((res) => {
         if (res.profile._id) {
-          navigate(RouteNames.PACKS);
+          // navigate(RouteNames.PACKS);
         }
       })
-      .catch((e) => console.error(e));
-  }, [dispatch]);
+      .catch((e) => console.log(e.errorMessage));
+    //TODO:  how to delete log ?
+  }, []);
 
   return (
     <div className="App">
@@ -42,54 +43,9 @@ function App() {
       <Header />
       <div className="mainContainer">
         <Outlet />
-        {/*routes.tsx*/}
-        {/*Outlet используется для рендеринга вложенных маршрутов внутри родительского маршрута*/}
       </div>
     </div>
   );
 }
 
 export default App;
-
-// const router = createBrowserRouter([
-//   {
-//     path: "/",
-//     element: <Register />,
-//   },
-//   {
-//     path: "/cards",
-//     element: <Cards />,
-//   },
-//   {
-//     path: "/checkEmail",
-//     element: <CheckEmail />,
-//   },
-//   {
-//     path: "forgotEmail/",
-//     element: <ForgotEmail />,
-//   },
-//   {
-//     path: "/learn",
-//     element: <Learn />,
-//   },
-//   {
-//     path: "/login",
-//     element: <Login />,
-//   },
-//   {
-//     path: "/packs",
-//     element: <Packs />,
-//   },
-//   {
-//     path: "/profile",
-//     element: <Profile />,
-//   },
-//   {
-//     path: "/register",
-//     element: <Register />,
-//   },
-//   {
-//     path: "/setNewPassword",
-//     element: <SetNewPassword />,
-//   },
-// ]);

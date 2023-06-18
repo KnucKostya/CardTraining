@@ -1,7 +1,5 @@
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppSelector } from "common/hooks/useAppSelector";
-import { RootState } from "app/store";
 import s from "./Packs.module.scss";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -10,12 +8,9 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { useAppDispatch } from "common/hooks/useAppDispatch";
 import { packsThunks } from "features/packs/packsSlice";
 import IconButton from "@mui/material/IconButton";
 import SchoolIcon from "@mui/icons-material/School";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { SuperButton } from "common/components/super-button/SuperButton";
 import { SearchBar } from "features/packs/search-bar/SearchBar";
 import Pagination from "@mui/material/Pagination";
@@ -24,8 +19,22 @@ import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
 import { PacksSlider } from "features/packs/slider/PacksSlider";
-import { makeStyles } from "@mui/styles";
-import { BearLoader } from "../../common/components/BearLoader/BearLoader";
+import TableSortLabel from "@mui/material/TableSortLabel";
+import { useActions } from "common/hooks/useActions";
+import { Link } from "react-router-dom";
+import { isLoading_Selector } from "app/appSelector";
+import {
+  maxCardsCount_Selector,
+  minCardsCount_Selector,
+  packs_Selector,
+  packsCount_Selector,
+} from "./packsSelector";
+import { userId_Selector } from "../auth/authSelector";
+import { Backdrop } from "@mui/material";
+import { AddPackModal } from "features/packs/modals/AddPackModal";
+import { BaseModal } from "common/components/BasicModal/BaseModal";
+import { EditPackModal } from "features/packs/modals/EditPackModal";
+import { DeletePackModal } from "features/packs/modals/DeletePackModal";
 
 export type QueryParamsType = {
   packName: string;
@@ -38,14 +47,13 @@ export type QueryParamsType = {
 };
 
 export const Packs = () => {
-  const dispatch = useAppDispatch();
-  const classes = useStyles();
-  const isLoading = useAppSelector((state) => state.app.isLoading);
-  const cardPacks = useAppSelector((state: RootState) => state.packs.cardPacks);
-  const packsCount = useAppSelector((state: RootState) => state.packs.cardPacksTotalCount);
-  const userId = useAppSelector((state: RootState) => state.auth.profile?._id);
-  const minCardsCount = useAppSelector((state: RootState) => state.packs.minCardsCount);
-  const maxCardsCount = useAppSelector((state: RootState) => state.packs.maxCardsCount);
+  const { fetchPacks } = useActions(packsThunks);
+  const isLoading = useAppSelector(isLoading_Selector);
+  const packs = useAppSelector(packs_Selector);
+  const packsCount = useAppSelector(packsCount_Selector);
+  const userId = useAppSelector(userId_Selector);
+  const minCardsCount = useAppSelector(minCardsCount_Selector);
+  const maxCardsCount = useAppSelector(maxCardsCount_Selector);
   const [sliderValuesLocal, setSliderValuesLocal] = useState([minCardsCount, maxCardsCount]);
   const [queryParams, setQueryParams] = useState<QueryParamsType>({
     packName: "",
@@ -57,16 +65,37 @@ export const Packs = () => {
     user_id: "",
   });
   const [searchBarValue, setSearchBarValue] = useState(queryParams.packName);
-  const packsPaginationCount: number = packsCount
-    ? Math.ceil(packsCount / queryParams.pageCount)
-    : 10;
+  const packsPaginationCount: number = packsCount ? Math.ceil(packsCount / queryParams.pageCount) : 10;
 
   useEffect(() => {
-    dispatch(packsThunks.fetchCardPacksTC(queryParams));
+    fetchPacks(queryParams);
   }, [queryParams]);
 
+  // authApi
+  //   .login({
+  //     email: "knuckostya1@gmail.com",
+  //     password: "Sends777",
+  //     rememberMe: true,
+  //   })
+  //   .then(() => authApi.isAuth);
+  //    fetchPacks(queryParams));
+  const updatedSortHandler = () => {
+    if (queryParams.sortPacks === "1updated" || queryParams.sortPacks === "") {
+      setQueryParams((prevState) => ({
+        ...prevState,
+        sortPacks: "0updated",
+        page: 1,
+      }));
+    } else {
+      setQueryParams((prevState) => ({
+        ...prevState,
+        sortPacks: "1updated",
+        page: 1,
+      }));
+    }
+  };
+
   const showMyPacks = () => {
-    console.log(userId);
     if (userId) setQueryParams({ ...queryParams, user_id: userId });
   };
   const showFriendsPacks = () => {
@@ -78,7 +107,7 @@ export const Packs = () => {
   };
 
   const resetFiltersHandler = () => {
-    setSearchBarValue("");
+    setSearchBarValue(""); //TODO fix bug with double request in this setState/searchBar component
     setSliderValuesLocal([minCardsCount, maxCardsCount]);
     setQueryParams({
       packName: "",
@@ -91,32 +120,29 @@ export const Packs = () => {
     });
   };
 
-  const addPackHandler = () => {
-    dispatch(
-      packsThunks.addCardPackTC({
-        name: "test14", //TODO modal
-      })
-    );
-  };
-  const deletePackHandler = (id: string) => {
-    dispatch(packsThunks.deleteCardPackTC(id));
-  };
-  const updatePackHandler = (_id: string, name: string) => {
-    dispatch(packsThunks.updateCardPackTC({ _id, name }));
-  };
   const paginationChangeHandler = (event: React.ChangeEvent<unknown>, value: number) => {
     setQueryParams({ ...queryParams, page: value });
   };
   const changeRowsNumber = (event: SelectChangeEvent) => {
     setQueryParams({ ...queryParams, pageCount: +event.target.value });
   };
+  const changeDateFormat = (date: Date) => {
+    const newDate = new Date(date);
+    return `${newDate.getDate().toString().padStart(2, "0")}.${(newDate.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}.${newDate.getFullYear().toString()}`;
+  };
+
+  const onClickPackHandler = () => {};
 
   return (
     <div className={s.packs}>
       <div className={`container ${s.packsContainer}`}>
         <div className={s.titleBlock}>
           <span className={s.title}>Packs List</span>
-          <SuperButton name={"Add new pack"} onClickCallBack={addPackHandler} />
+          <BaseModal modalTitle={"Add new pack"} buttonType={"base"}>
+            {(close) => <AddPackModal closeModal={close} />}
+          </BaseModal>
         </div>
         <div className={s.actionsBlock}>
           <div className={s.search}>
@@ -131,8 +157,14 @@ export const Packs = () => {
           <div className={s.showCards}>
             <span>Show packs cards</span>
             <div className={s.buttons}>
-              <SuperButton name={"My"} onClickCallBack={showMyPacks} height={"36px"} />
-              <SuperButton name={"All"} onClickCallBack={showFriendsPacks} height={"36px"} />
+              <SuperButton name={"My"} onClickCallBack={showMyPacks} width={"90px"} variant={"contained"} />
+              <SuperButton
+                name={"All"}
+                onClickCallBack={showFriendsPacks}
+                width={"90px"}
+                variant={"contained"}
+              />
+              {/*TODO contained of active my/all*/}
             </div>
           </div>
           <div className={s.slider}>
@@ -147,24 +179,34 @@ export const Packs = () => {
           </div>
           <div className={s.resetFilter}>
             <IconButton aria-label="filterOff" onClick={resetFiltersHandler}>
-              <FilterAltOffIcon />
+              <FilterAltOffIcon color={"primary"} />
             </IconButton>
           </div>
         </div>
-        {isLoading ? (
-          <BearLoader />
-        ) : cardPacks.length === 0 ? (
-          <div className={s.noPacksError}>
-            Колоды не найдены. Измените параметры фильтра / поиска
-          </div>
+        {packs.length === 0 ? (
+          <div className={s.noPacksError}>Колоды не найдены. Измените параметры фильтра / поиска</div>
         ) : (
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableContainer component={Paper} sx={{ position: "relative" }}>
+            <Table sx={{ overflowWrap: "break-word", tableLayout: "fixed" }}>
+              <colgroup>
+                <col style={{ width: "30%" }} />
+                <col style={{ width: "10%" }} />
+                <col style={{ width: "20%" }} />
+                <col style={{ width: "20%" }} />
+                <col style={{ width: "15%" }} />
+              </colgroup>
               <TableHead sx={{ background: "#EFEFEF" }}>
-                <TableRow>
-                  <TableCell sx={{ padding: "16px 16px 16px 36px" }}>Name</TableCell>
+                <TableRow hover={true}>
+                  <TableCell sx={{ padding: "16px 16px 16px 36px", width: "200px" }}>Name</TableCell>
                   <TableCell align="left">Cards</TableCell>
-                  <TableCell align="left">Last updated</TableCell>
+                  <TableCell align="left" onClick={updatedSortHandler} sx={{ display: "flex" }}>
+                    <TableSortLabel
+                      active={queryParams.sortPacks !== ""} //should be true for the sorted column
+                      direction={queryParams.sortPacks !== "0updated" ? "desc" : "asc"} // The current sort direction /"desc"
+                    >
+                      Last updated
+                    </TableSortLabel>
+                  </TableCell>
                   <TableCell align="left">Created By</TableCell>
                   <TableCell align="left" sx={{ padding: "16px 36px 16px 16px" }}>
                     Actions
@@ -172,35 +214,57 @@ export const Packs = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {cardPacks.map((p) => (
-                  <TableRow key={p._id} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+                {packs.map((p) => (
+                  <TableRow
+                    key={p._id}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    onClick={onClickPackHandler}
+                  >
                     <TableCell component="th" scope="row" sx={{ padding: "16px 16px 16px 36px" }}>
-                      {p.name}
+                      <Link to={`/cards/pack/${p._id}`} style={{ textDecoration: "none", color: "inherit" }}>
+                        {p.name}
+                      </Link>
                     </TableCell>
                     <TableCell align="left">{p.cardsCount}</TableCell>
-                    <TableCell align="left">{JSON.stringify(p.updated)}</TableCell>
-                    <TableCell className={classes.cell_short} align="left">
-                      {p.user_name}
-                    </TableCell>
+                    <TableCell align="left">{changeDateFormat(p.updated)}</TableCell>
+                    <TableCell align="left">{p.user_name}</TableCell>
                     <TableCell align="left" sx={{ padding: "16px 28px 16px 8px" }}>
-                      <IconButton aria-label="learn">
-                        <SchoolIcon />
-                      </IconButton>
-                      <IconButton
-                        aria-label="edit"
-                        onClick={() => updatePackHandler(p._id, "updatedPack13")}
-                        //TODO modal
-                      >
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton aria-label="delete" onClick={() => deletePackHandler(p._id)}>
-                        <DeleteOutlineIcon />
-                      </IconButton>
+                      <span style={{ width: "33%" }}>
+                        {p.cardsCount !== 0 && (
+                          <IconButton aria-label="learn">
+                            <SchoolIcon color={"primary"} />
+                          </IconButton>
+                        )}
+                      </span>
+                      {userId === p.user_id && (
+                        <span style={{ width: "67%" }}>
+                          <BaseModal modalTitle={"Edit pack"} buttonType={"iconEdit"}>
+                            {(close) => <EditPackModal closeModal={close} _id={p._id} packName={p.name} />}
+                          </BaseModal>
+                          <BaseModal modalTitle={"Delete pack"} buttonType={"iconDelete"}>
+                            {(close) => <DeletePackModal closeModal={close} _id={p._id} packName={p.name} />}
+                          </BaseModal>
+                        </span>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
+            <Backdrop
+              sx={{
+                color: "#fff",
+                zIndex: (theme) => theme.zIndex.drawer + 1,
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+              }}
+              open={isLoading}
+            >
+              {/*<CircularProgress color="inherit" />*/}
+            </Backdrop>
           </TableContainer>
         )}
         <div className={s.paginationBlock}>
@@ -226,10 +290,3 @@ export const Packs = () => {
     </div>
   );
 };
-
-const useStyles = makeStyles((theme) => ({
-  cell_short: {
-    maxWidth: "200px",
-    overflowWrap: "break-word",
-  },
-}));

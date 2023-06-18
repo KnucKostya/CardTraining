@@ -3,6 +3,7 @@ import Slider from "@mui/material/Slider";
 import React, { useEffect, useState } from "react";
 import { useAppSelector } from "common/hooks/useAppSelector";
 import { RootState } from "app/store";
+import { maxCardsCount_Selector, minCardsCount_Selector } from "../packsSelector";
 
 type PackSliderPropsType = {
   sliderCallBack: (arr: number[]) => void;
@@ -15,8 +16,9 @@ export const PacksSlider = ({
   sliderValuesLocal,
   setSliderValuesLocal,
 }: PackSliderPropsType) => {
-  const minCardsCount = useAppSelector((state: RootState) => state.packs.minCardsCount);
-  const maxCardsCount = useAppSelector((state: RootState) => state.packs.maxCardsCount);
+
+  const minCardsCount = useAppSelector(minCardsCount_Selector);
+  const maxCardsCount = useAppSelector(maxCardsCount_Selector);
 
   useEffect(() => {
     setTimeout(() => {

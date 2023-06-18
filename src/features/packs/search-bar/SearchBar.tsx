@@ -4,7 +4,7 @@ import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import { QueryParamsType } from "features/packs/Packs";
-import { ChangeEvent, useEffect } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 
 type SearchBarPropsType = {
@@ -20,21 +20,32 @@ export const SearchBar = ({
   searchValue,
   setSearchValue,
 }: SearchBarPropsType) => {
+  console.log("searchBar render");
   const [debouncedPackName] = useDebounce(searchValue, 1000);
-
+  const [isMounted, setIsMounted] = useState(false);
   const changeSearchHandler = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setSearchValue(e.target.value);
   };
+
+  //second uE understand first/second mount of component - >
+  // no request on first (no rerender packs)
   useEffect(() => {
-    //TODO  !!! fix problem with rerender packs after this usee ( cause edit object queryParams)
-    //TODO with condition - no request after deleting input
-    if (debouncedPackName !== "") setQueryParams({ ...queryParams, packName: debouncedPackName });
+    setIsMounted(true);
+    return () => {
+      setIsMounted(false);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isMounted) {
+      setQueryParams({ ...queryParams, packName: debouncedPackName });
+    }
   }, [debouncedPackName]);
 
   return (
     <Paper
       component="form"
-      sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: 413, height: 33 }}
+      sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: 413, height: 36, marginTop: "8px" }}
     >
       <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
         <SearchIcon />

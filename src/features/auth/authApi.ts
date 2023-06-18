@@ -21,8 +21,27 @@ export const authApi = {
   updateUser: (data: UpdateProfilePayloadType) => {
     return instance.put<UpdatedProfileType>("auth/me", data);
   },
+  forgotPassword: (args: ForgotArgs) => {
+    return instance.post<ForgotRes>('auth/forgot', args)
+  },
+  setNewPassword: (args: SetNewPasswordArgs) => {
+    return instance.post<ForgotRes>('auth/set-new-password', args)
+  },
 };
 
+export type ForgotArgs={
+  email: string
+  from?: string
+  message: string
+}
+type ForgotRes = {
+  info: string
+  error?: string
+}
+export type SetNewPasswordArgs = {
+  password: string
+  resetPasswordToken: string|undefined
+}
 export type ArgLoginType = {
   email: string;
   password: string;

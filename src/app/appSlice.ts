@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-import { getErrorMessage } from "../common/utils/getErrorMessage";
 
 export type ErrorType = string | null | undefined;
 
@@ -9,7 +8,6 @@ const slice = createSlice({
   initialState: {
     error: null as ErrorType,
     isLoading: false as boolean,
-    isAppInitialized: false,
   },
   reducers: {
     setError: (state, action: PayloadAction<{ error: ErrorType }>) => {
@@ -25,7 +23,7 @@ const slice = createSlice({
         (action) => {
           return action.type.endsWith("/pending");
         },
-        (state, action) => {
+        (state) => {
           state.isLoading = true;
         }
       )
@@ -33,23 +31,25 @@ const slice = createSlice({
         (action) => {
           return action.type.endsWith("/fulfilled");
         },
-        (state, action) => {
+        (state) => {
           state.isLoading = false;
         }
       )
       .addMatcher(
         (action) => {
-          return action.type.endsWith("/rejected"); // любой экшн с реджектом
+          return action.type.endsWith("/rejected");
         },
         (state, action) => {
           state.isLoading = false;
-          const error = action.payload?.error;
-
-          if (!error) return;
-
-          const errorMessage = getErrorMessage(error);
-          if (error.message === null) return;
-          toast.error(errorMessage);
+          const { errorMessage, showGlobalError = true } = action.payload;
+          if (!showGlobalError) return;
+          if (errorMessage) {
+            state.error = errorMessage
+          } else {
+            state.error = `Undefined error occurred`;
+          }
+          toast.error(state.error);
+          state.error = "";
         }
       );
   },
