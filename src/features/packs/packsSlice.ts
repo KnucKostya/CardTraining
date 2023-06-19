@@ -39,6 +39,7 @@ export const removePack = createAppAsyncThunk<{ packId: string }, string>(
     return thunkTryCatch(thunkAPI, async () => {
       await packsApi.removePack(id);
       await dispatch(fetchPacks({}));
+      // TODO fetch packs with prev queryParams after delete  action
       // return {packId: res.data.deletedCardsPack._id}
     });
   }

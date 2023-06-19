@@ -10,16 +10,20 @@ import { SuperButton } from "common/components/super-button/SuperButton";
 import { EditableSpan } from "common/components/EditableSpan/EditableSpan";
 import { useAppDispatch } from "common/hooks/useAppDispatch";
 import { useAppSelector } from "common/hooks/useAppSelector";
-import { userAvatar_Selector, userEmail_Selector, userId_Selector, userName_Selector } from "../auth/authSelector";
+import {
+  userAvatar_auth_Selector,
+  userEmail_auth_Selector,
+  userId_auth_Selector,
+  userName_auth_Selector,
+} from "../auth/authSelector";
 
 export const Profile = () => {
   const dispatch = useAppDispatch();
 
-  const userId= useAppSelector(userId_Selector);
-  const userAvatar= useAppSelector(userAvatar_Selector);
-  const userName= useAppSelector(userName_Selector);
-  const userEmail= useAppSelector(userEmail_Selector);
-
+  const userId = useAppSelector(userId_auth_Selector);
+  const userAvatar = useAppSelector(userAvatar_auth_Selector);
+  const userName = useAppSelector(userName_auth_Selector);
+  const userEmail = useAppSelector(userEmail_auth_Selector);
 
   const onClickLogoutHandler = () => {
     dispatch(authThunks.logoutTC());
@@ -27,7 +31,6 @@ export const Profile = () => {
   const onChangeNameHandler = (name: string) => {
     dispatch(authThunks.updateUserTC({ name }));
   };
-
 
   return (
     <div className={s.profileBlock} id="profile">
@@ -44,11 +47,7 @@ export const Profile = () => {
           <h3>Profile</h3>
           <div className={s.info}>
             <div className={s.avatarBlock}>
-              <img
-                className={s.avatar}
-                src={userId && userAvatar? userAvatar : ava}
-                alt="avatar"
-              />
+              <img className={s.avatar} src={userId && userAvatar ? userAvatar : ava} alt="avatar" />
               <IconButton className={s.photoIcon} aria-label="change photo">
                 <AddAPhotoIcon />
               </IconButton>

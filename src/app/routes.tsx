@@ -22,7 +22,7 @@ export enum RouteNames {
   FORGOT_PASSWORD = "/forgot-password",
   PROFILE = "/profile",
   PACKS = "/packs",
-  LEARN = "/Learn",
+  LEARN = "/learn/:packId",
   CARDS = "/cards",
   CARDS_PACK_ID = "/cards/pack/:packId",
 }

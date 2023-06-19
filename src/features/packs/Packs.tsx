@@ -21,7 +21,7 @@ import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
 import { PacksSlider } from "features/packs/slider/PacksSlider";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import { useActions } from "common/hooks/useActions";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { isLoading_Selector } from "app/appSelector";
 import {
   maxCardsCount_Selector,
@@ -29,12 +29,14 @@ import {
   packs_Selector,
   packsCount_Selector,
 } from "./packsSelector";
-import { userId_Selector } from "../auth/authSelector";
+import { userId_auth_Selector } from "../auth/authSelector";
 import { Backdrop } from "@mui/material";
 import { AddPackModal } from "features/packs/modals/AddPackModal";
 import { BaseModal } from "common/components/BasicModal/BaseModal";
 import { EditPackModal } from "features/packs/modals/EditPackModal";
 import { DeletePackModal } from "features/packs/modals/DeletePackModal";
+import { RouteNames } from "app/routes";
+import { cardsThunks } from "features/cards/cardsSlice";
 
 export type QueryParamsType = {
   packName: string;
@@ -47,11 +49,12 @@ export type QueryParamsType = {
 };
 
 export const Packs = () => {
-  const { fetchPacks } = useActions(packsThunks);
+  const navigate = useNavigate();
+  const { fetchPacks, getCards } = useActions({ ...packsThunks, ...cardsThunks });
   const isLoading = useAppSelector(isLoading_Selector);
   const packs = useAppSelector(packs_Selector);
   const packsCount = useAppSelector(packsCount_Selector);
-  const userId = useAppSelector(userId_Selector);
+  const userId = useAppSelector(userId_auth_Selector);
   const minCardsCount = useAppSelector(minCardsCount_Selector);
   const maxCardsCount = useAppSelector(maxCardsCount_Selector);
   const [sliderValuesLocal, setSliderValuesLocal] = useState([minCardsCount, maxCardsCount]);
@@ -231,7 +234,7 @@ export const Packs = () => {
                     <TableCell align="left" sx={{ padding: "16px 28px 16px 8px" }}>
                       <span style={{ width: "33%" }}>
                         {p.cardsCount !== 0 && (
-                          <IconButton aria-label="learn">
+                          <IconButton aria-label="learn" component={Link} to={`/learn/${p._id}`}>
                             <SchoolIcon color={"primary"} />
                           </IconButton>
                         )}

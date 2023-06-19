@@ -7,12 +7,12 @@ import { SuperButton } from "common/components/super-button/SuperButton";
 import { ProgressBar } from "../app/ProgressBar/ProgressBar";
 import ava from "../../assets/images/ava.png";
 import { isLoading_Selector } from "app/appSelector";
-import { userAvatar_Selector, userName_Selector } from "../auth/authSelector";
+import { userAvatar_auth_Selector, userName_auth_Selector } from "../auth/authSelector";
 
 export const Header = () => {
   const isLoading = useAppSelector(isLoading_Selector);
-  const userAvatar = useAppSelector(userAvatar_Selector);
-  const userName = useAppSelector(userName_Selector);
+  const userAvatar = useAppSelector(userAvatar_auth_Selector);
+  const userName = useAppSelector(userName_auth_Selector);
 
   const location = useLocation();
   const profilePage = location.pathname === RouteNames.PROFILE;

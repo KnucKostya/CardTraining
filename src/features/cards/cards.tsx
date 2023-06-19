@@ -19,7 +19,7 @@ import {
   cardsSelector,
   cardUserIdSelector,
   packNameSelector,
-  packUserIdSelector
+  packUserIdSelector,
 } from "features/cards/cardsSelectors";
 import { DropDownMenu } from "common/components/DropDownMenu/DropDownMenu";
 import { SearchCards } from "features/cards/SearchCards/SearchCards";
@@ -30,17 +30,16 @@ import Pagination from "@mui/material/Pagination";
 
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
-import { isLoading_Selector } from "../../app/appSelector";
+import { isLoading_Selector } from "app/appSelector";
 import { toast } from "react-toastify";
-import { BaseModal } from "../../common/components/BasicModal/BaseModal";
+import { BaseModal } from "common/components/BasicModal/BaseModal";
 import { AddCard } from "./modals/AddCard";
 import { EditCard } from "./modals/EditCard";
 import { DeleteCard } from "./modals/DeleteCard";
 
-
 export type QueryParamsTypeCards = {
-  cardQuestion: string,
-  cardAnswer: string,
+  cardQuestion: string;
+  cardAnswer: string;
   page: number;
   pageCount: number;
 };
@@ -60,15 +59,13 @@ export const Cards = () => {
     cardQuestion: "",
     cardAnswer: "",
     page: 1,
-    pageCount: 4
+    pageCount: 4,
   });
-  console.log("page",queryParams.page);
-  console.log("pageCount",queryParams.pageCount);
+  console.log("page", queryParams.page);
+  console.log("pageCount", queryParams.pageCount);
   const [searchBarValue, setSearchBarValue] = useState(queryParams.cardQuestion);
-  const cardsPaginationCount: number = cardsCount
-    ? Math.ceil(cardsCount / queryParams.pageCount)
-    : 10;
- const paginationChangeHandler = (event: React.ChangeEvent<unknown>, value: number) => {
+  const cardsPaginationCount: number = cardsCount ? Math.ceil(cardsCount / queryParams.pageCount) : 10;
+  const paginationChangeHandler = (event: React.ChangeEvent<unknown>, value: number) => {
     setQueryParams({ ...queryParams, page: value });
   };
   const changeCountRows = (event: SelectChangeEvent) => {

@@ -1,22 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
-import { cardsApi, GetCardsResponse } from "./cardsApi";
+import { cardsApi, EditGradePayloadType, EditGradeResType, GetCardsResponse } from "./cardsApi";
 import { thunkTryCatch } from "common/utils/thunkTryCatch";
 
-const getCards = createAppAsyncThunk<GetCardsResponse, { packId: string, page:number,pageCount:number,cardQuestion: string}>(
-  "cards/get",
-  async (arg, thunkAPI) => {
-    return thunkTryCatch(
-      thunkAPI,
-      async () => {
-        const res = await cardsApi.getCards(arg.packId,arg.page,arg.pageCount,arg.cardQuestion);
-        console.log(res.data);
-        return res.data;
-      },
-      false
-    );
-  }
-);
+const getCards = createAppAsyncThunk<
+  GetCardsResponse,
+  { packId: string; page?: number; pageCount?: number; cardQuestion?: string }
+>("cards/get", async (arg, thunkAPI) => {
+  return thunkTryCatch(
+    thunkAPI,
+    async () => {
+      const res = await cardsApi.getCards(arg.packId, arg.page, arg.pageCount, arg.cardQuestion);
+      return res.data;
+    },
+    false
+  );
+});
 
 const removeCard = createAppAsyncThunk<any, { cardId: string }>("cards/delete", async (arg, thunkAPI) => {
   return thunkTryCatch(
@@ -55,6 +54,20 @@ const editCard = createAppAsyncThunk<any, { cardId: string; question: string; an
   }
 );
 
+const updateGrade = createAppAsyncThunk<EditGradeResType, EditGradePayloadType>(
+  "cards/grade",
+  async (arg, thunkAPI) => {
+    return thunkTryCatch(
+      thunkAPI,
+      async () => {
+        const res = await cardsApi.editGrade({ ...arg });
+        return res.data;
+      },
+      false
+    );
+  }
+);
+
 const slice = createSlice({
   name: "cards",
   initialState: {
@@ -78,12 +91,20 @@ const slice = createSlice({
       })
       .addCase(editCard.fulfilled, (state, action) => {
         state.cards = action.payload;
-      })
-      .addCase((getCards || removeCard || addNewCard || editCard).rejected, (state, action) => {
-        return action.payload;
       });
+    // .addCase(updateGrade.fulfilled, (state, action) => {
+    //   const index = state.cards.cards.findIndex((card) => card._id === action.payload.updatedGrade.card_id);
+    //   if (index !== -1) {
+    //     state.cards.cards[index].grade = action.payload.updatedGrade.grade;
+    //   }
+    // })
+    // .addCase((getCards || removeCard || addNewCard || editCard).rejected, (state, action) => {
+    //   return action.payload;
+    //TODO wrong reject case , why here?? app slice for it - > add Matcher
+    // }
+    // );
   },
 });
 export const cardsReducer = slice.reducer;
 export const cardsActions = slice.actions;
-export const cardsThunks = { getCards, removeCard, addNewCard, editCard };
+export const cardsThunks = { getCards, removeCard, addNewCard, editCard, updateGrade };

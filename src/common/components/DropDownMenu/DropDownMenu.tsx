@@ -3,11 +3,13 @@ import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { EditPackModal } from "../../../features/packs/modals/EditPackModal";
+import { EditPackModal } from "features/packs/modals/EditPackModal";
 import { BaseModal } from "../BasicModal/BaseModal";
-import { DeletePackModal } from "../../../features/packs/modals/DeletePackModal";
+import { DeletePackModal } from "features/packs/modals/DeletePackModal";
 import { useAppSelector } from "../../hooks/useAppSelector";
-import { packNameSelector } from "../../../features/cards/cardsSelectors";
+import { packNameSelector } from "features/cards/cardsSelectors";
+import { Link, Navigate } from "react-router-dom";
+import { RouteNames } from "app/routes";
 
 export function DropDownMenu(props: DropDownMenu) {
   const { packId } = props;
@@ -37,6 +39,8 @@ export function DropDownMenu(props: DropDownMenu) {
 
   const learnHandle = () => {
     setAnchorEl(null);
+    return <Navigate to={RouteNames.LEARN} />;
+    // setAnchorEl(null);
   };
   // const saveHandler = () => {
   //   removePack(_id)
@@ -97,7 +101,9 @@ export function DropDownMenu(props: DropDownMenu) {
             </BaseModal>
           </label>
         </MenuItem>
-        <MenuItem onClick={learnHandle}>Learn</MenuItem>
+        <MenuItem component={Link} to={`/learn/${packId}`}>
+          Learn
+        </MenuItem>
       </Menu>
     </span>
   );
