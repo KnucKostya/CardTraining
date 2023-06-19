@@ -9,20 +9,25 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import SearchIcon from "@mui/icons-material/Search";
-import CloseIcon from "@mui/icons-material/Close";
 import { useAppSelector } from "common/hooks/useAppSelector";
 import { authApi } from "features/auth";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import StarPurple500SharpIcon from "@mui/icons-material/StarPurple500Sharp";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import {
+  cardsCountSelector,
   cardsSelector,
   cardUserIdSelector,
   packNameSelector,
-  packUserIdSelector,
+  packUserIdSelector
 } from "features/cards/cardsSelectors";
 import { DropDownMenu } from "common/components/DropDownMenu/DropDownMenu";
+import { SearchCards } from "features/cards/SearchCards/SearchCards";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import Pagination from "@mui/material/Pagination";
+
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import { isLoading_Selector } from "../../app/appSelector";
@@ -32,27 +37,47 @@ import { AddCard } from "./modals/AddCard";
 import { EditCard } from "./modals/EditCard";
 import { DeleteCard } from "./modals/DeleteCard";
 
+
+export type QueryParamsTypeCards = {
+  cardQuestion: string,
+  cardAnswer: string,
+  page: number;
+  pageCount: number;
+};
 export const Cards = () => {
   const dispatch = useAppDispatch();
   const cards = useAppSelector(cardsSelector);
   const userId = useAppSelector(cardUserIdSelector);
   const packName = useAppSelector(packNameSelector);
   const packUserId = useAppSelector(packUserIdSelector);
+  const cardsCount = useAppSelector(cardsCountSelector);
   const isLoading = useAppSelector(isLoading_Selector);
   const { packId } = useParams();
   const url = useLocation().pathname;
   const navigate = useNavigate();
   sessionStorage.setItem("url", url);
-
-  const [inputValue, setInputValue] = useState<string>("");
-  const onInputChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.currentTarget.value);
+  const [queryParams, setQueryParams] = useState<QueryParamsTypeCards>({
+    cardQuestion: "",
+    cardAnswer: "",
+    page: 1,
+    pageCount: 4
+  });
+  console.log("page",queryParams.page);
+  console.log("pageCount",queryParams.pageCount);
+  const [searchBarValue, setSearchBarValue] = useState(queryParams.cardQuestion);
+  const cardsPaginationCount: number = cardsCount
+    ? Math.ceil(cardsCount / queryParams.pageCount)
+    : 10;
+ const paginationChangeHandler = (event: React.ChangeEvent<unknown>, value: number) => {
+    setQueryParams({ ...queryParams, page: value });
   };
-
+  const changeCountRows = (event: SelectChangeEvent) => {
+    setQueryParams({ ...queryParams, pageCount: +event.target.value });
+  };
   const removeCardHandle = (cardId: string, packId: string) => {
     dispatch(cardsThunks.removeCard({ cardId }))
       .unwrap()
-      .then(() => dispatch(cardsThunks.getCards({ packId })));
+      .then(() => dispatch(cardsThunks.getCards({ packId, ...queryParams })));
     //TODO catch for every handler
     //TODO remove all "!"
   };
@@ -61,13 +86,13 @@ export const Cards = () => {
     console.log();
     dispatch(cardsThunks.addNewCard({ packId: packId!, answer, question }))
       .unwrap()
-      .then(() => dispatch(cardsThunks.getCards({ packId: packId! })));
+      .then(() => dispatch(cardsThunks.getCards({ packId: packId!, ...queryParams })));
   };
 
   const editCardHandle = (cardsPackId: string, cardId: string, question: string, answer: string) => {
     dispatch(cardsThunks.editCard({ cardId, question, answer }))
       .unwrap()
-      .then(() => dispatch(cardsThunks.getCards({ packId: cardsPackId })))
+      .then(() => dispatch(cardsThunks.getCards({ packId: cardsPackId, ...queryParams })))
       .catch((e) => {
         toast.error(e);
       });
@@ -99,10 +124,10 @@ export const Cards = () => {
     //     dispatch(cardsThunks.getCards({ packId: packId }));
     //   });
     if (!packId) return;
-    dispatch(cardsThunks.getCards({ packId: packId }))
+    dispatch(cardsThunks.getCards({ packId: packId, ...queryParams }))
       .unwrap()
       .then(() => authApi.isAuth);
-  }, [dispatch]);
+  }, [dispatch, queryParams]);
 
   useEffect(() => {
     let getUrl = sessionStorage.getItem("url");
@@ -127,14 +152,14 @@ export const Cards = () => {
         </span>
         <div className={s.searchContainer}>
           <div className={s.bal}>
-            <SearchIcon className={s.searchIcon} />
-            <input
-              className={s.input}
-              placeholder="Search..."
-              value={inputValue}
-              onChange={onInputChangeHandler}
-            ></input>
-            <CloseIcon className={s.closeIcon} onClick={() => setInputValue("")} />
+            <span>Search</span>
+            <SearchCards
+              queryParams={queryParams}
+              setQueryParams={setQueryParams}
+              searchValue={searchBarValue}
+              setSearchValue={setSearchBarValue}
+            />
+            {/*<CloseIcon className={s.closeIcon} onClick={() => setInputValue("")} />*/}
           </div>
           {packUserId === userId ? (
             <span>
@@ -222,8 +247,24 @@ export const Cards = () => {
               <CircularProgress color="inherit" />
             </Backdrop>
           </TableContainer>
-          <div className={s.paginationContainer}>
-            -----------------pagination for Valentin----------------
+          <div className={s.paginationBlock}>
+            <Pagination
+              shape={"rounded"}
+              count={cardsPaginationCount}
+              color="primary"
+              page={queryParams.page}
+              onChange={paginationChangeHandler}
+            />
+            <span>Show</span>
+            <FormControl>
+              <Select value={queryParams.pageCount.toString()} onChange={changeCountRows} autoWidth>
+                <MenuItem value={"4"}>4</MenuItem>
+                <MenuItem value={"6"}>6</MenuItem>
+                <MenuItem value={"8"}>8</MenuItem>
+                <MenuItem value={"10"}>10</MenuItem>
+              </Select>
+            </FormControl>
+            <span>Packs per page</span>
           </div>
         </div>
       </div>

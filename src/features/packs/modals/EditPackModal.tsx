@@ -14,6 +14,7 @@ import { useAppDispatch } from "../../../common/hooks/useAppDispatch";
 type PropsType = {
   closeModal: () => void | ReactNode;
   _id: string;
+  packName?: string;
   closeSecondModalHandler?: (value: null | HTMLElement) => void;
 };
 

@@ -3,13 +3,14 @@ import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
 import { cardsApi, GetCardsResponse } from "./cardsApi";
 import { thunkTryCatch } from "common/utils/thunkTryCatch";
 
-const getCards = createAppAsyncThunk<GetCardsResponse, { packId: string }>(
+const getCards = createAppAsyncThunk<GetCardsResponse, { packId: string, page:number,pageCount:number,cardQuestion: string}>(
   "cards/get",
   async (arg, thunkAPI) => {
     return thunkTryCatch(
       thunkAPI,
       async () => {
-        const res = await cardsApi.getCards(arg.packId);
+        const res = await cardsApi.getCards(arg.packId,arg.page,arg.pageCount,arg.cardQuestion);
+        console.log(res.data);
         return res.data;
       },
       false
