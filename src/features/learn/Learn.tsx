@@ -14,7 +14,7 @@ import FormLabel from "@mui/material/FormLabel";
 import { RouteNames } from "app/routes";
 import GradeTwoToneIcon from "@mui/icons-material/GradeTwoTone";
 import { CardType, EditGradePayloadType, GradeType } from "features/cards/cardsApi";
-import { cards_Selector, cardsSelector, packNameSelector } from "features/cards/cardsSelectors";
+import { cardsSelector, packNameSelector } from "features/cards/cardsSelectors";
 import { cardsThunks } from "features/cards/cardsSlice";
 import { authApi } from "features/auth";
 import { useAppDispatch } from "common/hooks/useAppDispatch";
@@ -36,7 +36,7 @@ export const Learn = () => {
   const { getCards, updateGrade } = useActions({ ...packsThunks, ...cardsThunks });
   const { packId } = useParams();
   const packName = useAppSelector(packNameSelector);
-  const cards = useAppSelector(cards_Selector);
+  const cards = useAppSelector(cardsSelector);
   const isLoading = useAppSelector(isLoading_Selector);
   const [card, setCard] = useState<CardType>({
     user_id: "fake",
@@ -50,8 +50,8 @@ export const Learn = () => {
     updated: "",
   });
   const [first, setFirst] = useState<boolean>(true);
-  const [grade, setGrade] = useState<GradeType>(0);
-  const [answer, setAnswer] = useState<string>(grades[0].answer);
+  const [grade, setGrade] = useState<GradeType>(5);
+  const [answer, setAnswer] = useState<string>(grades[4].answer);
   const [showAnswer, setShowAnswer] = useState<boolean>(false);
   const [showLearning, setShowLearning] = useState<boolean>(true);
 
