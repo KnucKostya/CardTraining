@@ -6,6 +6,7 @@
   background-color: $white-color;
 
   .insideContainer {
+    width: 100%;
     padding: 20px;
     display: flex;
     justify-content: flex-start;
@@ -17,58 +18,59 @@
       font-family: $base-font;
       font-size: 20px;
     }
-    .packName {
-      font-weight: 600;
-      font-size: 22px;
-    }
-    .searchContainer {
-      margin-top: 3%;
-      width: 100%;
+    .packAddName {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
       align-items: center;
-      .bal {
-        width: 80%;
-        position: relative;
-        .searchIcon {
-          line-height: 26px;
-          text-align: center;
-          margin-right: -26px;
-          position: absolute;
-          top: 27%;
-          left: 7px;
-          z-index: 1;
-        }
-        .searchIcon + input {
-          padding-left: 35px;
-        }
-        .input {
-          margin-right: 4%;
-          width: 100%;
-          position: relative;
-          border: $sec-color;
-          height: 35px;
-          background-color: $sec-color;
-        }
-        .input:hover {
-          border: 1px solid #b6b6b6;
-        }
-        .input:focus {
-          outline: none;
-          border: 1px solid #b6b6b6;
-        }
-        .closeIcon {
-          line-height: 26px;
-          text-align: center;
-          margin-left: -10px;
-          position: absolute;
-          top: 27%;
-          right: 7px;
-          z-index: 1;
-          cursor: pointer;
-        }
+      width: 100%;
+      .packName {
+        font-weight: 600;
+        font-size: 22px;
       }
+    }
+    .searchContainer {
+      margin-top: 2%;
+      width: 100%;
+      position: relative;
+
+      .searchIcon {
+        line-height: 26px;
+        text-align: center;
+        margin-right: -26px;
+        position: absolute;
+        top: 27%;
+        left: 7px;
+        z-index: 1;
+      }
+      .searchIcon + input {
+        padding-left: 35px;
+      }
+      .input {
+        margin-right: 4%;
+        width: 100%;
+        position: relative;
+        border: $sec-color;
+        height: 35px;
+        background-color: $sec-color;
+      }
+      .input:hover {
+        border: 1px solid #b6b6b6;
+      }
+      .input:focus {
+        outline: none;
+        border: 1px solid #b6b6b6;
+      }
+      //.closeIcon {
+      //  line-height: 26px;
+      //  text-align: center;
+      //  margin-left: -10px;
+      //  position: absolute;
+      //  top: 27%;
+      //  right: 7px;
+      //  z-index: 1;
+      //  cursor: pointer;
+      //}
     }
 
     .cardsContainer {
@@ -76,6 +78,10 @@
       display: grid;
       text-align: center;
       width: 100%;
+      .photo {
+        width: 80px;
+        height: 40px;
+      }
     }
   }
 

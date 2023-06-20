@@ -27,7 +27,6 @@ import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Pagination from "@mui/material/Pagination";
-
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import { isLoading_Selector } from "app/appSelector";
@@ -62,8 +61,6 @@ export const Cards = () => {
     page: 1,
     pageCount: 4,
   });
-  console.log("page", queryParams.page);
-  console.log("pageCount", queryParams.pageCount);
   const [searchBarValue, setSearchBarValue] = useState(queryParams.cardQuestion);
   const cardsPaginationCount: number = cardsCount ? Math.ceil(cardsCount / queryParams.pageCount) : 10;
   const paginationChangeHandler = (event: React.ChangeEvent<unknown>, value: number) => {
@@ -80,9 +77,8 @@ export const Cards = () => {
     //TODO remove all "!"
   };
 
-  const addNewCardHandle = (question: string, answer: string) => {
-    console.log();
-    dispatch(cardsThunks.addNewCard({ packId: packId!, answer, question }))
+  const addNewCardHandle = (question?: string, answer?: string, answerImg?: string, questionImg?: string) => {
+    dispatch(cardsThunks.addNewCard({ packId: packId!, answer, question, questionImg, answerImg }))
       .unwrap()
       .then(() => dispatch(cardsThunks.getCards({ packId: packId!, ...queryParams })));
   };
@@ -142,23 +138,12 @@ export const Cards = () => {
               <span>Back to packs</span>
             </div>
           </Link>
+        </span>
+        <span className={s.packAddName}>
           <h2 className={s.packName}>
-            {/*{packName?.name}*/}
             {packName}
             {packUserId === userId && <DropDownMenu packId={packId} />}
           </h2>
-        </span>
-        <div className={s.searchContainer}>
-          <div className={s.bal}>
-            <span>Search</span>
-            <SearchCards
-              queryParams={queryParams}
-              setQueryParams={setQueryParams}
-              searchValue={searchBarValue}
-              setSearchValue={setSearchBarValue}
-            />
-            {/*<CloseIcon className={s.closeIcon} onClick={() => setInputValue("")} />*/}
-          </div>
           {packUserId === userId ? (
             <span>
               <BaseModal modalTitle={"Add new card"} buttonType={"base"}>
@@ -166,6 +151,15 @@ export const Cards = () => {
               </BaseModal>
             </span>
           ) : null}
+        </span>
+        <div className={s.searchContainer}>
+          <div className={s.search}>Search</div>
+          <SearchCards
+            queryParams={queryParams}
+            setQueryParams={setQueryParams}
+            searchValue={searchBarValue}
+            setSearchValue={setSearchBarValue}
+          />
         </div>
         <div className={s.cardsContainer}>
           <TableContainer component={Paper}>
@@ -184,11 +178,20 @@ export const Cards = () => {
                   cards.map((row) => (
                     <TableRow key={row._id} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                       <TableCell component="th" scope="row">
-                        {row.question}
+                        {row.question.includes("blob") ? (
+                          <img src={row.question} alt="" className={s.photo} />
+                        ) : (
+                          row.question
+                        )}
                       </TableCell>
-                      <TableCell align="right">{row.answer}</TableCell>
                       <TableCell align="right">
-                        {/*<div>{row.updated.slice(5, 10).replace("-", ".")}</div>*/}
+                        {row.answer.includes("blob") ? (
+                          <img src={row.answer} alt="" className={s.photo} />
+                        ) : (
+                          row.answer
+                        )}
+                      </TableCell>
+                      <TableCell align="right">
                         <div>{changeDateFormat(row.updated)}</div>
                       </TableCell>
                       {!row.grade ? <TableCell align="right">0</TableCell> : StarsRating(row.grade)}
@@ -213,10 +216,6 @@ export const Cards = () => {
                                 />
                               )}
                             </BaseModal>
-                            {/*<DeleteIcon*/}
-                            {/*  style={{ marginLeft: "7%", cursor: "pointer" }}*/}
-                            {/*  onClick={() => removeCardHandle(row._id, row.cardsPack_id)}*/}
-                            {/*/>*/}
                           </div>
                         ) : (
                           "not your card"

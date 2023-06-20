@@ -1,19 +1,38 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
   ArgLoginType,
-  authApi, ForgotArgs,
+  authApi,
+  ForgotArgs,
   LogoutResType,
-  ProfileType, SetNewPasswordArgs,
+  ProfileType,
+  RegisterResponse,
+  SetNewPasswordArgs,
   UpdatedProfileType,
-  UpdateProfilePayloadType
+  UpdateProfilePayloadType,
 } from "features/auth/authApi";
 import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
-import { thunkTryCatch } from "../../common/utils/thunkTryCatch";
+import { thunkTryCatch } from "common/utils/thunkTryCatch";
+import { appActions } from "app/appSlice";
 
 //THUNKS =================================================================================================
 
-const login = createAppAsyncThunk<{ profile: ProfileType }, ArgLoginType>
-("auth/login", (arg, thunkAPI) => {
+const register = createAppAsyncThunk<RegisterResponse, { email: string; password: string }>(
+  "auth/register",
+  async (arg, thunkAPI) => {
+    const { rejectWithValue, dispatch } = thunkAPI;
+    try {
+      dispatch(appActions.setIsLoading({ isLoading: true }));
+      return await authApi.register(arg.email, arg.password);
+    } catch (e: any) {
+      dispatch(appActions.setError({ error: e }));
+      return rejectWithValue(e.response.data.error);
+    } finally {
+      dispatch(appActions.setIsLoading({ isLoading: false }));
+    }
+  }
+);
+
+const login = createAppAsyncThunk<{ profile: ProfileType }, ArgLoginType>("auth/login", (arg, thunkAPI) => {
   return thunkTryCatch(thunkAPI, () => {
     return authApi.login(arg).then((res) => {
       return { profile: res.data };
@@ -29,7 +48,7 @@ const setNewPassword = createAppAsyncThunk("auth/newPassword", async (arg: SetNe
   return thunkTryCatch(thunkAPI, async () => {
     return await authApi.setNewPassword({
       password: arg.password,
-      resetPasswordToken: arg.resetPasswordToken
+      resetPasswordToken: arg.resetPasswordToken,
     });
   });
 });
@@ -47,13 +66,10 @@ const updateUserTC = createAppAsyncThunk<{ profile: UpdatedProfileType }, Update
 export const isAuthTC = createAppAsyncThunk<{ profile: ProfileType }>(
   "auth/isAuth",
   async (arg, thunkAPI) => {
-    return thunkTryCatch(
-      thunkAPI,
-      async () => {
-        const res = await authApi.isAuth();
-        return { profile: res.data };
-      },
-    );
+    return thunkTryCatch(thunkAPI, async () => {
+      const res = await authApi.isAuth();
+      return { profile: res.data };
+    });
   }
 );
 
@@ -65,7 +81,7 @@ const slice = createSlice({
     profile: null as ProfileType | null,
     isAuth: false,
     email: "",
-    password: ""
+    password: "",
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -89,14 +105,13 @@ const slice = createSlice({
       })
       .addCase(setNewPassword.fulfilled, (state, action) => {
         state.password = action.meta.arg.password;
-      })
+      });
     //TODO
-      // .addCase(isAuthTC.rejected, (state, action) => {
-      //   console.log("isAuth ", action.payload);
-      //   return action.payload;
-      // })
-
-  }
+    // .addCase(isAuthTC.rejected, (state, action) => {
+    //   console.log("isAuth ", action.payload);
+    //   return action.payload;
+    // })
+  },
 });
 
 export const authReducer = slice.reducer;
@@ -108,5 +123,6 @@ export const authThunks = {
   logoutTC,
   login,
   sendResetPassword,
-  setNewPassword
+  setNewPassword,
+  register,
 };
