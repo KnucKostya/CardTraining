@@ -27,19 +27,25 @@ const removeCard = createAppAsyncThunk<any, { cardId: string }>("cards/delete", 
     false
   );
 });
-const addNewCard = createAppAsyncThunk<any, { packId: string; question: string; answer: string }>(
-  "cards/add",
-  async (arg, thunkAPI) => {
-    return thunkTryCatch(
-      thunkAPI,
-      async () => {
-        const res = await cardsApi.addCard(arg.packId, arg.question, arg.answer);
-        return res.data;
-      },
-      false
-    );
-  }
-);
+const addNewCard = createAppAsyncThunk<
+  any,
+  { packId: string; question?: string; answer?: string; answerImg?: string; questionImg?: string }
+>("cards/add", async (arg, thunkAPI) => {
+  return thunkTryCatch(
+    thunkAPI,
+    async () => {
+      const res = await cardsApi.addCard(
+        arg.packId,
+        arg.question,
+        arg.answer,
+        arg.answerImg,
+        arg.questionImg
+      );
+      return res.data;
+    },
+    false
+  );
+});
 const editCard = createAppAsyncThunk<any, { cardId: string; question: string; answer: string }>(
   "cards/edit",
   async (arg, thunkAPI) => {

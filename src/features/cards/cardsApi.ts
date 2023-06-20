@@ -13,8 +13,10 @@ export const cardsApi = {
       },
     });
   },
-  addCard: (packId: string, question: string, answer: string) => {
-    return instance.post<PostCard>("cards/card", { card: { cardsPack_id: packId, question, answer } });
+  addCard: (packId: string, question?: string, answer?: string, answerImg?: string, questionImg?: string) => {
+    return instance.post<PostCard>("cards/card", {
+      card: { cardsPack_id: packId, question, answer, answerImg, questionImg },
+    });
   },
   editCard: (cardId: string, question: string, answer: string) => {
     return instance.put("/cards/card", { card: { _id: cardId, question, answer } });

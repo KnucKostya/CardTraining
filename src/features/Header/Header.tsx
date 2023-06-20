@@ -1,7 +1,7 @@
 import React from "react";
 import s from "features/Header/Header.module.scss";
 import { useAppSelector } from "common/hooks/useAppSelector";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { RouteNames } from "app/routes";
 import { SuperButton } from "common/components/super-button/SuperButton";
 import { ProgressBar } from "../app/ProgressBar/ProgressBar";
@@ -24,6 +24,9 @@ export const Header = () => {
         <div className={s.logo}>
           <img src={logo} alt="logo" />
         </div>
+        <Link to={RouteNames.PROFILE} style={{ textDecoration: "none", color: "rgb(154 145 200)" }}>
+          <h1>Go to Profile</h1>
+        </Link>
         {!profilePage && (
           <div className={s.actions}>
             <SuperButton
