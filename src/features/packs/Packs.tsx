@@ -35,8 +35,8 @@ import { AddPackModal } from "features/packs/modals/AddPackModal";
 import { BaseModal } from "common/components/BasicModal/BaseModal";
 import { EditPackModal } from "features/packs/modals/EditPackModal";
 import { DeletePackModal } from "features/packs/modals/DeletePackModal";
-import { RouteNames } from "app/routes";
 import { cardsThunks } from "features/cards/cardsSlice";
+import { changeDateFormat } from "common/utils/changeDateFormat";
 
 export type QueryParamsType = {
   packName: string;
@@ -49,8 +49,7 @@ export type QueryParamsType = {
 };
 
 export const Packs = () => {
-  const navigate = useNavigate();
-  const { fetchPacks, getCards } = useActions({ ...packsThunks, ...cardsThunks });
+  const { fetchPacks } = useActions({ ...packsThunks, ...cardsThunks });
   const isLoading = useAppSelector(isLoading_Selector);
   const packs = useAppSelector(packs_Selector);
   const packsCount = useAppSelector(packsCount_Selector);
@@ -129,12 +128,12 @@ export const Packs = () => {
   const changeRowsNumber = (event: SelectChangeEvent) => {
     setQueryParams({ ...queryParams, pageCount: +event.target.value });
   };
-  const changeDateFormat = (date: Date) => {
-    const newDate = new Date(date);
-    return `${newDate.getDate().toString().padStart(2, "0")}.${(newDate.getMonth() + 1)
-      .toString()
-      .padStart(2, "0")}.${newDate.getFullYear().toString()}`;
-  };
+  // const changeDateFormat = (date: Date) => {
+  //   const newDate = new Date(date);
+  //   return `${newDate.getDate().toString().padStart(2, "0")}.${(newDate.getMonth() + 1)
+  //     .toString()
+  //     .padStart(2, "0")}.${newDate.getFullYear().toString()}`;
+  // };
 
   const onClickPackHandler = () => {};
 

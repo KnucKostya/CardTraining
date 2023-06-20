@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppDispatch } from "common/hooks/useAppDispatch";
 import s from "./cards.module.scss";
 import { cardsThunks } from "./cardsSlice";
@@ -36,6 +36,7 @@ import { BaseModal } from "common/components/BasicModal/BaseModal";
 import { AddCard } from "./modals/AddCard";
 import { EditCard } from "./modals/EditCard";
 import { DeleteCard } from "./modals/DeleteCard";
+import { changeDateFormat } from "common/utils/changeDateFormat";
 
 export type QueryParamsTypeCards = {
   cardQuestion: string;
@@ -187,7 +188,8 @@ export const Cards = () => {
                       </TableCell>
                       <TableCell align="right">{row.answer}</TableCell>
                       <TableCell align="right">
-                        <div>{row.updated.slice(5, 10).replace("-", ".")}</div>
+                        {/*<div>{row.updated.slice(5, 10).replace("-", ".")}</div>*/}
+                        <div>{changeDateFormat(row.updated)}</div>
                       </TableCell>
                       {!row.grade ? <TableCell align="right">0</TableCell> : StarsRating(row.grade)}
                       <TableCell align="right">

@@ -32,8 +32,8 @@ export type CardType = {
   grade: number;
   shots: number;
   user_id: string;
-  created: string;
-  updated: string;
+  created: Date;
+  updated: Date;
   _id: string;
 };
 

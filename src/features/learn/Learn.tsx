@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAppSelector } from "common/hooks/useAppSelector";
 import { useActions } from "common/hooks/useActions";
-import { packs_Selector } from "features/packs/packsSelector";
 import s from "features/learn/Learn.module.scss";
 import { SuperButton } from "common/components/super-button/SuperButton";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -13,13 +12,10 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import { RouteNames } from "app/routes";
 import GradeTwoToneIcon from "@mui/icons-material/GradeTwoTone";
-import { CardType, EditGradePayloadType, GradeType } from "features/cards/cardsApi";
-import { cards_Selector, cardsSelector, packNameSelector } from "features/cards/cardsSelectors";
+import { CardType, GradeType } from "features/cards/cardsApi";
+import { cards_Selector, packNameSelector } from "features/cards/cardsSelectors";
 import { cardsThunks } from "features/cards/cardsSlice";
-import { authApi } from "features/auth";
-import { useAppDispatch } from "common/hooks/useAppDispatch";
 import { packsThunks } from "features/packs/packsSlice";
-import { logDOM } from "@testing-library/react";
 import { getRandomCard } from "common/utils/random-card";
 import { isLoading_Selector } from "app/appSelector";
 import { Backdrop } from "@mui/material";
@@ -46,8 +42,8 @@ export const Learn = () => {
     question: "fake",
     grade: 0,
     shots: 0,
-    created: "",
-    updated: "",
+    created: new Date(),
+    updated: new Date(),
   });
   const [first, setFirst] = useState<boolean>(true);
   const [grade, setGrade] = useState<GradeType>(0);
