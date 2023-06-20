@@ -6,6 +6,7 @@ import { RouteNames } from "app/routes";
 import { SuperButton } from "common/components/super-button/SuperButton";
 import { ProgressBar } from "../app/ProgressBar/ProgressBar";
 import ava from "../../assets/images/ava.png";
+import logo from "../../assets/images/cards.png";
 import { isLoading_Selector } from "app/appSelector";
 import { userAvatar_auth_Selector, userName_auth_Selector } from "../auth/authSelector";
 
@@ -20,8 +21,8 @@ export const Header = () => {
   return (
     <div className={s.header} id="header">
       <div className={`container ${s.headerContainer}`}>
-        <div>
-          <h1>Cards</h1>
+        <div className={s.logo}>
+          <img src={logo} alt="logo" />
         </div>
         {!profilePage && (
           <div className={s.actions}>

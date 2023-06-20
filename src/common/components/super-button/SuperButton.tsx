@@ -80,7 +80,7 @@ export const SuperButton = (props: ButtonPropsType) => {
       startIcon={startIcon}
       endIcon={endIcon}
     >
-      {name ? name : "button"}
+      <b>{name ? name : "button"}</b>
     </Button>
   );
 };
