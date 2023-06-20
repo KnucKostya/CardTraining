@@ -23,6 +23,7 @@ import TableSortLabel from "@mui/material/TableSortLabel";
 import { useActions } from "common/hooks/useActions";
 import { Link, useNavigate } from "react-router-dom";
 import { isLoading_Selector } from "app/appSelector";
+import InputLabel from "@mui/material/InputLabel";
 import {
   maxCardsCount_Selector,
   minCardsCount_Selector,
@@ -159,14 +160,18 @@ export const Packs = () => {
           <div className={s.showCards}>
             <span>Show packs cards</span>
             <div className={s.buttons}>
-              <SuperButton name={"My"} onClickCallBack={showMyPacks} width={"90px"} variant={"contained"} />
+              <SuperButton
+                name={"My"}
+                onClickCallBack={showMyPacks}
+                width={"90px"}
+                variant={queryParams.user_id === "" ? "outlined" : "contained"}
+              />
               <SuperButton
                 name={"All"}
                 onClickCallBack={showFriendsPacks}
                 width={"90px"}
-                variant={"contained"}
+                variant={queryParams.user_id === "" ? "contained" : "outlined"}
               />
-              {/*TODO contained of active my/all*/}
             </div>
           </div>
           <div className={s.slider}>
@@ -277,16 +282,24 @@ export const Packs = () => {
             page={queryParams.page}
             onChange={paginationChangeHandler}
           />
-          <span>Show</span>
+          <span className={s.text}>Show</span>
           <FormControl>
-            <Select value={queryParams.pageCount.toString()} onChange={changeRowsNumber} autoWidth>
+            <InputLabel>Packs</InputLabel>
+            <Select
+              sx={{ maxHeight: "40px", minWidth: "70px" }}
+              color={"primary"}
+              value={queryParams.pageCount.toString()}
+              onChange={changeRowsNumber}
+              // autoWidth
+              label="Packs"
+            >
               <MenuItem value={"4"}>4</MenuItem>
               <MenuItem value={"6"}>6</MenuItem>
               <MenuItem value={"8"}>8</MenuItem>
               <MenuItem value={"10"}>10</MenuItem>
             </Select>
           </FormControl>
-          <span>Packs per page</span>
+          <span className={s.text}>per page</span>
         </div>
       </div>
     </div>

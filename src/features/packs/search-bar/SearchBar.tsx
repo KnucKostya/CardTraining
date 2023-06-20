@@ -20,7 +20,7 @@ export const SearchBar = ({
   searchValue,
   setSearchValue,
 }: SearchBarPropsType) => {
-  console.log("searchBar render");
+  // console.log("searchBar render");
   const [debouncedPackName] = useDebounce(searchValue, 1000);
   const [isMounted, setIsMounted] = useState(false);
   const changeSearchHandler = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -32,8 +32,6 @@ export const SearchBar = ({
   useEffect(() => {
     setIsMounted(true);
     return () => {
-
-
       setIsMounted(false);
     };
   }, []);
