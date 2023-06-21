@@ -5,8 +5,8 @@ import { Link, useLocation } from "react-router-dom";
 import { RouteNames } from "app/routes";
 import { SuperButton } from "common/components/super-button/SuperButton";
 import { ProgressBar } from "../app/ProgressBar/ProgressBar";
-import ava from "../../assets/images/ava.png";
-import logo from "../../assets/images/cards.png";
+import ava from "assets/images/defaultAva.png";
+import logo from "assets/images/cardsLogo.png";
 import { isLoading_Selector } from "app/appSelector";
 import { userAvatar_auth_Selector, userName_auth_Selector } from "../auth/authSelector";
 

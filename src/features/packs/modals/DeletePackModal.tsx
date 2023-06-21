@@ -39,7 +39,7 @@ export const DeletePackModal = ({ closeModal, _id, packName, closeSecondModalHan
 
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
-      <Typography sx={{ marginBottom: "30px" }}>
+      <Typography sx={{ marginBottom: "30px", marginTop: "35px" }}>
         Do you really want to remove <b>{packName}</b> pack?
         <br /> All cards in pack will be deleted!
       </Typography>

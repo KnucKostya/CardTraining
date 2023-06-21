@@ -38,6 +38,7 @@ import { EditPackModal } from "features/packs/modals/EditPackModal";
 import { DeletePackModal } from "features/packs/modals/DeletePackModal";
 import { cardsThunks } from "features/cards/cardsSlice";
 import { changeDateFormat } from "common/utils/changeDateFormat";
+import defaultPackAva from "assets/images/defaultPackLogo.svg";
 
 export type QueryParamsType = {
   packName: string;
@@ -129,12 +130,6 @@ export const Packs = () => {
   const changeRowsNumber = (event: SelectChangeEvent) => {
     setQueryParams({ ...queryParams, pageCount: +event.target.value });
   };
-  // const changeDateFormat = (date: Date) => {
-  //   const newDate = new Date(date);
-  //   return `${newDate.getDate().toString().padStart(2, "0")}.${(newDate.getMonth() + 1)
-  //     .toString()
-  //     .padStart(2, "0")}.${newDate.getFullYear().toString()}`;
-  // };
 
   const onClickPackHandler = () => {};
 
@@ -196,27 +191,41 @@ export const Packs = () => {
           <TableContainer component={Paper} sx={{ position: "relative" }}>
             <Table sx={{ overflowWrap: "break-word", tableLayout: "fixed" }}>
               <colgroup>
-                <col style={{ width: "30%" }} />
                 <col style={{ width: "10%" }} />
-                <col style={{ width: "20%" }} />
-                <col style={{ width: "20%" }} />
+                {/*cover*/}
+                <col style={{ width: "25%" }} />
+                {/*name*/}
+                <col style={{ width: "10%" }} />
+                {/*cardsCount*/}
                 <col style={{ width: "15%" }} />
+                {/*updated*/}
+                <col style={{ width: "20%" }} />
+                {/*createdBy*/}
+                <col style={{ width: "15%" }} />
+                {/*actions*/}
               </colgroup>
               <TableHead sx={{ background: "#EFEFEF" }}>
                 <TableRow hover={true}>
-                  <TableCell sx={{ padding: "16px 16px 16px 36px", width: "200px" }}>Name</TableCell>
-                  <TableCell align="left">Cards</TableCell>
+                  <TableCell align="left"></TableCell>
+                  <TableCell sx={{ padding: "16px 16px 16px 36px" }}>
+                    <b>Name</b>
+                  </TableCell>
+                  <TableCell align="left">
+                    <b>Cards</b>
+                  </TableCell>
                   <TableCell align="left" onClick={updatedSortHandler} sx={{ display: "flex" }}>
                     <TableSortLabel
                       active={queryParams.sortPacks !== ""} //should be true for the sorted column
                       direction={queryParams.sortPacks !== "0updated" ? "desc" : "asc"} // The current sort direction /"desc"
                     >
-                      Last updated
+                      <b>Last updated</b>
                     </TableSortLabel>
                   </TableCell>
-                  <TableCell align="left">Created By</TableCell>
+                  <TableCell align="left">
+                    <b>Created By</b>
+                  </TableCell>
                   <TableCell align="left" sx={{ padding: "16px 36px 16px 16px" }}>
-                    Actions
+                    <b>Actions</b>
                   </TableCell>
                 </TableRow>
               </TableHead>
@@ -227,7 +236,14 @@ export const Packs = () => {
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     onClick={onClickPackHandler}
                   >
-                    <TableCell component="th" scope="row" sx={{ padding: "16px 16px 16px 36px" }}>
+                    <TableCell align="center" sx={{ padding: 0, paddingLeft: "10px" }}>
+                      <img
+                        className={s.packLogo}
+                        src={p.deckCover ? p.deckCover : defaultPackAva}
+                        alt="logo"
+                      />
+                    </TableCell>
+                    <TableCell component="th" scope="row" sx={{ padding: "0px 16px 0px 36px" }}>
                       <Link to={`/cards/pack/${p._id}`} style={{ textDecoration: "none", color: "inherit" }}>
                         {p.name}
                       </Link>
@@ -235,7 +251,7 @@ export const Packs = () => {
                     <TableCell align="left">{p.cardsCount}</TableCell>
                     <TableCell align="left">{changeDateFormat(p.updated)}</TableCell>
                     <TableCell align="left">{p.user_name}</TableCell>
-                    <TableCell align="left" sx={{ padding: "16px 28px 16px 8px" }}>
+                    <TableCell align="left" sx={{ padding: "0px 16px 0px 16px" }}>
                       <span style={{ width: "33%" }}>
                         {p.cardsCount !== 0 && (
                           <IconButton aria-label="learn" component={Link} to={`/learn/${p._id}`}>

@@ -50,7 +50,7 @@ export const EditPackModal = ({ closeModal, _id, closeSecondModalHandler }: Prop
         type="email"
         fullWidth
         variant="standard"
-        sx={{ marginBottom: "29px" }}
+        sx={{ marginBottom: "29px", marginTop: "35px" }}
         size={"medium"}
         value={name}
         onChange={handleSetName}
