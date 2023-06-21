@@ -8,7 +8,8 @@ import { packsThunks } from "features/packs/packsSlice";
 import s from "./AddPack.module.scss";
 import defaultPackAva from "assets/images/defaultPackLogo.svg";
 import Button from "@mui/material/Button";
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useState } from "react";
+import { convertFileToBase64 } from "common/utils/imageToBase64";
 
 type PropsType = {
   closeModal: () => void;
@@ -19,7 +20,7 @@ export const AddPackModal = ({ closeModal }: PropsType) => {
   const [checked, setChecked] = React.useState(true);
   const [name, setName] = React.useState("");
   const [packCover, setPackCover] = useState(defaultPackAva);
-  const [isAvaBroken, setIsAvaBroken] = useState(false);
+  const [isCoverBroken, setIsCoverBroken] = useState(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
@@ -45,28 +46,23 @@ export const AddPackModal = ({ closeModal }: PropsType) => {
     }
   };
 
-  const convertFileToBase64 = (file: File, callBack: (value: string) => void) => {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const file64 = reader.result as string;
-      callBack(file64);
-    };
-    reader.readAsDataURL(file);
-  };
-
   const imgErrorHandler = () => {
-    setIsAvaBroken(true);
+    setIsCoverBroken(true);
     alert("Image is broken");
   };
 
   return (
-    <div className={s.content}>
+    <div>
       <div className={s.coverBlock}>
-        <img src={isAvaBroken ? defaultPackAva : packCover} alt="cover" onError={imgErrorHandler} />
+        <img src={isCoverBroken ? defaultPackAva : packCover} alt="cover" onError={imgErrorHandler} />
         <label style={{ width: "100%" }}>
           <input style={{ display: "none" }} type="file" onChange={uploadHandler} accept="image/*" />
-          <Button variant={"outlined"} component="span" sx={{ width: "100%", textTransform: "none" }}>
-            Add or Change Pack Cover
+          <Button
+            variant={"outlined"}
+            component="span"
+            sx={{ width: "100%", textTransform: "none", borderRadius: "30px" }}
+          >
+            Add Pack Cover
           </Button>
         </label>
       </div>

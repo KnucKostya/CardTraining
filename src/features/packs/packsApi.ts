@@ -31,6 +31,7 @@ export type AddPackPayloadType = {
 export type UpdatePackPayloadType = {
   _id: string;
   name?: string;
+  deckCover?: string;
 };
 
 export type GetPacksParamsType = {

@@ -262,7 +262,14 @@ export const Packs = () => {
                       {userId === p.user_id && (
                         <span style={{ width: "67%" }}>
                           <BaseModal modalTitle={"Edit pack"} buttonType={"iconEdit"}>
-                            {(close) => <EditPackModal closeModal={close} _id={p._id} />}
+                            {(close) => (
+                              <EditPackModal
+                                closeModal={close}
+                                _id={p._id}
+                                packName={p.name}
+                                cover={p.deckCover}
+                              />
+                            )}
                           </BaseModal>
                           <BaseModal modalTitle={"Delete pack"} buttonType={"iconDelete"}>
                             {(close) => <DeletePackModal closeModal={close} _id={p._id} packName={p.name} />}
