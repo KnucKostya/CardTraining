@@ -99,9 +99,6 @@ export const Learn = () => {
     }
     setCard(getRandomCard(cards));
   };
-  const resetAllCardsGrades = () => {
-    //TODO reset request
-  };
 
   return (
     <div className={s.learn}>
@@ -114,57 +111,50 @@ export const Learn = () => {
         />
         <div className={s.learnBlock}>
           <h2 className={s.title}>Learn: "{packName}"</h2>
-          {showLearning ? (
-            <div className={s.learnCard}>
-              <div className={s.question}>
-                <b>Question</b>: {card?.question}
-              </div>
-              <div className={s.attempts}>Количество попыток ответов на вопрос: {card?.shots}</div>
-              {showAnswer && (
-                <>
-                  <div className={s.answer}>
-                    <b>Answer</b>: {card?.answer}
-                  </div>
-                  <FormControl sx={{ marginBottom: "42px" }}>
-                    <FormLabel>Rate yourself:</FormLabel>
-                    <RadioGroup value={answer} onChange={setGradeHandler}>
-                      {grades.map((grade) => (
-                        <div className={s.answerVariant} key={grade.id}>
-                          <FormControlLabel value={grade.answer} control={<Radio />} label={grade.answer} />
-                          {Array.from({ length: grade.id }, (_, index) => (
-                            <GradeTwoToneIcon key={index} fontSize={"small"} />
-                          ))}
-                        </div>
-                      ))}
-                    </RadioGroup>
-                  </FormControl>
-                </>
-              )}
-              {!showAnswer && (
-                <SuperButton
-                  name={"Show answer"}
-                  variant={"contained"}
-                  borderRadius={"30px"}
-                  width={"360px"}
-                  onClickCallBack={() => setShowAnswer(true)}
-                />
-              )}
-              {showAnswer && (
-                <SuperButton
-                  name={"Next"}
-                  variant={"contained"}
-                  borderRadius={"30px"}
-                  width={"360px"}
-                  onClickCallBack={setNextCard}
-                />
-              )}
+          <div className={s.learnCard}>
+            <div className={s.question}>
+              <b>Question</b>: {card?.question}
             </div>
-          ) : (
-            <div>
-              All cards are learned ! Do you want to repeat and reset all cards grades?
-              <SuperButton name={"Reset cards"} onClickCallBack={resetAllCardsGrades} />
-            </div>
-          )}
+            <div className={s.attempts}>Количество попыток ответов на вопрос: {card?.shots}</div>
+            {showAnswer && (
+              <>
+                <div className={s.answer}>
+                  <b>Answer</b>: {card?.answer}
+                </div>
+                <FormControl sx={{ marginBottom: "42px" }}>
+                  <FormLabel>Rate yourself:</FormLabel>
+                  <RadioGroup value={answer} onChange={setGradeHandler}>
+                    {grades.map((grade) => (
+                      <div className={s.answerVariant} key={grade.id}>
+                        <FormControlLabel value={grade.answer} control={<Radio />} label={grade.answer} />
+                        {Array.from({ length: grade.id }, (_, index) => (
+                          <GradeTwoToneIcon key={index} fontSize={"small"} />
+                        ))}
+                      </div>
+                    ))}
+                  </RadioGroup>
+                </FormControl>
+              </>
+            )}
+            {!showAnswer && (
+              <SuperButton
+                name={"Show answer"}
+                variant={"contained"}
+                borderRadius={"30px"}
+                width={"360px"}
+                onClickCallBack={() => setShowAnswer(true)}
+              />
+            )}
+            {showAnswer && (
+              <SuperButton
+                name={"Next"}
+                variant={"contained"}
+                borderRadius={"30px"}
+                width={"360px"}
+                onClickCallBack={setNextCard}
+              />
+            )}
+          </div>
           <Backdrop
             sx={{
               color: "#fff",

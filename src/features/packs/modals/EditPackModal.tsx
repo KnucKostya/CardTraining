@@ -5,13 +5,14 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { SuperButton } from "common/components/super-button/SuperButton";
 import { useActions } from "common/hooks/useActions";
-import { packsThunks } from "features/packs/packsSlice";
+import { fetchPacks, packsThunks } from "features/packs/packsSlice";
 import { cardsActions } from "../../cards/cardsSlice";
 import { useAppDispatch } from "common/hooks/useAppDispatch";
 import { convertFileToBase64 } from "common/utils/imageToBase64";
-import defaultPackAva from "assets/images/defaultPackLogo.svg";
+import defaultPackAva from "assets/images/defaultPackCover.svg";
 import s from "features/packs/modals/EditPack.module.scss";
 import Button from "@mui/material/Button";
+import { QueryParamsType } from "features/packs/Packs";
 
 type PropsType = {
   closeModal: () => void | ReactNode;
@@ -19,10 +20,18 @@ type PropsType = {
   packName?: string;
   cover?: string;
   closeSecondModalHandler?: (value: null | HTMLElement) => void;
+  queryParams?: QueryParamsType;
 };
 
-export const EditPackModal = ({ closeModal, _id, closeSecondModalHandler, packName, cover }: PropsType) => {
-  const { updatePack } = useActions(packsThunks);
+export const EditPackModal = ({
+  closeModal,
+  _id,
+  closeSecondModalHandler,
+  packName,
+  cover,
+  queryParams,
+}: PropsType) => {
+  const { updatePack, fetchPacks } = useActions(packsThunks);
   const dispatch = useAppDispatch();
   const [checked, setChecked] = React.useState(true);
   const [name, setName] = React.useState(packName);
@@ -40,7 +49,7 @@ export const EditPackModal = ({ closeModal, _id, closeSecondModalHandler, packNa
     closeSecondModalHandler && closeSecondModalHandler(null);
   };
   const saveHandler = () => {
-    updatePack({ _id, name, deckCover: packCover });
+    updatePack({ _id, name, deckCover: packCover }).then(() => fetchPacks(queryParams!));
     dispatch(cardsActions.addPackName(name)); //TODO why dispatch here? use : useActions hook!
     closeModal();
     closeSecondModalHandler && closeSecondModalHandler(null);

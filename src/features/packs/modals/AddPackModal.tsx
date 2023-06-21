@@ -6,7 +6,7 @@ import { SuperButton } from "common/components/super-button/SuperButton";
 import { useActions } from "common/hooks/useActions";
 import { packsThunks } from "features/packs/packsSlice";
 import s from "./AddPack.module.scss";
-import defaultPackAva from "assets/images/defaultPackLogo.svg";
+import defaultPackAva from "assets/images/defaultPackCover.svg";
 import Button from "@mui/material/Button";
 import { ChangeEvent, useState } from "react";
 import { convertFileToBase64 } from "common/utils/imageToBase64";

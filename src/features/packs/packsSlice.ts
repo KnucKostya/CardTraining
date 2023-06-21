@@ -23,39 +23,36 @@ export const fetchPacks = createAppAsyncThunk<{ packs: PacksResType }, GetPacksP
 );
 export const addPack = createAppAsyncThunk<{ pack: CardPackType }, AddPackPayloadType>(
   "packs/addPack",
-  async (arg, thunkAPI) => {
+  async (args, thunkAPI) => {
     const { dispatch } = thunkAPI;
     return thunkTryCatch(thunkAPI, async () => {
-      await packsApi.addPack(arg);
-      await dispatch(fetchPacks({}));
+      await packsApi.addPack(args);
       // return { pack: res.data.newCardsPack}
     });
   }
 );
-export const removePack = createAppAsyncThunk<{ packId: string }, string>(
+export const removePack = createAppAsyncThunk<{ packId: string }, { _id: string }>(
   "packs/deletePack",
-  async (id, thunkAPI) => {
+  async (arg, thunkAPI) => {
     const { dispatch } = thunkAPI;
     return thunkTryCatch(thunkAPI, async () => {
-      await packsApi.removePack(id);
-      await dispatch(fetchPacks({}));
-      // TODO fetch packs with prev queryParams after delete  action
+      await packsApi.removePack(arg._id);
       // return {packId: res.data.deletedCardsPack._id}
     });
   }
 );
-export const updatePack = createAppAsyncThunk<{ pack: CardPackType }, UpdatePackPayloadType>(
-  "packs/updatePack",
-  async (arg, thunkAPI) => {
-    const { dispatch } = thunkAPI;
-    return thunkTryCatch(thunkAPI, async () => {
-      dispatch(packsActions.savePackName(arg.name));
-      await packsApi.updatePack(arg);
-      await dispatch(fetchPacks({}));
-      // return {pack: res.data.updatedCardsPack}
-    });
-  }
-);
+export const updatePack = createAppAsyncThunk<
+  { pack: CardPackType },
+  UpdatePackPayloadType & { userId?: string }
+>("packs/updatePack", async (arg, thunkAPI) => {
+  const { dispatch } = thunkAPI;
+  return thunkTryCatch(thunkAPI, async () => {
+    dispatch(packsActions.savePackName(arg.name));
+    await packsApi.updatePack(arg);
+    await dispatch(fetchPacks({ user_id: arg.userId }));
+    // return {pack: res.data.updatedCardsPack}
+  });
+});
 
 //REDUCER =================================================================================================
 

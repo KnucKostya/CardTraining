@@ -22,10 +22,12 @@ export const packsApi = {
 };
 
 //TYPES==========//TYPES==========//TYPES==========//TYPES==========//TYPES==========//TYPES==========
+
+export type AddPackTypeWithQuery = AddPackPayloadType & { userId: string };
 export type AddPackPayloadType = {
-  name?: string; // если не отправить будет "no Name"
-  deckCover?: string; // не обязателен  url/base64
-  private?: boolean; // если не отправить будет false
+  name?: string;
+  deckCover?: string;
+  private?: boolean;
 };
 
 export type UpdatePackPayloadType = {

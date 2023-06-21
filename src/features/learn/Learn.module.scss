@@ -18,6 +18,7 @@
       line-height: 27px;
     }
     .learnCard {
+      max-width: 420px;
       @include flex-block(flex, column, top, left);
       padding: 30px 33px 48px;
       background: #fcfcfc;
@@ -32,6 +33,7 @@
         margin-bottom: 13px;
         font-weight: 600;
         font-size: 16px;
+        word-wrap: break-word;
       }
       .attempts {
         margin-bottom: 29px;

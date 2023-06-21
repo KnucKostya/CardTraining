@@ -38,7 +38,7 @@ import { EditPackModal } from "features/packs/modals/EditPackModal";
 import { DeletePackModal } from "features/packs/modals/DeletePackModal";
 import { cardsThunks } from "features/cards/cardsSlice";
 import { changeDateFormat } from "common/utils/changeDateFormat";
-import defaultPackAva from "assets/images/defaultPackLogo.svg";
+import defaultPackCover from "assets/images/defaultPackCover.svg";
 
 export type QueryParamsType = {
   packName: string;
@@ -192,17 +192,11 @@ export const Packs = () => {
             <Table sx={{ overflowWrap: "break-word", tableLayout: "fixed" }}>
               <colgroup>
                 <col style={{ width: "10%" }} />
-                {/*cover*/}
                 <col style={{ width: "25%" }} />
-                {/*name*/}
                 <col style={{ width: "10%" }} />
-                {/*cardsCount*/}
                 <col style={{ width: "15%" }} />
-                {/*updated*/}
                 <col style={{ width: "20%" }} />
-                {/*createdBy*/}
                 <col style={{ width: "15%" }} />
-                {/*actions*/}
               </colgroup>
               <TableHead sx={{ background: "#EFEFEF" }}>
                 <TableRow hover={true}>
@@ -239,7 +233,7 @@ export const Packs = () => {
                     <TableCell align="center" sx={{ padding: 0, paddingLeft: "10px" }}>
                       <img
                         className={s.packLogo}
-                        src={p.deckCover ? p.deckCover : defaultPackAva}
+                        src={p.deckCover ? p.deckCover : defaultPackCover}
                         alt="logo"
                       />
                     </TableCell>
@@ -268,11 +262,19 @@ export const Packs = () => {
                                 _id={p._id}
                                 packName={p.name}
                                 cover={p.deckCover}
+                                queryParams={queryParams}
                               />
                             )}
                           </BaseModal>
                           <BaseModal modalTitle={"Delete pack"} buttonType={"iconDelete"}>
-                            {(close) => <DeletePackModal closeModal={close} _id={p._id} packName={p.name} />}
+                            {(close) => (
+                              <DeletePackModal
+                                closeModal={close}
+                                _id={p._id}
+                                packName={p.name}
+                                queryParams={queryParams}
+                              />
+                            )}
                           </BaseModal>
                         </span>
                       )}
