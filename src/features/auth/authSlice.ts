@@ -12,23 +12,15 @@ import {
 } from "features/auth/authApi";
 import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
 import { thunkTryCatch } from "common/utils/thunkTryCatch";
-import { appActions } from "app/appSlice";
 
 //THUNKS =================================================================================================
 
 const register = createAppAsyncThunk<RegisterResponse, { email: string; password: string }>(
   "auth/register",
   async (arg, thunkAPI) => {
-    const { rejectWithValue, dispatch } = thunkAPI;
-    try {
-      dispatch(appActions.setIsLoading({ isLoading: true }));
-      return await authApi.register(arg.email, arg.password);
-    } catch (e: any) {
-      dispatch(appActions.setError({ error: e }));
-      return rejectWithValue(e.response.data.error);
-    } finally {
-      dispatch(appActions.setIsLoading({ isLoading: false }));
-    }
+    return thunkTryCatch(thunkAPI, () => {
+      return authApi.register(arg.email, arg.password);
+    });
   }
 );
 
@@ -52,13 +44,13 @@ const setNewPassword = createAppAsyncThunk("auth/newPassword", async (arg: SetNe
     });
   });
 });
-const logoutTC = createAppAsyncThunk<LogoutResType>("auth/logout", async (arg) => {
+const logoutTC = createAppAsyncThunk<LogoutResType>("auth/logout", async () => {
   const res = await authApi.logout();
   return res.data;
 });
 const updateUserTC = createAppAsyncThunk<{ profile: UpdatedProfileType }, UpdateProfilePayloadType>(
   "profile/updateUser",
-  async (arg, thunkAPI) => {
+  async (arg) => {
     const res = await authApi.updateUser(arg);
     return { profile: res.data };
   }
@@ -90,7 +82,7 @@ const slice = createSlice({
         state.profile = action.payload.profile;
         state.isAuth = true;
       })
-      .addCase(logoutTC.fulfilled, (state, action) => {
+      .addCase(logoutTC.fulfilled, (state) => {
         state.isAuth = false;
       })
       .addCase(isAuthTC.fulfilled, (state, action) => {
