@@ -2,7 +2,7 @@ import * as React from "react";
 import TextField from "@mui/material/TextField";
 import { SuperButton } from "common/components/super-button/SuperButton";
 import { ChangeEvent, useState } from "react";
-import s from "./addCard.module.scss";
+import s from "features/cards/modals/addCard/addCard.module.scss";
 import { toast } from "react-toastify";
 
 type PropsType = {

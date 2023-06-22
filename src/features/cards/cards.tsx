@@ -32,8 +32,8 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { isLoading_Selector } from "app/appSelector";
 import { toast } from "react-toastify";
 import { BaseModal } from "common/components/BasicModal/BaseModal";
-import { AddCard } from "./modals/AddCard";
-import { EditCard } from "./modals/EditCard";
+import { AddCard } from "features/cards/modals/addCard/AddCard";
+import { EditCard } from "features/cards/modals/editCard/EditCard";
 import { DeleteCard } from "./modals/DeleteCard";
 import { changeDateFormat } from "common/utils/changeDateFormat";
 
@@ -62,6 +62,7 @@ export const Cards = () => {
     pageCount: 4,
   });
   const [searchBarValue, setSearchBarValue] = useState(queryParams.cardQuestion);
+  const [isImage, setIsImage] = useState(false);
   const cardsPaginationCount: number = cardsCount ? Math.ceil(cardsCount / queryParams.pageCount) : 10;
   const paginationChangeHandler = (event: React.ChangeEvent<unknown>, value: number) => {
     setQueryParams({ ...queryParams, page: value });
@@ -84,6 +85,7 @@ export const Cards = () => {
   };
 
   const editCardHandle = (cardsPackId: string, cardId: string, question: string, answer: string) => {
+    console.log(question);
     dispatch(cardsThunks.editCard({ cardId, question, answer }))
       .unwrap()
       .then(() => dispatch(cardsThunks.getCards({ packId: cardsPackId, ...queryParams })))
@@ -106,17 +108,6 @@ export const Cards = () => {
   }
 
   useEffect(() => {
-    // authApi
-    //   .login({
-    //     email: "knuckostya1@gmail.com",
-    //     password: "Sends777",
-    //     rememberMe: true,
-    //   })
-    //   .then(() => authApi.isAuth)
-    //   .then(() => {
-    //     if (!packId) return;
-    //     dispatch(cardsThunks.getCards({ packId: packId }));
-    //   });
     if (!packId) return;
     dispatch(cardsThunks.getCards({ packId: packId, ...queryParams }))
       .unwrap()
@@ -181,6 +172,7 @@ export const Cards = () => {
                         {row.question.includes("blob") ? (
                           <img src={row.question} alt="" className={s.photo} />
                         ) : (
+                          // {row.question.includes("blob") ? setIsImage(true) : setIsImage(false)}
                           row.question
                         )}
                       </TableCell>
@@ -199,12 +191,14 @@ export const Cards = () => {
                         {userId === row.user_id ? (
                           <div>
                             <BaseModal buttonType={"iconEdit"} modalTitle={"Edit card"}>
+                              {/*TODO*/}
                               {(close) => (
                                 <EditCard
                                   closeModal={close}
                                   editCardCallback={(question, answer) =>
                                     editCardHandle(row.cardsPack_id, row._id, question, answer)
                                   }
+                                  isImage={isImage}
                                 />
                               )}
                             </BaseModal>
