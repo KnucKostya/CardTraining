@@ -60,7 +60,7 @@ export const Register = () => {
 
   return (
     <div className={s.regForm}>
-      <div className={s.signIn}>Sign Up</div>
+      <h3>Sign Up</h3>
 
       <form className={s.form} onSubmit={handleSubmit(onSubmit)}>
         <ThemeProvider theme={theme}>
@@ -117,24 +117,25 @@ export const Register = () => {
             <SuperButton
               name="Cancel"
               redirectPath={"/login"}
-              borderRadius={"5px"}
-              width={"120px"}
-              height={"38px"}
+              borderRadius={"10px"}
+              width={"127px"}
+              height={"36px"}
             />
             <SuperButton
               name="Sign Up"
               type={"submit"}
-              borderRadius={"5px"}
-              width={"120px"}
-              height={"38px"}
+              borderRadius={"10px"}
+              width={"127px"}
+              height={"36px"}
             />
           </div>
         </ThemeProvider>
       </form>
       <div className={s.isAccount}>Already have an account?</div>
-      <Link to={RouteNames.LOGIN} className={s.loginLink}>
-        Sign In
-      </Link>
+      <SuperButton name={"Sign In"} borderRadius={"10px"} redirectPath={RouteNames.LOGIN} />
+      {/*<Link to={RouteNames.LOGIN} className={s.loginLink}>*/}
+      {/*  Sign In*/}
+      {/*</Link>*/}
     </div>
   );
 };

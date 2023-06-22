@@ -4,14 +4,23 @@
   list-style: none;
 }
 
-@mixin flex-block(
-  $display: flex,
-  $flex-direction: row,
-  $justify-content: center,
-  $align-items: center
-) {
+@mixin flex-block($display: flex, $flex-direction: row, $justify-content: center, $align-items: center) {
   display: $display;
   flex-direction: $flex-direction;
   justify-content: $justify-content;
   align-items: $align-items;
+}
+
+@mixin form($display, $direction, $align, $justify) {
+  display: $display;
+  flex-direction: $direction;
+  align-items: $align;
+  justify-content: $justify;
+}
+
+@mixin formStyle($color, $font-family, $font-size, $font-weight) {
+  color: $color;
+  font-family: $font-family;
+  font-size: $font-size;
+  font-weight: $font-weight;
 }

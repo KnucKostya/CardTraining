@@ -76,11 +76,11 @@ export type PacksResType = {
 };
 
 export type UpdatePackResponseType = {
-  updatedCardsPack: RootObjectUpdatedCardsPack;
+  updatedCardsPack: UpdatedPack;
   token: string;
   tokenDeathTime: number;
 };
-export type RootObjectUpdatedCardsPack = {
+export type UpdatedPack = {
   _id: string;
   user_id: string;
   user_name: string;

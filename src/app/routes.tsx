@@ -29,7 +29,7 @@ export enum RouteNames {
 export const router = createHashRouter(
   createRoutesFromElements(
     <Route path={RouteNames.START_PAGE} element={<App />}>
-      <Route path={RouteNames.START_PAGE} element={<Navigate to={RouteNames.PACKS} />} />
+      <Route path={RouteNames.START_PAGE} element={<Navigate to={RouteNames.LOGIN} />} />
       <Route path={RouteNames.ERROR_PAGE} element={<ErrorPage />} />
       <Route path={RouteNames.PROFILE} element={<Profile />} />
       <Route path={RouteNames.LOGIN} element={<Login />} />
