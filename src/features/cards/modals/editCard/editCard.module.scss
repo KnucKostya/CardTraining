@@ -1,0 +1,16 @@
+.imgLearnContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  .question {
+    margin-bottom: 5%;
+  }
+  .answer {
+    margin-bottom: 5%;
+  }
+  .photo {
+    width: 100%;
+    height: 100px;
+  }
+}
