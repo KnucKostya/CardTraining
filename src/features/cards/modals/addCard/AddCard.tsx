@@ -7,7 +7,13 @@ import { toast } from "react-toastify";
 
 type PropsType = {
   closeModal: () => void;
-  addCardCallback: (question?: string, answer?: string, answerImg?: string, questionImg?: string) => void;
+  addCardCallback: (params: AddCardCallbackType) => void;
+};
+export type AddCardCallbackType = {
+  question?: string;
+  answer?: string;
+  questionImg?: string;
+  answerImg?: string;
 };
 
 export const AddCard = ({ closeModal, addCardCallback }: PropsType) => {
@@ -20,11 +26,8 @@ export const AddCard = ({ closeModal, addCardCallback }: PropsType) => {
     closeModal();
   };
   const saveHandler = () => {
-    if ((question && answer) !== "") {
-      addCardCallback(question, answer);
-      closeModal();
-    } else if ((questionFile && answerFile) !== "") {
-      addCardCallback(questionFile, answerFile);
+    if ((questionFile && answerFile) || (question && answer)) {
+      addCardCallback({ answer, question, answerImg: answerFile, questionImg: questionFile });
       closeModal();
     } else toast.error("you are not added question or answer");
   };

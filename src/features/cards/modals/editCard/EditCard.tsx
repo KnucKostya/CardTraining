@@ -45,91 +45,91 @@ export const EditCard = ({ closeModal, editCardCallback, isImage }: PropsType) =
 
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
-      {/*{!cards?.map((row) => row.question.includes("blob")) ? (*/}
-      <span>
-        <TextField
-          autoFocus
-          margin="none"
-          label="Question"
-          type="email"
-          fullWidth
-          variant="standard"
-          sx={{ marginBottom: "29px" }}
-          size={"medium"}
-          value={question}
-          onChange={setQuestionHandler}
-          InputProps={{
-            style: {
-              fontSize: "20px",
-            },
-          }}
-          InputLabelProps={{
-            style: {
-              fontSize: "20px",
-            },
-          }}
-        />
-        <TextField
-          margin="none"
-          label="Answer"
-          type="email"
-          fullWidth
-          variant="standard"
-          sx={{ marginBottom: "29px" }}
-          size={"medium"}
-          value={answer}
-          onChange={setAnswerHandler}
-          InputProps={{
-            style: {
-              fontSize: "20px",
-            },
-          }}
-          InputLabelProps={{
-            style: {
-              fontSize: "20px",
-            },
-          }}
-        />
-      </span>
+      {/*{cards?.map((row) => row.question.includes("blob")) ? (*/}
+      {/*<span>*/}
+      {/*  <TextField*/}
+      {/*    autoFocus*/}
+      {/*    margin="none"*/}
+      {/*    label="Question"*/}
+      {/*    type="email"*/}
+      {/*    fullWidth*/}
+      {/*    variant="standard"*/}
+      {/*    sx={{ marginBottom: "29px" }}*/}
+      {/*    size={"medium"}*/}
+      {/*    value={question}*/}
+      {/*    onChange={setQuestionHandler}*/}
+      {/*    InputProps={{*/}
+      {/*      style: {*/}
+      {/*        fontSize: "20px",*/}
+      {/*      },*/}
+      {/*    }}*/}
+      {/*    InputLabelProps={{*/}
+      {/*      style: {*/}
+      {/*        fontSize: "20px",*/}
+      {/*      },*/}
+      {/*    }}*/}
+      {/*  />*/}
+      {/*  <TextField*/}
+      {/*    margin="none"*/}
+      {/*    label="Answer"*/}
+      {/*    type="email"*/}
+      {/*    fullWidth*/}
+      {/*    variant="standard"*/}
+      {/*    sx={{ marginBottom: "29px" }}*/}
+      {/*    size={"medium"}*/}
+      {/*    value={answer}*/}
+      {/*    onChange={setAnswerHandler}*/}
+      {/*    InputProps={{*/}
+      {/*      style: {*/}
+      {/*        fontSize: "20px",*/}
+      {/*      },*/}
+      {/*    }}*/}
+      {/*    InputLabelProps={{*/}
+      {/*      style: {*/}
+      {/*        fontSize: "20px",*/}
+      {/*      },*/}
+      {/*    }}*/}
+      {/*  />*/}
+      {/*</span>*/}
       {/*) : (*/}
-      {/*<div className={s.imgLearnContainer}>*/}
-      {/*  <h5 className={s.question}>Question:</h5>*/}
-      {/*  {questionFile && <img src={questionFile} alt="question image" className={s.photo} />}*/}
-      {/*  <TextField*/}
-      {/*    type="file"*/}
-      {/*    variant="standard"*/}
-      {/*    onChange={uploadQuestionFileHandler}*/}
-      {/*    label="Choose File"*/}
-      {/*    InputLabelProps={{*/}
-      {/*      shrink: true,*/}
-      {/*    }}*/}
-      {/*    InputProps={{*/}
-      {/*      style: {*/}
-      {/*        marginTop: "5%",*/}
-      {/*        marginBottom: "5%",*/}
-      {/*        width: "100%",*/}
-      {/*      },*/}
-      {/*    }}*/}
-      {/*  />*/}
-      {/*  <h5 className={s.answer}>Answer:</h5>*/}
-      {/*  {answerFile && <img src={answerFile} alt="answer image" className={s.photo} />}*/}
-      {/*  <TextField*/}
-      {/*    type="file"*/}
-      {/*    variant="standard"*/}
-      {/*    onChange={uploadAnswerFileHandler}*/}
-      {/*    label="Choose File"*/}
-      {/*    InputLabelProps={{*/}
-      {/*      shrink: true,*/}
-      {/*    }}*/}
-      {/*    InputProps={{*/}
-      {/*      style: {*/}
-      {/*        marginTop: "5%",*/}
-      {/*        marginBottom: "7%",*/}
-      {/*        width: "100%",*/}
-      {/*      },*/}
-      {/*    }}*/}
-      {/*  />*/}
-      {/*</div>*/}
+      <div className={s.imgLearnContainer}>
+        <h5 className={s.question}>Question:</h5>
+        {questionFile && <img src={questionFile} alt="question image" className={s.photo} />}
+        <TextField
+          type="file"
+          variant="standard"
+          onChange={uploadQuestionFileHandler}
+          label="Choose File"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          InputProps={{
+            style: {
+              marginTop: "5%",
+              marginBottom: "5%",
+              width: "100%",
+            },
+          }}
+        />
+        <h5 className={s.answer}>Answer:</h5>
+        {answerFile && <img src={answerFile} alt="answer image" className={s.photo} />}
+        <TextField
+          type="file"
+          variant="standard"
+          onChange={uploadAnswerFileHandler}
+          label="Choose File"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          InputProps={{
+            style: {
+              marginTop: "5%",
+              marginBottom: "7%",
+              width: "100%",
+            },
+          }}
+        />
+      </div>
       {/*)}*/}
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <SuperButton

@@ -34,13 +34,13 @@ const addNewCard = createAppAsyncThunk<
   return thunkTryCatch(
     thunkAPI,
     async () => {
-      const res = await cardsApi.addCard(
-        arg.packId,
-        arg.question,
-        arg.answer,
-        arg.answerImg,
-        arg.questionImg
-      );
+      const res = await cardsApi.addCard({
+        packId: arg.packId,
+        question: arg.question,
+        answer: arg.answer,
+        answerImg: arg.answerImg,
+        questionImg: arg.questionImg,
+      });
       return res.data;
     },
     false

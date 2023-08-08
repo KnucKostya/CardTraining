@@ -40,6 +40,8 @@ export const Learn = () => {
     cardsPack_id: "",
     answer: "fake answer",
     question: "fake question",
+    answerImg: "fake answer",
+    questionImg: "fake answer",
     grade: 0,
     shots: 0,
     created: new Date(),
