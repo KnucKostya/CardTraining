@@ -46,7 +46,6 @@ export type QueryParamsTypeCards = {
 export const Cards = () => {
   const dispatch = useAppDispatch();
   const cards = useAppSelector(cardsSelector);
-  console.log(cards);
   const userId = useAppSelector(cardUserIdSelector);
   const packName = useAppSelector(packNameSelector);
   const packUserId = useAppSelector(packUserIdSelector);
@@ -63,7 +62,6 @@ export const Cards = () => {
     pageCount: 4,
   });
   const [searchBarValue, setSearchBarValue] = useState(queryParams.cardQuestion);
-  const [isImage, setIsImage] = useState(false);
   const cardsPaginationCount: number = cardsCount ? Math.ceil(cardsCount / queryParams.pageCount) : 10;
   const paginationChangeHandler = (event: React.ChangeEvent<unknown>, value: number) => {
     setQueryParams({ ...queryParams, page: value });

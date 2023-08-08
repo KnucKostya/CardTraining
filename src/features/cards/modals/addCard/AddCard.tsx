@@ -18,7 +18,7 @@ export type AddCardCallbackType = {
 
 export const AddCard = ({ closeModal, addCardCallback }: PropsType) => {
   const [variant, setVariant] = useState("text");
-  const [answerFile, setAnswerFileFile] = useState("");
+  const [answerFile, setAnswerFile] = useState("");
   const [questionFile, setQuestionFile] = useState("");
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
@@ -34,12 +34,40 @@ export const AddCard = ({ closeModal, addCardCallback }: PropsType) => {
 
   const changeSelectValue = (event: ChangeEvent<HTMLSelectElement>) => setVariant(event.target.value);
 
+  // converter photo with FileReader Base64
+  const uploadHandler = (e: ChangeEvent<HTMLInputElement>, uploadType: string) => {
+    if (e.target.files && e.target.files.length) {
+      const file = e.target.files[0];
+      console.log("file: ", file);
+
+      if (file.size < 4000000) {
+        convertFileToBase64(file, (file64: string) => {
+          if (uploadType === "answer") {
+            setAnswerFile(file64);
+          } else if (uploadType === "question") {
+            setQuestionFile(file64);
+          }
+        });
+      } else {
+        toast.error("File is to big, chose another file");
+      }
+    }
+  };
+  const convertFileToBase64 = (file: File, callBack: (value: string) => void) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const file64 = reader.result as string;
+      callBack(file64);
+    };
+    reader.readAsDataURL(file);
+  };
+
   const uploadQuestionFileHandler = (event: ChangeEvent<HTMLInputElement>) => {
-    setQuestionFile(URL.createObjectURL(event.target.files![0]));
+    uploadHandler(event, "question");
   };
 
   const uploadAnswerFileHandler = (event: ChangeEvent<HTMLInputElement>) => {
-    setAnswerFileFile(URL.createObjectURL(event.target.files![0]));
+    uploadHandler(event, "answer");
   };
 
   return (
