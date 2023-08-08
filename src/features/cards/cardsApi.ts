@@ -13,7 +13,7 @@ export const cardsApi = {
       },
     });
   },
-  addCard: (packId: string, question?: string, answer?: string, answerImg?: string, questionImg?: string) => {
+  addCard: ({ answer, answerImg, questionImg, question, packId }: AddCardType) => {
     return instance.post<PostCard>("cards/card", {
       card: { cardsPack_id: packId, question, answer, answerImg, questionImg },
     });
@@ -30,6 +30,8 @@ export const cardsApi = {
 export type CardType = {
   answer: string;
   question: string;
+  answerImg: string;
+  questionImg: string;
   cardsPack_id: string;
   grade: number;
   shots: number;
@@ -62,6 +64,14 @@ export type PostCard = {
     questionVideo?: string;
     answerVideo?: string;
   };
+};
+
+export type AddCardType = {
+  packId: string;
+  question?: string;
+  answer?: string;
+  answerImg?: string;
+  questionImg?: string;
 };
 
 export type GradeType = 0 | 1 | 2 | 3 | 4 | 5;

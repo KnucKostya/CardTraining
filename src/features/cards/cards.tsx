@@ -32,7 +32,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { isLoading_Selector } from "app/appSelector";
 import { toast } from "react-toastify";
 import { BaseModal } from "common/components/BasicModal/BaseModal";
-import { AddCard } from "features/cards/modals/addCard/AddCard";
+import { AddCard, AddCardCallbackType } from "features/cards/modals/addCard/AddCard";
 import { EditCard } from "features/cards/modals/editCard/EditCard";
 import { DeleteCard } from "./modals/DeleteCard";
 import { changeDateFormat } from "common/utils/changeDateFormat";
@@ -78,7 +78,7 @@ export const Cards = () => {
     //TODO remove all "!"
   };
 
-  const addNewCardHandle = (question?: string, answer?: string, answerImg?: string, questionImg?: string) => {
+  const addNewCardHandle = ({ answer, question, answerImg, questionImg }: AddCardCallbackType) => {
     dispatch(cardsThunks.addNewCard({ packId: packId!, answer, question, questionImg, answerImg }))
       .unwrap()
       .then(() => dispatch(cardsThunks.getCards({ packId: packId!, ...queryParams })));
@@ -169,19 +169,14 @@ export const Cards = () => {
                   cards.map((row) => (
                     <TableRow key={row._id} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                       <TableCell component="th" scope="row">
-                        {row.question.includes("blob") ? (
-                          <img src={row.question} alt="" className={s.photo} />
+                        {row.questionImg ? (
+                          <img src={row.questionImg} alt="" className={s.photo} />
                         ) : (
-                          // {row.question.includes("blob") ? setIsImage(true) : setIsImage(false)}
                           row.question
                         )}
                       </TableCell>
                       <TableCell align="right">
-                        {row.answer.includes("blob") ? (
-                          <img src={row.answer} alt="" className={s.photo} />
-                        ) : (
-                          row.answer
-                        )}
+                        {row.answerImg ? <img src={row.answerImg} alt="" className={s.photo} /> : row.answer}
                       </TableCell>
                       <TableCell align="right">
                         <div>{changeDateFormat(row.updated)}</div>
