@@ -21,7 +21,7 @@ import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
 import { PacksSlider } from "features/packs/slider/PacksSlider";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import { useActions } from "common/hooks/useActions";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { isLoading_Selector } from "app/appSelector";
 import InputLabel from "@mui/material/InputLabel";
 import {
@@ -75,14 +75,6 @@ export const Packs = () => {
     fetchPacks(queryParams);
   }, [queryParams]);
 
-  // authApi
-  //   .login({
-  //     email: "knuckostya1@gmail.com",
-  //     password: "Sends777",
-  //     rememberMe: true,
-  //   })
-  //   .then(() => authApi.isAuth);
-  //    fetchPacks(queryParams));
   const updatedSortHandler = () => {
     if (queryParams.sortPacks === "1updated" || queryParams.sortPacks === "") {
       setQueryParams((prevState) => ({
