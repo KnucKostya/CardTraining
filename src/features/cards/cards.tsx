@@ -62,7 +62,6 @@ export const Cards = () => {
     pageCount: 4,
   });
   const [searchBarValue, setSearchBarValue] = useState(queryParams.cardQuestion);
-  const [isImage, setIsImage] = useState(false);
   const cardsPaginationCount: number = cardsCount ? Math.ceil(cardsCount / queryParams.pageCount) : 10;
   const paginationChangeHandler = (event: React.ChangeEvent<unknown>, value: number) => {
     setQueryParams({ ...queryParams, page: value });
@@ -84,9 +83,16 @@ export const Cards = () => {
       .then(() => dispatch(cardsThunks.getCards({ packId: packId!, ...queryParams })));
   };
 
-  const editCardHandle = (cardsPackId: string, cardId: string, question: string, answer: string) => {
+  const editCardHandle = (
+    cardsPackId: string,
+    cardId: string,
+    question: string,
+    answer: string,
+    questionImg: string,
+    answerImg: string
+  ) => {
     console.log(question);
-    dispatch(cardsThunks.editCard({ cardId, question, answer }))
+    dispatch(cardsThunks.editCard({ cardId, question, answer, questionImg, answerImg }))
       .unwrap()
       .then(() => dispatch(cardsThunks.getCards({ packId: cardsPackId, ...queryParams })))
       .catch((e) => {
@@ -187,15 +193,39 @@ export const Cards = () => {
                           <div>
                             <BaseModal buttonType={"iconEdit"} modalTitle={"Edit card"}>
                               {/*TODO*/}
-                              {(close) => (
-                                <EditCard
-                                  closeModal={close}
-                                  editCardCallback={(question, answer) =>
-                                    editCardHandle(row.cardsPack_id, row._id, question, answer)
-                                  }
-                                  isImage={isImage}
-                                />
-                              )}
+                              {(close) =>
+                                row.answerImg ? (
+                                  <EditCard
+                                    closeModal={close}
+                                    editCardCallback={(question, answer, questionImg, answerImg) =>
+                                      editCardHandle(
+                                        row.cardsPack_id,
+                                        row._id,
+                                        question,
+                                        answer,
+                                        questionImg,
+                                        answerImg
+                                      )
+                                    }
+                                    isImage={true}
+                                  />
+                                ) : (
+                                  <EditCard
+                                    closeModal={close}
+                                    editCardCallback={(question, answer, questionImg, answerImg) =>
+                                      editCardHandle(
+                                        row.cardsPack_id,
+                                        row._id,
+                                        question,
+                                        answer,
+                                        questionImg,
+                                        answerImg
+                                      )
+                                    }
+                                    isImage={false}
+                                  />
+                                )
+                              }
                             </BaseModal>
                             <BaseModal buttonType={"iconDelete"} modalTitle={"Delete Card"}>
                               {(close) => (

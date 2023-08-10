@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
-import { cardsApi, EditGradePayloadType, EditGradeResType, GetCardsResponse } from "./cardsApi";
+import { cardsApi, EditCardType, EditGradePayloadType, EditGradeResType, GetCardsResponse } from "./cardsApi";
 import { thunkTryCatch } from "common/utils/thunkTryCatch";
 
 const getCards = createAppAsyncThunk<
@@ -46,19 +46,23 @@ const addNewCard = createAppAsyncThunk<
     false
   );
 });
-const editCard = createAppAsyncThunk<any, { cardId: string; question: string; answer: string }>(
-  "cards/edit",
-  async (arg, thunkAPI) => {
-    return thunkTryCatch(
-      thunkAPI,
-      async () => {
-        const res = await cardsApi.editCard(arg.cardId, arg.question, arg.answer);
-        return res.data;
-      },
-      false
-    );
-  }
-);
+const editCard = createAppAsyncThunk<any, EditCardType>("cards/edit", async ({ ...arg }, thunkAPI) => {
+  console.log(arg.question);
+  return thunkTryCatch(
+    thunkAPI,
+    async () => {
+      const res = await cardsApi.editCard({
+        cardId: arg.cardId,
+        question: arg.question,
+        answer: arg.answer,
+        questionImg: arg.questionImg,
+        answerImg: arg.answerImg,
+      });
+      return res.data;
+    },
+    false
+  );
+});
 
 const updateGrade = createAppAsyncThunk<EditGradeResType, EditGradePayloadType>(
   "cards/grade",

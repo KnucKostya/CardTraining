@@ -18,8 +18,8 @@ export const cardsApi = {
       card: { cardsPack_id: packId, question, answer, answerImg, questionImg },
     });
   },
-  editCard: (cardId: string, question: string, answer: string) => {
-    return instance.put("/cards/card", { card: { _id: cardId, question, answer } });
+  editCard: ({ cardId, question, answer, answerImg, questionImg }: EditCardType) => {
+    return instance.put("/cards/card", { card: { _id: cardId, question, answer, answerImg, questionImg } });
   },
   editGrade: (payload: EditGradePayloadType) => {
     return instance.put<EditGradeResType>("/cards/grade", { ...payload });
@@ -73,6 +73,7 @@ export type AddCardType = {
   answerImg?: string;
   questionImg?: string;
 };
+export type EditCardType = Omit<AddCardType, "packId"> & { cardId: string };
 
 export type GradeType = 0 | 1 | 2 | 3 | 4 | 5;
 export type EditGradePayloadType = {
