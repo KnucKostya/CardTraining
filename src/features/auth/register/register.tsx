@@ -35,7 +35,6 @@ export const Register = () => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<Inputs>({
     resolver: yupResolver(schema),
@@ -120,6 +119,8 @@ export const Register = () => {
               borderRadius={"5px"}
               width={"120px"}
               height={"38px"}
+              color={"primary"}
+              variant={"contained"}
             />
             <SuperButton
               name="Sign Up"
@@ -127,6 +128,8 @@ export const Register = () => {
               borderRadius={"5px"}
               width={"120px"}
               height={"38px"}
+              color={"primary"}
+              variant={"contained"}
             />
           </div>
         </ThemeProvider>

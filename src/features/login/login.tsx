@@ -5,7 +5,7 @@ import FormGroup from "@mui/material/FormGroup";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import React, { useState } from "react";
-import s from "./login.module.css";
+import s from "features/login/login.module.scss";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
@@ -35,8 +35,6 @@ export const Login = () => {
   const {
     register,
     handleSubmit,
-    setFocus,
-    watch,
     formState: { errors },
   } = useForm<FormInputType>();
   const [showPassword, setShowPassword] = useState(false);
@@ -59,6 +57,7 @@ export const Login = () => {
               margin="normal"
               type={"email"}
               variant={"standard"}
+              InputLabelProps={{ style: { fontSize: 13 } }}
               {...register("email", {
                 required: "Email is required",
                 pattern: {
@@ -70,12 +69,12 @@ export const Login = () => {
               error={Boolean(errors.email)}
               helperText={errors.email?.message}
             />
-            {/*{errors.email?<div style={{color: 'red'}}>{errors.email.message}</div> : null}*/}
             <TextField
               type={showPassword ? "text" : "password"}
               label="Password"
               margin="normal"
               variant={"standard"}
+              InputLabelProps={{ style: { fontSize: 13 } }}
               {...register("password", {
                 required: "Password is required",
                 minLength: {
