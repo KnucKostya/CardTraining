@@ -13,7 +13,7 @@ import FormLabel from "@mui/material/FormLabel";
 import { RouteNames } from "app/routes";
 import GradeTwoToneIcon from "@mui/icons-material/GradeTwoTone";
 import { CardType, GradeType } from "features/cards/cardsApi";
-import { cards_Selector, packNameSelector } from "features/cards/cardsSelectors";
+import { cards_Selector, pack_Name_Selector } from "features/cards/cardsSelectors";
 import { cardsThunks } from "features/cards/cardsSlice";
 import { packsThunks } from "features/packs/packsSlice";
 import { getRandomCard } from "common/utils/random-card";
@@ -31,7 +31,7 @@ const grades = [
 export const Learn = () => {
   const { getCards, updateGrade } = useActions({ ...packsThunks, ...cardsThunks });
   const { packId } = useParams();
-  const packName = useAppSelector(packNameSelector);
+  const packName = useAppSelector(pack_Name_Selector);
   const cards = useAppSelector(cards_Selector);
   const isLoading = useAppSelector(isLoading_Selector);
   const [card, setCard] = useState<CardType>({

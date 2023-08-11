@@ -8,14 +8,11 @@ import { useAppDispatch } from "common/hooks/useAppDispatch";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { isLoading_Selector } from "./appSelector";
-import { packNameSelector } from "features/cards/cardsSelectors";
 import { isAuth_auth_Selector } from "features/auth/authSelector";
 
 function App() {
   const isAuth = useAppSelector(isAuth_auth_Selector);
-  const isLoading = useAppSelector(isLoading_Selector);
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (!isAuth) {

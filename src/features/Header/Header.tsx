@@ -9,6 +9,8 @@ import ava from "assets/images/defaultAva.png";
 import logo from "assets/images/cardsLogo.png";
 import { isLoading_Selector } from "app/appSelector";
 import { userAvatar_auth_Selector, userName_auth_Selector } from "../auth/authSelector";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAddressCard, faUser } from "@fortawesome/free-solid-svg-icons";
 
 export const Header = () => {
   const isLoading = useAppSelector(isLoading_Selector);
@@ -24,9 +26,18 @@ export const Header = () => {
         <div className={s.logo}>
           <img src={logo} alt="logo" />
         </div>
-        <Link to={RouteNames.PROFILE} style={{ textDecoration: "none", color: "rgb(154 145 200)" }}>
-          <h1>Go to Profile</h1>
-        </Link>
+        <div className={s.links}>
+          <Link to={RouteNames.PROFILE} style={{ textDecoration: "none", color: "rgb(154 145 200)" }}>
+            <h1 className={s.profileLink}>
+              {<FontAwesomeIcon icon={faUser} className={s.profileLogo} />}Profile
+            </h1>
+          </Link>
+          <Link to={RouteNames.PACKS} style={{ textDecoration: "none", color: "rgb(154 145 200)" }}>
+            <h1 className={s.profileLink}>
+              {<FontAwesomeIcon icon={faAddressCard} className={s.profileLogo} />}Pack List
+            </h1>
+          </Link>
+        </div>
         {!profilePage && (
           <div className={s.actions}>
             <SuperButton

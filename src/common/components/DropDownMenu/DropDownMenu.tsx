@@ -7,13 +7,13 @@ import { EditPackModal } from "features/packs/modals/EditPackModal";
 import { BaseModal } from "../BasicModal/BaseModal";
 import { DeletePackModal } from "features/packs/modals/DeletePackModal";
 import { useAppSelector } from "../../hooks/useAppSelector";
-import { packNameSelector } from "features/cards/cardsSelectors";
+import { pack_Name_Selector } from "features/cards/cardsSelectors";
 import { Link, Navigate } from "react-router-dom";
 import { RouteNames } from "app/routes";
 
 export function DropDownMenu(props: DropDownMenu) {
   const { packId } = props;
-  const packName = useAppSelector(packNameSelector);
+  const packName = useAppSelector(pack_Name_Selector);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 

@@ -24,14 +24,6 @@ type FormInputType = {
 export const Login = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  // const loginHandler = () => {
-  //   const payload = {
-  //     email: "kozlov0020@gmail.com",
-  //     password: "1qazxcvBG",
-  //     rememberMe: false,
-  //   };
-  //   dispatch(authThunks.login(payload));
-  // };
   const {
     register,
     handleSubmit,

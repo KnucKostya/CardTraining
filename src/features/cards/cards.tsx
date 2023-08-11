@@ -15,11 +15,11 @@ import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import StarPurple500SharpIcon from "@mui/icons-material/StarPurple500Sharp";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import {
-  cardsCountSelector,
-  cardsSelector,
+  cards_Count_Selector,
+  cards_Selector,
   cardUserIdSelector,
-  packNameSelector,
-  packUserIdSelector,
+  pack_Name_Selector,
+  pack_UserId_Selector,
 } from "features/cards/cardsSelectors";
 import { DropDownMenu } from "common/components/DropDownMenu/DropDownMenu";
 import { SearchCards } from "features/cards/SearchCards/SearchCards";
@@ -45,11 +45,11 @@ export type QueryParamsTypeCards = {
 };
 export const Cards = () => {
   const dispatch = useAppDispatch();
-  const cards = useAppSelector(cardsSelector);
+  const cards = useAppSelector(cards_Selector);
   const userId = useAppSelector(cardUserIdSelector);
-  const packName = useAppSelector(packNameSelector);
-  const packUserId = useAppSelector(packUserIdSelector);
-  const cardsCount = useAppSelector(cardsCountSelector);
+  const packName = useAppSelector(pack_Name_Selector);
+  const packUserId = useAppSelector(pack_UserId_Selector);
+  const cardsCount = useAppSelector(cards_Count_Selector);
   const isLoading = useAppSelector(isLoading_Selector);
   const { packId } = useParams();
   const url = useLocation().pathname;

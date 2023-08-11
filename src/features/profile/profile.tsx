@@ -25,6 +25,10 @@ export const Profile = () => {
   const userName = useAppSelector(userName_auth_Selector);
   const userEmail = useAppSelector(userEmail_auth_Selector);
 
+  const changePhotoHandle = () => {
+    alert("fill");
+  };
+
   const onClickLogoutHandler = () => {
     dispatch(authThunks.logoutTC());
   };
@@ -49,7 +53,7 @@ export const Profile = () => {
             <div className={s.avatarBlock}>
               <img className={s.avatar} src={userId && userAvatar ? userAvatar : ava} alt="avatar" />
               <IconButton className={s.photoIcon} aria-label="change photo">
-                <AddAPhotoIcon />
+                <AddAPhotoIcon onClick={changePhotoHandle} />
               </IconButton>
             </div>
             <EditableSpan
