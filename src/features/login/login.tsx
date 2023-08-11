@@ -5,7 +5,7 @@ import FormGroup from "@mui/material/FormGroup";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import React, { useState } from "react";
-import s from "./login.module.css";
+import s from "features/login/login.module.scss";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
@@ -13,8 +13,8 @@ import InputAdornment from "@mui/material/InputAdornment";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
 import { authThunks } from "../auth/authSlice";
-import { useAppDispatch } from "../../common/hooks/useAppDispatch";
-import { RouteNames } from "../../app/routes";
+import { useAppDispatch } from "common/hooks/useAppDispatch";
+import { RouteNames } from "app/routes";
 
 type FormInputType = {
   email: string;
@@ -24,19 +24,9 @@ type FormInputType = {
 export const Login = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const loginHandler = () => {
-    const payload = {
-      email: "kozlov0020@gmail.com",
-      password: "1qazxcvBG",
-      rememberMe: false,
-    };
-    dispatch(authThunks.login(payload));
-  };
   const {
     register,
     handleSubmit,
-    setFocus,
-    watch,
     formState: { errors },
   } = useForm<FormInputType>();
   const [showPassword, setShowPassword] = useState(false);
@@ -59,6 +49,7 @@ export const Login = () => {
               margin="normal"
               type={"email"}
               variant={"standard"}
+              InputLabelProps={{ style: { fontSize: 13 } }}
               {...register("email", {
                 required: "Email is required",
                 pattern: {
@@ -70,12 +61,12 @@ export const Login = () => {
               error={Boolean(errors.email)}
               helperText={errors.email?.message}
             />
-            {/*{errors.email?<div style={{color: 'red'}}>{errors.email.message}</div> : null}*/}
             <TextField
               type={showPassword ? "text" : "password"}
               label="Password"
               margin="normal"
               variant={"standard"}
+              InputLabelProps={{ style: { fontSize: 13 } }}
               {...register("password", {
                 required: "Password is required",
                 minLength: {
@@ -95,10 +86,7 @@ export const Login = () => {
                 ),
               }}
             />
-            <FormControlLabel
-              label={"Remember me"}
-              control={<Checkbox {...register("rememberMe")} />}
-            />
+            <FormControlLabel label={"Remember me"} control={<Checkbox {...register("rememberMe")} />} />
 
             <Button
               type={"submit"}
@@ -112,13 +100,13 @@ export const Login = () => {
         </FormControl>
       </form>
       <div className={"s.forgot"}>
-        <NavLink className={s.fogotLink} to="/forgot-password">
+        <NavLink className={s.forgotLink} to="/forgot-password">
           Forgot password?
         </NavLink>
       </div>
       <div className={s.question}>Don't have an account?</div>
       <div>
-        <NavLink to="/register" className={s.refisterLink}>
+        <NavLink to="/register" className={s.registerLink}>
           {" "}
           Sign up
         </NavLink>

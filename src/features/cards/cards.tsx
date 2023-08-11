@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppDispatch } from "common/hooks/useAppDispatch";
 import s from "./cards.module.scss";
 import { cardsThunks } from "./cardsSlice";
@@ -9,65 +9,92 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import SearchIcon from "@mui/icons-material/Search";
-import CloseIcon from "@mui/icons-material/Close";
 import { useAppSelector } from "common/hooks/useAppSelector";
 import { authApi } from "features/auth";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import StarPurple500SharpIcon from "@mui/icons-material/StarPurple500Sharp";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import {
-  cardsSelector,
+  cards_Count_Selector,
+  cards_Selector,
   cardUserIdSelector,
-  packNameSelector,
-  packUserIdSelector,
+  pack_Name_Selector,
+  pack_UserId_Selector,
 } from "features/cards/cardsSelectors";
 import { DropDownMenu } from "common/components/DropDownMenu/DropDownMenu";
+import { SearchCards } from "features/cards/SearchCards/SearchCards";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import Pagination from "@mui/material/Pagination";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
-import { isLoading_Selector } from "../../app/appSelector";
+import { isLoading_Selector } from "app/appSelector";
 import { toast } from "react-toastify";
-import { BaseModal } from "../../common/components/BasicModal/BaseModal";
-import { AddCard } from "./modals/AddCard";
-import { EditCard } from "./modals/EditCard";
+import { BaseModal } from "common/components/BasicModal/BaseModal";
+import { AddCard, AddCardCallbackType } from "features/cards/modals/addCard/AddCard";
+import { EditCard } from "features/cards/modals/editCard/EditCard";
 import { DeleteCard } from "./modals/DeleteCard";
+import { changeDateFormat } from "common/utils/changeDateFormat";
 
+export type QueryParamsTypeCards = {
+  cardQuestion: string;
+  cardAnswer: string;
+  page: number;
+  pageCount: number;
+};
 export const Cards = () => {
   const dispatch = useAppDispatch();
-  const cards = useAppSelector(cardsSelector);
+  const cards = useAppSelector(cards_Selector);
   const userId = useAppSelector(cardUserIdSelector);
-  const packName = useAppSelector(packNameSelector);
-  const packUserId = useAppSelector(packUserIdSelector);
+  const packName = useAppSelector(pack_Name_Selector);
+  const packUserId = useAppSelector(pack_UserId_Selector);
+  const cardsCount = useAppSelector(cards_Count_Selector);
   const isLoading = useAppSelector(isLoading_Selector);
   const { packId } = useParams();
   const url = useLocation().pathname;
   const navigate = useNavigate();
   sessionStorage.setItem("url", url);
-
-  const [inputValue, setInputValue] = useState<string>("");
-  const onInputChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.currentTarget.value);
+  const [queryParams, setQueryParams] = useState<QueryParamsTypeCards>({
+    cardQuestion: "",
+    cardAnswer: "",
+    page: 1,
+    pageCount: 4,
+  });
+  const [searchBarValue, setSearchBarValue] = useState(queryParams.cardQuestion);
+  const cardsPaginationCount: number = cardsCount ? Math.ceil(cardsCount / queryParams.pageCount) : 10;
+  const paginationChangeHandler = (event: React.ChangeEvent<unknown>, value: number) => {
+    setQueryParams({ ...queryParams, page: value });
   };
-
+  const changeCountRows = (event: SelectChangeEvent) => {
+    setQueryParams({ ...queryParams, pageCount: +event.target.value });
+  };
   const removeCardHandle = (cardId: string, packId: string) => {
     dispatch(cardsThunks.removeCard({ cardId }))
       .unwrap()
-      .then(() => dispatch(cardsThunks.getCards({ packId })));
+      .then(() => dispatch(cardsThunks.getCards({ packId, ...queryParams })));
     //TODO catch for every handler
     //TODO remove all "!"
   };
 
-  const addNewCardHandle = (question: string, answer: string) => {
-    console.log();
-    dispatch(cardsThunks.addNewCard({ packId: packId!, answer, question }))
+  const addNewCardHandle = ({ answer, question, answerImg, questionImg }: AddCardCallbackType) => {
+    dispatch(cardsThunks.addNewCard({ packId: packId!, answer, question, questionImg, answerImg }))
       .unwrap()
-      .then(() => dispatch(cardsThunks.getCards({ packId: packId! })));
+      .then(() => dispatch(cardsThunks.getCards({ packId: packId!, ...queryParams })));
   };
 
-  const editCardHandle = (cardsPackId: string, cardId: string, question: string, answer: string) => {
-    dispatch(cardsThunks.editCard({ cardId, question, answer }))
+  const editCardHandle = (
+    cardsPackId: string,
+    cardId: string,
+    question: string,
+    answer: string,
+    questionImg: string,
+    answerImg: string
+  ) => {
+    console.log(question);
+    dispatch(cardsThunks.editCard({ cardId, question, answer, questionImg, answerImg }))
       .unwrap()
-      .then(() => dispatch(cardsThunks.getCards({ packId: cardsPackId })))
+      .then(() => dispatch(cardsThunks.getCards({ packId: cardsPackId, ...queryParams })))
       .catch((e) => {
         toast.error(e);
       });
@@ -87,22 +114,11 @@ export const Cards = () => {
   }
 
   useEffect(() => {
-    // authApi
-    //   .login({
-    //     email: "knuckostya1@gmail.com",
-    //     password: "Sends777",
-    //     rememberMe: true,
-    //   })
-    //   .then(() => authApi.isAuth)
-    //   .then(() => {
-    //     if (!packId) return;
-    //     dispatch(cardsThunks.getCards({ packId: packId }));
-    //   });
     if (!packId) return;
-    dispatch(cardsThunks.getCards({ packId: packId }))
+    dispatch(cardsThunks.getCards({ packId: packId, ...queryParams }))
       .unwrap()
       .then(() => authApi.isAuth);
-  }, [dispatch]);
+  }, [dispatch, queryParams]);
 
   useEffect(() => {
     let getUrl = sessionStorage.getItem("url");
@@ -119,23 +135,12 @@ export const Cards = () => {
               <span>Back to packs</span>
             </div>
           </Link>
+        </span>
+        <span className={s.packAddName}>
           <h2 className={s.packName}>
-            {/*{packName?.name}*/}
             {packName}
             {packUserId === userId && <DropDownMenu packId={packId} />}
           </h2>
-        </span>
-        <div className={s.searchContainer}>
-          <div className={s.bal}>
-            <SearchIcon className={s.searchIcon} />
-            <input
-              className={s.input}
-              placeholder="Search..."
-              value={inputValue}
-              onChange={onInputChangeHandler}
-            ></input>
-            <CloseIcon className={s.closeIcon} onClick={() => setInputValue("")} />
-          </div>
           {packUserId === userId ? (
             <span>
               <BaseModal modalTitle={"Add new card"} buttonType={"base"}>
@@ -143,6 +148,15 @@ export const Cards = () => {
               </BaseModal>
             </span>
           ) : null}
+        </span>
+        <div className={s.searchContainer}>
+          <div className={s.search}>Search</div>
+          <SearchCards
+            queryParams={queryParams}
+            setQueryParams={setQueryParams}
+            searchValue={searchBarValue}
+            setSearchValue={setSearchBarValue}
+          />
         </div>
         <div className={s.cardsContainer}>
           <TableContainer component={Paper}>
@@ -161,25 +175,57 @@ export const Cards = () => {
                   cards.map((row) => (
                     <TableRow key={row._id} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                       <TableCell component="th" scope="row">
-                        {row.question}
+                        {row.questionImg ? (
+                          <img src={row.questionImg} alt="" className={s.photo} />
+                        ) : (
+                          row.question
+                        )}
                       </TableCell>
-                      <TableCell align="right">{row.answer}</TableCell>
                       <TableCell align="right">
-                        <div>{row.updated.slice(5, 10).replace("-", ".")}</div>
+                        {row.answerImg ? <img src={row.answerImg} alt="" className={s.photo} /> : row.answer}
+                      </TableCell>
+                      <TableCell align="right">
+                        <div>{changeDateFormat(row.updated)}</div>
                       </TableCell>
                       {!row.grade ? <TableCell align="right">0</TableCell> : StarsRating(row.grade)}
                       <TableCell align="right">
                         {userId === row.user_id ? (
                           <div>
                             <BaseModal buttonType={"iconEdit"} modalTitle={"Edit card"}>
-                              {(close) => (
-                                <EditCard
-                                  closeModal={close}
-                                  editCardCallback={(question, answer) =>
-                                    editCardHandle(row.cardsPack_id, row._id, question, answer)
-                                  }
-                                />
-                              )}
+                              {/*TODO*/}
+                              {(close) =>
+                                row.answerImg ? (
+                                  <EditCard
+                                    closeModal={close}
+                                    editCardCallback={(question, answer, questionImg, answerImg) =>
+                                      editCardHandle(
+                                        row.cardsPack_id,
+                                        row._id,
+                                        question,
+                                        answer,
+                                        questionImg,
+                                        answerImg
+                                      )
+                                    }
+                                    isImage={true}
+                                  />
+                                ) : (
+                                  <EditCard
+                                    closeModal={close}
+                                    editCardCallback={(question, answer, questionImg, answerImg) =>
+                                      editCardHandle(
+                                        row.cardsPack_id,
+                                        row._id,
+                                        question,
+                                        answer,
+                                        questionImg,
+                                        answerImg
+                                      )
+                                    }
+                                    isImage={false}
+                                  />
+                                )
+                              }
                             </BaseModal>
                             <BaseModal buttonType={"iconDelete"} modalTitle={"Delete Card"}>
                               {(close) => (
@@ -189,10 +235,6 @@ export const Cards = () => {
                                 />
                               )}
                             </BaseModal>
-                            {/*<DeleteIcon*/}
-                            {/*  style={{ marginLeft: "7%", cursor: "pointer" }}*/}
-                            {/*  onClick={() => removeCardHandle(row._id, row.cardsPack_id)}*/}
-                            {/*/>*/}
                           </div>
                         ) : (
                           "not your card"
@@ -222,8 +264,24 @@ export const Cards = () => {
               <CircularProgress color="inherit" />
             </Backdrop>
           </TableContainer>
-          <div className={s.paginationContainer}>
-            -----------------pagination for Valentin----------------
+          <div className={s.paginationBlock}>
+            <Pagination
+              shape={"rounded"}
+              count={cardsPaginationCount}
+              color="primary"
+              page={queryParams.page}
+              onChange={paginationChangeHandler}
+            />
+            <span>Show</span>
+            <FormControl>
+              <Select value={queryParams.pageCount.toString()} onChange={changeCountRows} autoWidth>
+                <MenuItem value={"4"}>4</MenuItem>
+                <MenuItem value={"6"}>6</MenuItem>
+                <MenuItem value={"8"}>8</MenuItem>
+                <MenuItem value={"10"}>10</MenuItem>
+              </Select>
+            </FormControl>
+            <span>Packs per page</span>
           </div>
         </div>
       </div>

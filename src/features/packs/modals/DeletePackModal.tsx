@@ -1,20 +1,28 @@
 import * as React from "react";
 import { SuperButton } from "common/components/super-button/SuperButton";
 import { useActions } from "common/hooks/useActions";
-import { packsThunks } from "features/packs/packsSlice";
+import { fetchPacks, packsThunks } from "features/packs/packsSlice";
 import Typography from "@mui/material/Typography";
 import { toast } from "react-toastify";
 import { useLocation, useNavigate } from "react-router-dom";
+import { QueryParamsType } from "features/packs/Packs";
 
 type PropsType = {
   closeModal: () => void;
   _id: string;
   packName?: string;
   closeSecondModalHandler?: (value: null | HTMLElement) => void;
+  queryParams?: QueryParamsType;
 };
 
-export const DeletePackModal = ({ closeModal, _id, packName, closeSecondModalHandler }: PropsType) => {
-  const { removePack } = useActions(packsThunks);
+export const DeletePackModal = ({
+  closeModal,
+  _id,
+  packName,
+  closeSecondModalHandler,
+  queryParams,
+}: PropsType) => {
+  const { removePack, fetchPacks } = useActions(packsThunks);
   const location = useLocation();
   console.log(location.pathname.includes("/cards/pack/"));
   // const { packId } = useParams();
@@ -25,8 +33,9 @@ export const DeletePackModal = ({ closeModal, _id, packName, closeSecondModalHan
     closeModal();
   };
   const saveHandler = () => {
-    removePack(_id)
+    removePack({ _id })
       .then(() => {
+        fetchPacks(queryParams!);
         if (location.pathname.includes("/cards/pack/")) navigate("/packs");
         toast.success(`${packName} pack successfully deleted `);
       })
@@ -39,7 +48,7 @@ export const DeletePackModal = ({ closeModal, _id, packName, closeSecondModalHan
 
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
-      <Typography sx={{ marginBottom: "30px" }}>
+      <Typography sx={{ marginBottom: "30px", marginTop: "35px" }}>
         Do you really want to remove <b>{packName}</b> pack?
         <br /> All cards in pack will be deleted!
       </Typography>

@@ -76,7 +76,8 @@ export function BaseModal({ children, modalTitle, buttonType }: BaseModalPropsTy
             >
               {modalTitle}
             </Typography>
-            <Divider sx={{ marginBottom: "35px" }} />
+            {/*<Divider sx={{ marginBottom: "35px" }} />*/}
+            <Divider />
             {children(handleClose)}
           </Box>
         </Fade>

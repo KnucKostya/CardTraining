@@ -1,0 +1,11 @@
+@import "src/common/styles/mixins/mixins.scss";
+
+.coverBlock {
+  margin-bottom: 30px;
+  @include flex-block(flex, column, center, center);
+  width: 360px;
+  img {
+    height: 130px;
+    padding: 10px;
+  }
+}

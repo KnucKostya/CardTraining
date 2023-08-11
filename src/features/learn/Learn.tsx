@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAppSelector } from "common/hooks/useAppSelector";
 import { useActions } from "common/hooks/useActions";
-import { packs_Selector } from "features/packs/packsSelector";
 import s from "features/learn/Learn.module.scss";
 import { SuperButton } from "common/components/super-button/SuperButton";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -13,7 +12,14 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import { RouteNames } from "app/routes";
 import GradeTwoToneIcon from "@mui/icons-material/GradeTwoTone";
-import { CardType } from "features/cards/cardsApi";
+import { CardType, GradeType } from "features/cards/cardsApi";
+import { cards_Selector, pack_Name_Selector } from "features/cards/cardsSelectors";
+import { cardsThunks } from "features/cards/cardsSlice";
+import { packsThunks } from "features/packs/packsSlice";
+import { getRandomCard } from "common/utils/random-card";
+import { isLoading_Selector } from "app/appSelector";
+import { Backdrop } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const grades = [
   { answer: "Didn't know", id: 1 },
@@ -23,40 +29,60 @@ const grades = [
   { answer: "Knew the answer", id: 5 },
 ];
 export const Learn = () => {
-  const { id: cardsPack_id } = useParams();
-  const packs = useAppSelector(packs_Selector);
-  // const  cards  = useAppSelector(cards_Selector)
-  // const { getCards, updateGrade, getPacks, setIsLoading } = useActions({
-  //   ...cardsThunks,
-  //   ...packsThunks,
-  //   ...cardsActions,
-  // })
-  const [card, setCard] = useState<CardType>();
+  const { getCards, updateGrade } = useActions({ ...packsThunks, ...cardsThunks });
+  const { packId } = useParams();
+  const packName = useAppSelector(pack_Name_Selector);
+  const cards = useAppSelector(cards_Selector);
+  const isLoading = useAppSelector(isLoading_Selector);
+  const [card, setCard] = useState<CardType>({
+    user_id: "fake",
+    _id: "fake",
+    cardsPack_id: "",
+    answer: "fake answer",
+    question: "fake question",
+    answerImg: "fake answer",
+    questionImg: "fake answer",
+    grade: 0,
+    shots: 0,
+    created: new Date(),
+    updated: new Date(),
+  });
   const [first, setFirst] = useState<boolean>(true);
-  const [grade, setGrade] = useState<number>(0);
+  const [grade, setGrade] = useState<GradeType>(0);
+  const [answer, setAnswer] = useState<string>(grades[0].answer);
   const [showAnswer, setShowAnswer] = useState<boolean>(false);
-  const [answer, setAnswer] = React.useState("female");
+  const [showLearning, setShowLearning] = useState<boolean>(true);
 
-  const pack = packs.find((p) => p._id === cardsPack_id);
-  const onChangeGrade = (value: string) => {
+  useEffect(() => {
+    if (first) {
+      getCards({ packId: packId! });
+      setFirst(false);
+    }
+    if (cards?.length > 0) {
+      setCard(getRandomCard(cards));
+    }
+  }, [first, cards, packId]);
+  const setGradeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = (event.target as HTMLInputElement).value;
+    setAnswer(value);
     switch (value) {
-      case "Didn't answer, 1/5": {
+      case grades[0].answer: {
         setGrade(1);
         break;
       }
-      case "Wasn't sure, 2/5": {
+      case grades[1].answer: {
         setGrade(2);
         break;
       }
-      case "Knew something, 3/5": {
+      case grades[2].answer: {
         setGrade(3);
         break;
       }
-      case "Mostly knew the answer, 4/5": {
+      case grades[3].answer: {
         setGrade(4);
         break;
       }
-      case "Knew the answer, 5/5": {
+      case grades[4].answer: {
         setGrade(5);
         break;
       }
@@ -64,8 +90,16 @@ export const Learn = () => {
         setGrade(0);
     }
   };
-  const answerHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAnswer((event.target as HTMLInputElement).value);
+  const areAllCardsWithGradeFive = (cards: CardType[]) => {
+    return cards.every((card) => card.grade === 5);
+  };
+  const setNextCard = () => {
+    updateGrade({ grade: grade, card_id: card._id });
+    setShowAnswer(false);
+    if (areAllCardsWithGradeFive(cards)) {
+      setShowLearning(false);
+    }
+    setCard(getRandomCard(cards));
   };
 
   return (
@@ -78,29 +112,31 @@ export const Learn = () => {
           redirectPath={RouteNames.PACKS}
         />
         <div className={s.learnBlock}>
-          <h2 className={s.title}>Learn : Pack name</h2> {/*TODO hardcode*/}
+          <h2 className={s.title}>Learn: "{packName}"</h2>
           <div className={s.learnCard}>
             <div className={s.question}>
-              <b>Question</b>: Lorem ipsum dolor sit amet! {/*TODO hardcode*/}
+              <b>Question</b>: {card?.question}
             </div>
-            <div className={s.attempts}>Количество попыток ответов на вопрос: 10</div> {/*TODO hardcode*/}
-            <div className={s.answer}>
-              <b>Answer</b>: answer content here {/*TODO hardcode*/}
-            </div>
+            <div className={s.attempts}>Количество попыток ответов на вопрос: {card?.shots}</div>
             {showAnswer && (
-              <FormControl sx={{ marginBottom: "42px" }}>
-                <FormLabel>Rate yourself:</FormLabel>
-                <RadioGroup value={answer} onChange={answerHandler}>
-                  {grades.map((grade) => (
-                    <div className={s.answerVariant} key={grade.id}>
-                      <FormControlLabel value={grade.answer} control={<Radio />} label={grade.answer} />
-                      {Array.from({ length: grade.id }, (_, index) => (
-                        <GradeTwoToneIcon key={index} fontSize={"small"} />
-                      ))}
-                    </div>
-                  ))}
-                </RadioGroup>
-              </FormControl>
+              <>
+                <div className={s.answer}>
+                  <b>Answer</b>: {card?.answer}
+                </div>
+                <FormControl sx={{ marginBottom: "42px" }}>
+                  <FormLabel>Rate yourself:</FormLabel>
+                  <RadioGroup value={answer} onChange={setGradeHandler}>
+                    {grades.map((grade) => (
+                      <div className={s.answerVariant} key={grade.id}>
+                        <FormControlLabel value={grade.answer} control={<Radio />} label={grade.answer} />
+                        {Array.from({ length: grade.id }, (_, index) => (
+                          <GradeTwoToneIcon key={index} fontSize={"small"} />
+                        ))}
+                      </div>
+                    ))}
+                  </RadioGroup>
+                </FormControl>
+              </>
             )}
             {!showAnswer && (
               <SuperButton
@@ -108,7 +144,7 @@ export const Learn = () => {
                 variant={"contained"}
                 borderRadius={"30px"}
                 width={"360px"}
-                onClickCallBack={() => setShowAnswer(!showAnswer)}
+                onClickCallBack={() => setShowAnswer(true)}
               />
             )}
             {showAnswer && (
@@ -117,11 +153,24 @@ export const Learn = () => {
                 variant={"contained"}
                 borderRadius={"30px"}
                 width={"360px"}
-                // onClickCallBack={setNextCard}
-                // TODO
+                onClickCallBack={setNextCard}
               />
             )}
           </div>
+          <Backdrop
+            sx={{
+              color: "#fff",
+              zIndex: (theme) => theme.zIndex.drawer + 1,
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+            }}
+            open={isLoading}
+          >
+            <CircularProgress color="inherit" />
+          </Backdrop>
         </div>
       </div>
     </div>

@@ -13,6 +13,19 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  .profileLogo {
+    margin-right: 5px;
+  }
+  .profileLink {
+    padding: 5px;
+  }
+  .profileLink:hover {
+    color: rgb(135, 121, 204);
+  }
+  .links {
+    display: flex;
+    flex-direction: row;
+  }
 }
 .actions {
   display: flex;
@@ -32,4 +45,7 @@
     width: 36px;
     height: 36px;
   }
+}
+.logo img {
+  height: 50px;
 }
