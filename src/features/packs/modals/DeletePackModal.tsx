@@ -1,9 +1,8 @@
 import * as React from "react";
 import { SuperButton } from "common/components/super-button/SuperButton";
 import { useActions } from "common/hooks/useActions";
-import { fetchPacks, packsThunks } from "features/packs/packsSlice";
+import { packsThunks } from "features/packs/packsSlice";
 import Typography from "@mui/material/Typography";
-import { toast } from "react-toastify";
 import { useLocation, useNavigate } from "react-router-dom";
 import { QueryParamsType } from "features/packs/Packs";
 
@@ -24,7 +23,6 @@ export const DeletePackModal = ({
 }: PropsType) => {
   const { removePack, fetchPacks } = useActions(packsThunks);
   const location = useLocation();
-  console.log(location.pathname.includes("/cards/pack/"));
   // const { packId } = useParams();
   const navigate = useNavigate();
 
@@ -33,17 +31,17 @@ export const DeletePackModal = ({
     closeModal();
   };
   const saveHandler = () => {
-    removePack({ _id })
-      .then(() => {
-        fetchPacks(queryParams!);
-        if (location.pathname.includes("/cards/pack/")) navigate("/packs");
-        toast.success(`${packName} pack successfully deleted `);
-      })
-      .catch((e: any) => {
-        e?.message ? toast.error(e.message) : toast.error(e.errorMessage);
-      });
-    closeSecondModalHandler && closeSecondModalHandler(null);
-    closeModal();
+    removePack({ _id }).then(() => {
+      fetchPacks(queryParams!);
+      //   if (location.pathname.includes("/cards/pack/")) navigate("/packs");
+      //   toast.success(`${packName} pack successfully deleted `);
+      // })
+      // .catch((e: any) => {
+      //   e?.message ? toast.error(e.message) : toast.error(e.errorMessage);
+      // });
+      closeSecondModalHandler && closeSecondModalHandler(null);
+      closeModal();
+    });
   };
 
   return (

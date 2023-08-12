@@ -21,7 +21,7 @@ export const packsApi = {
   },
 };
 
-//TYPES==========//TYPES==========//TYPES==========//TYPES==========//TYPES==========//TYPES==========
+//TYPES
 
 export type AddPackTypeWithQuery = AddPackPayloadType & { userId: string };
 export type AddPackPayloadType = {

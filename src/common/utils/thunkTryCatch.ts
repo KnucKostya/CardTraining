@@ -1,8 +1,7 @@
 import { AppDispatch, RootState } from "app/store";
 import { BaseThunkAPI } from "@reduxjs/toolkit/dist/createAsyncThunk";
-import { appActions } from "../../app/appSlice";
+import { appActions } from "app/appSlice";
 import { AxiosError } from "axios";
-
 
 /**
  * If the logic function completes without errors, thunkTryCatch returns the result of executing this function.
@@ -25,7 +24,11 @@ export const thunkTryCatch = async (
     return await afterResolveFoo();
   } catch (error) {
     const err = error as AxiosError<{ error: string }>;
-    const errorMessage=err?.response?.data.error
+    let errorMessage = err?.response?.data.error;
+    let axiosErrorMessage = err?.message;
+    if (!errorMessage) {
+      errorMessage = axiosErrorMessage;
+    }
     return rejectWithValue({ errorMessage, showGlobalError });
   } finally {
     dispatch(appActions.setIsLoading({ isLoading: false }));

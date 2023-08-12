@@ -10,13 +10,15 @@ import defaultPackAva from "assets/images/defaultPackCover.svg";
 import Button from "@mui/material/Button";
 import { ChangeEvent, useState } from "react";
 import { convertFileToBase64 } from "common/utils/imageToBase64";
+import { QueryParamsType } from "features/packs/Packs";
 
 type PropsType = {
   closeModal: () => void;
+  queryParams: QueryParamsType;
 };
 
-export const AddPackModal = ({ closeModal }: PropsType) => {
-  const { addPack } = useActions(packsThunks);
+export const AddPackModal = ({ closeModal, queryParams }: PropsType) => {
+  const { addPack, fetchPacks } = useActions(packsThunks);
   const [checked, setChecked] = React.useState(true);
   const [name, setName] = React.useState("");
   const [packCover, setPackCover] = useState(defaultPackAva);
@@ -29,7 +31,7 @@ export const AddPackModal = ({ closeModal }: PropsType) => {
     closeModal();
   };
   const saveHandler = () => {
-    addPack({ name: name, deckCover: packCover });
+    addPack({ name: name, deckCover: packCover }).then(() => fetchPacks(queryParams));
     closeModal();
   };
 

@@ -26,8 +26,7 @@ export const addPack = createAppAsyncThunk<{ pack: CardPackType }, AddPackPayloa
   async (args, thunkAPI) => {
     const { dispatch } = thunkAPI;
     return thunkTryCatch(thunkAPI, async () => {
-      await packsApi.addPack(args);
-      // return { pack: res.data.newCardsPack}
+      return await packsApi.addPack(args);
     });
   }
 );
@@ -36,8 +35,8 @@ export const removePack = createAppAsyncThunk<{ packId: string }, { _id: string 
   async (arg, thunkAPI) => {
     const { dispatch } = thunkAPI;
     return thunkTryCatch(thunkAPI, async () => {
-      await packsApi.removePack(arg._id);
-      // return {packId: res.data.deletedCardsPack._id}
+      let res = await packsApi.removePack(arg._id);
+      return res;
     });
   }
 );

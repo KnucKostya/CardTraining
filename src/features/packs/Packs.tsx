@@ -131,7 +131,8 @@ export const Packs = () => {
         <div className={s.titleBlock}>
           <span className={s.title}>Packs List</span>
           <BaseModal modalTitle={"Add new pack"} buttonType={"base"}>
-            {(close) => <AddPackModal closeModal={close} />}
+            {(close) => <AddPackModal closeModal={close} queryParams={queryParams} />}
+            {/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/}
           </BaseModal>
         </div>
         <div className={s.actionsBlock}>
