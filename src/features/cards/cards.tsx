@@ -12,7 +12,6 @@ import Paper from "@mui/material/Paper";
 import { useAppSelector } from "common/hooks/useAppSelector";
 import { authApi } from "features/auth";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import StarPurple500SharpIcon from "@mui/icons-material/StarPurple500Sharp";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import {
   cards_Count_Selector,
@@ -36,6 +35,7 @@ import { AddCard, AddCardCallbackType } from "features/cards/modals/addCard/AddC
 import { EditCard } from "features/cards/modals/editCard/EditCard";
 import { DeleteCard } from "./modals/DeleteCard";
 import { changeDateFormat } from "common/utils/changeDateFormat";
+import { StarsRating } from "features/cards/StarsRating";
 
 export type QueryParamsTypeCards = {
   cardQuestion: string;
@@ -99,19 +99,6 @@ export const Cards = () => {
         toast.error(e);
       });
   };
-
-  function StarsRating(count: number) {
-    let stars = [];
-
-    for (let i = 0; i < count; i++) {
-      stars.push(<StarPurple500SharpIcon key={i} />);
-    }
-    return (
-      <TableCell align="right" style={{ display: "flex", color: "yellow" }}>
-        {stars}
-      </TableCell>
-    );
-  }
 
   useEffect(() => {
     if (!packId) return;

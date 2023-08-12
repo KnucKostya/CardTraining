@@ -31,6 +31,7 @@ type ButtonPropsType = {
   borderRadius?: string;
   onClickCallBack?: () => void;
   type?: string;
+  onKeyDown?: (e?: any) => void;
 };
 
 export const SuperButton = (props: ButtonPropsType) => {

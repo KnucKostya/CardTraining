@@ -38,10 +38,10 @@ export const Learn = () => {
     user_id: "fake",
     _id: "fake",
     cardsPack_id: "",
-    answer: "fake answer",
-    question: "fake question",
-    answerImg: "fake answer",
-    questionImg: "fake answer",
+    answer: "loading...",
+    question: "loading...",
+    answerImg: "loading...",
+    questionImg: "loading...",
     grade: 0,
     shots: 0,
     created: new Date(),
@@ -51,17 +51,8 @@ export const Learn = () => {
   const [grade, setGrade] = useState<GradeType>(0);
   const [answer, setAnswer] = useState<string>(grades[0].answer);
   const [showAnswer, setShowAnswer] = useState<boolean>(false);
-  const [showLearning, setShowLearning] = useState<boolean>(true);
+  // const [showLearning, setShowLearning] = useState<boolean>(true);
 
-  useEffect(() => {
-    if (first) {
-      getCards({ packId: packId! });
-      setFirst(false);
-    }
-    if (cards?.length > 0) {
-      setCard(getRandomCard(cards));
-    }
-  }, [first, cards, packId]);
   const setGradeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = (event.target as HTMLInputElement).value;
     setAnswer(value);
@@ -94,13 +85,23 @@ export const Learn = () => {
     return cards.every((card) => card.grade === 5);
   };
   const setNextCard = () => {
-    updateGrade({ grade: grade, card_id: card._id });
+    updateGrade({ grade, card_id: card._id });
     setShowAnswer(false);
     if (areAllCardsWithGradeFive(cards)) {
       setShowLearning(false);
     }
     setCard(getRandomCard(cards));
   };
+
+  useEffect(() => {
+    if (first) {
+      getCards({ packId: packId! });
+      setFirst(false);
+    }
+    if (cards?.length > 0) {
+      setCard(getRandomCard(cards));
+    }
+  }, [first, cards, packId]);
 
   return (
     <div className={s.learn}>
@@ -115,13 +116,23 @@ export const Learn = () => {
           <h2 className={s.title}>Learn: "{packName}"</h2>
           <div className={s.learnCard}>
             <div className={s.question}>
-              <b>Question</b>: {card?.question}
+              <b>Question:</b>{" "}
+              {card?.question !== ("no question" || card.grade !== 5) ? (
+                card.question
+              ) : (
+                <img src={card.questionImg} className={s.photo} alt="question Img" />
+              )}
             </div>
-            <div className={s.attempts}>Количество попыток ответов на вопрос: {card?.shots}</div>
+            {/*<div className={s.attempts}>Try counts: {card?.shots}</div>*/}
             {showAnswer && (
               <>
                 <div className={s.answer}>
-                  <b>Answer</b>: {card?.answer}
+                  <b>Answer:</b>{" "}
+                  {card?.answer !== ("no answer" || card.grade !== 5) ? (
+                    card.answer
+                  ) : (
+                    <img src={card.answerImg} className={s.photo} alt="answer Img" />
+                  )}
                 </div>
                 <FormControl sx={{ marginBottom: "42px" }}>
                   <FormLabel>Rate yourself:</FormLabel>

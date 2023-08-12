@@ -32,27 +32,38 @@ export const AddCard = ({ closeModal, addCardCallback }: PropsType) => {
     } else toast.error("you are not added question or answer");
   };
 
+  /**
+   * function that converts file to image base64
+   * @param event
+   */
   const changeSelectValue = (event: ChangeEvent<HTMLSelectElement>) => setVariant(event.target.value);
 
   // converter photo with FileReader Base64
   const uploadHandler = (e: ChangeEvent<HTMLInputElement>, uploadType: string) => {
-    if (e.target.files && e.target.files.length) {
-      const file = e.target.files[0];
-      console.log("file: ", file);
+    if (e.target.files) {
+      if (e.target.files.length) {
+        const file = e.target.files[0];
 
-      if (file.size < 4000000) {
-        convertFileToBase64(file, (file64: string) => {
-          if (uploadType === "answer") {
-            setAnswerFile(file64);
-          } else if (uploadType === "question") {
-            setQuestionFile(file64);
-          }
-        });
-      } else {
-        toast.error("File is to big, chose another file");
+        if (file.size < 4000000) {
+          convertFileToBase64(file, (file64: string) => {
+            if (uploadType === "answer") {
+              setAnswerFile(file64);
+            } else if (uploadType === "question") {
+              setQuestionFile(file64);
+            }
+          });
+        } else {
+          toast.error("File is to big, chose another file");
+        }
       }
     }
   };
+
+  /**
+   * function that helps convert file to image base64
+   * @param file
+   * @param callBack that set converted file to local state
+   */
   const convertFileToBase64 = (file: File, callBack: (value: string) => void) => {
     const reader = new FileReader();
     reader.onloadend = () => {

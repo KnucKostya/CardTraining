@@ -11,6 +11,7 @@ import Button from "@mui/material/Button";
 import { ChangeEvent, useState } from "react";
 import { convertFileToBase64 } from "common/utils/imageToBase64";
 import { QueryParamsType } from "features/packs/Packs";
+import { toast } from "react-toastify";
 
 type PropsType = {
   closeModal: () => void;
@@ -43,7 +44,7 @@ export const AddPackModal = ({ closeModal, queryParams }: PropsType) => {
           setPackCover(file64);
         });
       } else {
-        console.error("Error: ", "Файл слишком большого размера");
+        toast.error("Error: File is to large");
       }
     }
   };
@@ -107,6 +108,7 @@ export const AddPackModal = ({ closeModal, queryParams }: PropsType) => {
           onClickCallBack={cancelHandler}
         />
         <SuperButton
+          type={"submit"}
           name={"Save"}
           width={"130px"}
           height={"40px"}
