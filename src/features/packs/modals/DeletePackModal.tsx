@@ -5,6 +5,7 @@ import { packsThunks } from "features/packs/packsSlice";
 import Typography from "@mui/material/Typography";
 import { useLocation, useNavigate } from "react-router-dom";
 import { QueryParamsType } from "features/packs/Packs";
+import { toast } from "react-toastify";
 
 type PropsType = {
   closeModal: () => void;
@@ -25,23 +26,25 @@ export const DeletePackModal = ({
   const location = useLocation();
   // const { packId } = useParams();
   const navigate = useNavigate();
-
   const cancelHandler = () => {
     closeSecondModalHandler && closeSecondModalHandler(null);
     closeModal();
   };
   const saveHandler = () => {
-    removePack({ _id }).then(() => {
-      fetchPacks(queryParams!);
-      //   if (location.pathname.includes("/cards/pack/")) navigate("/packs");
-      //   toast.success(`${packName} pack successfully deleted `);
-      // })
-      // .catch((e: any) => {
-      //   e?.message ? toast.error(e.message) : toast.error(e.errorMessage);
-      // });
-      closeSecondModalHandler && closeSecondModalHandler(null);
-      closeModal();
-    });
+    removePack({ _id })
+      .then(() => {
+        if (location.pathname.includes("/cards/pack/")) {
+          navigate("/packs");
+          toast.success(`${packName} pack successfully deleted `);
+        } else {
+          fetchPacks(queryParams!);
+        }
+      })
+      .catch((e: any) => {
+        e?.message ? toast.error(e.message) : toast.error(e.errorMessage);
+      });
+    closeSecondModalHandler && closeSecondModalHandler(null);
+    closeModal();
   };
 
   return (

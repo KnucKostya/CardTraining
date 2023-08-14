@@ -13,7 +13,7 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 type BaseModalPropsType = {
   children: (close: () => void) => ReactNode;
-  buttonType: "base" | "iconEdit" | "iconDelete";
+  buttonType?: "base" | "iconEdit" | "iconDelete" | "none";
   modalTitle: string;
 };
 
@@ -48,9 +48,9 @@ export function BaseModal({ children, modalTitle, buttonType }: BaseModalPropsTy
         <IconButton onClick={handleOpen}>
           {buttonType === "iconEdit" ? (
             <EditIcon color={"primary"} />
-          ) : (
+          ) : buttonType === "iconDelete" ? (
             <DeleteOutlineIcon color={"primary"} />
-          )}
+          ) : buttonType === "none" ? null : null}
         </IconButton>
       )}
       <Modal
@@ -76,7 +76,6 @@ export function BaseModal({ children, modalTitle, buttonType }: BaseModalPropsTy
             >
               {modalTitle}
             </Typography>
-            {/*<Divider sx={{ marginBottom: "35px" }} />*/}
             <Divider />
             {children(handleClose)}
           </Box>

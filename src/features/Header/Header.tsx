@@ -10,15 +10,21 @@ import logo from "assets/images/cardsLogo.png";
 import { isLoading_Selector } from "app/appSelector";
 import { userAvatar_auth_Selector, userName_auth_Selector } from "../auth/authSelector";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAddressCard, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faAddressCard, faRightFromBracket, faUser } from "@fortawesome/free-solid-svg-icons";
+import { useAppDispatch } from "common/hooks/useAppDispatch";
+import { authThunks } from "features/auth/authSlice";
 
 export const Header = () => {
   const isLoading = useAppSelector(isLoading_Selector);
   const userAvatar = useAppSelector(userAvatar_auth_Selector);
   const userName = useAppSelector(userName_auth_Selector);
+  const dispatch = useAppDispatch();
 
   const location = useLocation();
   const profilePage = location.pathname === RouteNames.PROFILE;
+  const logoutHandler = () => {
+    dispatch(authThunks.logoutTC());
+  };
 
   return (
     <div className={s.header} id="header">
@@ -37,6 +43,11 @@ export const Header = () => {
               {<FontAwesomeIcon icon={faAddressCard} className={s.profileLogo} />}Pack List
             </h1>
           </Link>
+          <span style={{ color: "rgb(154 145 200)", cursor: "pointer" }} onClick={logoutHandler}>
+            <h1 className={s.profileLink}>
+              {<FontAwesomeIcon icon={faRightFromBracket} className={s.profileLogo} />}Logout
+            </h1>
+          </span>
         </div>
         {!profilePage && (
           <div className={s.actions}>

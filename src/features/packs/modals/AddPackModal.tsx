@@ -12,6 +12,7 @@ import { ChangeEvent, useState } from "react";
 import { convertFileToBase64 } from "common/utils/imageToBase64";
 import { QueryParamsType } from "features/packs/Packs";
 import { toast } from "react-toastify";
+import { AxiosError } from "axios";
 
 type PropsType = {
   closeModal: () => void;
@@ -32,7 +33,14 @@ export const AddPackModal = ({ closeModal, queryParams }: PropsType) => {
     closeModal();
   };
   const saveHandler = () => {
-    addPack({ name: name, deckCover: packCover }).then(() => fetchPacks(queryParams));
+    addPack({ name: name, deckCover: packCover })
+      .then(() => fetchPacks(queryParams))
+      .catch((e: AxiosError) => {
+        let error = e;
+        error.message
+          ? toast.error(error.message)
+          : toast.error("something error occurred with adding new pack");
+      });
     closeModal();
   };
 

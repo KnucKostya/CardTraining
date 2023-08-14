@@ -5,7 +5,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { SuperButton } from "common/components/super-button/SuperButton";
 import { useActions } from "common/hooks/useActions";
-import { fetchPacks, packsThunks } from "features/packs/packsSlice";
+import { packsThunks } from "features/packs/packsSlice";
 import { cardsActions } from "../../cards/cardsSlice";
 import { useAppDispatch } from "common/hooks/useAppDispatch";
 import { convertFileToBase64 } from "common/utils/imageToBase64";
@@ -13,6 +13,8 @@ import defaultPackAva from "assets/images/defaultPackCover.svg";
 import s from "features/packs/modals/EditPack.module.scss";
 import Button from "@mui/material/Button";
 import { QueryParamsType } from "features/packs/Packs";
+import { toast } from "react-toastify";
+import { AxiosError } from "axios";
 
 type PropsType = {
   closeModal: () => void | ReactNode;
@@ -38,6 +40,11 @@ export const EditPackModal = ({
   const [packCover, setPackCover] = useState(cover);
   const [isCoverBroken, setIsCoverBroken] = useState(false);
 
+  if (packName !== undefined) {
+    localStorage.setItem("packName", JSON.stringify(packName));
+  }
+  const storageGetLocalPackName = localStorage.getItem("packName");
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
   };
@@ -49,7 +56,18 @@ export const EditPackModal = ({
     closeSecondModalHandler && closeSecondModalHandler(null);
   };
   const saveHandler = () => {
-    updatePack({ _id, name, deckCover: packCover }).then(() => fetchPacks(queryParams!));
+    updatePack({ _id, name, deckCover: packCover })
+      .then((res: any) => {
+        fetchPacks(queryParams!);
+        localStorage.setItem("packName", res.meta.arg.name);
+      })
+      .catch((e: AxiosError) => {
+        if (storageGetLocalPackName) {
+          setName(storageGetLocalPackName);
+        }
+        console.log(e);
+        e.message ? toast.error(e.message) : toast.error("something error occurred");
+      });
     dispatch(cardsActions.addPackName(name)); //TODO why dispatch here? use : useActions hook!
     closeModal();
     closeSecondModalHandler && closeSecondModalHandler(null);
@@ -62,7 +80,7 @@ export const EditPackModal = ({
           setPackCover(file64);
         });
       } else {
-        console.error("Error: ", "Файл слишком большого размера");
+        toast.error("Error: File is to big");
       }
     }
   };
@@ -109,7 +127,6 @@ export const EditPackModal = ({
           },
         }}
       />
-      {/*TODO checkbox data*/}
       <FormControlLabel
         sx={{ marginBottom: "29px" }}
         control={<Checkbox checked={checked} onChange={handleChange} />}

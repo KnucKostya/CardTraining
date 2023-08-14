@@ -24,7 +24,7 @@ const removeCard = createAppAsyncThunk<any, { cardId: string }>("cards/delete", 
       const res = await cardsApi.removeCard(arg.cardId);
       return res.data;
     },
-    false
+    true
   );
 });
 const addNewCard = createAppAsyncThunk<
@@ -43,11 +43,10 @@ const addNewCard = createAppAsyncThunk<
       });
       return res.data;
     },
-    false
+    true
   );
 });
 const editCard = createAppAsyncThunk<any, EditCardType>("cards/edit", async ({ ...arg }, thunkAPI) => {
-  console.log(arg.question);
   return thunkTryCatch(
     thunkAPI,
     async () => {
@@ -60,7 +59,7 @@ const editCard = createAppAsyncThunk<any, EditCardType>("cards/edit", async ({ .
       });
       return res.data;
     },
-    false
+    true
   );
 });
 

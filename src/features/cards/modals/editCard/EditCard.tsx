@@ -15,10 +15,7 @@ export const EditCard = ({ closeModal, editCardCallback, isImage }: PropsType) =
   const [answer, setAnswer] = React.useState("");
   const [answerFile, setAnswerFile] = useState("");
   const [questionFile, setQuestionFile] = useState("");
-  console.log(question);
-  console.log(answer);
-  console.log(answerFile);
-  console.log(questionFile);
+
   const cancelHandler = () => {
     closeModal();
   };

@@ -99,11 +99,9 @@ export const Login = () => {
           </FormGroup>
         </FormControl>
       </form>
-      <div className={"s.forgot"}>
-        <NavLink className={s.forgotLink} to="/forgot-password">
-          Forgot password?
-        </NavLink>
-      </div>
+      <NavLink className={s.forgotLink} to="/forgot-password">
+        Forgot password?
+      </NavLink>
       <div className={s.question}>Don't have an account?</div>
       <div>
         <NavLink to="/register" className={s.registerLink}>

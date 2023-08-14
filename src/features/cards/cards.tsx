@@ -36,6 +36,8 @@ import { EditCard } from "features/cards/modals/editCard/EditCard";
 import { DeleteCard } from "./modals/DeleteCard";
 import { changeDateFormat } from "common/utils/changeDateFormat";
 import { StarsRating } from "features/cards/StarsRating";
+import { isAuth_auth_Selector } from "features/auth/authSelector";
+import { AxiosError } from "axios";
 
 export type QueryParamsTypeCards = {
   cardQuestion: string;
@@ -51,6 +53,7 @@ export const Cards = () => {
   const packUserId = useAppSelector(pack_UserId_Selector);
   const cardsCount = useAppSelector(cards_Count_Selector);
   const isLoading = useAppSelector(isLoading_Selector);
+  const isAuth = useAppSelector(isAuth_auth_Selector);
   const { packId } = useParams();
   const url = useLocation().pathname;
   const navigate = useNavigate();
@@ -61,7 +64,14 @@ export const Cards = () => {
     page: 1,
     pageCount: 4,
   });
+  const [sortGrade, setSortGrade] = useState<"up" | "down" | "noSort">("noSort");
   const [searchBarValue, setSearchBarValue] = useState(queryParams.cardQuestion);
+
+  if (!isAuth) {
+    toast.warning("you are not signed in yet");
+    navigate("/login");
+  }
+
   const cardsPaginationCount: number = cardsCount ? Math.ceil(cardsCount / queryParams.pageCount) : 10;
   const paginationChangeHandler = (event: React.ChangeEvent<unknown>, value: number) => {
     setQueryParams({ ...queryParams, page: value });
@@ -72,15 +82,19 @@ export const Cards = () => {
   const removeCardHandle = (cardId: string, packId: string) => {
     dispatch(cardsThunks.removeCard({ cardId }))
       .unwrap()
-      .then(() => dispatch(cardsThunks.getCards({ packId, ...queryParams })));
-    //TODO catch for every handler
-    //TODO remove all "!"
+      .then(() => dispatch(cardsThunks.getCards({ packId, ...queryParams })))
+      .catch((e: AxiosError) => {
+        e ? toast.error(e.message) : toast.error("check your network connection");
+      });
   };
 
   const addNewCardHandle = ({ answer, question, answerImg, questionImg }: AddCardCallbackType) => {
     dispatch(cardsThunks.addNewCard({ packId: packId!, answer, question, questionImg, answerImg }))
       .unwrap()
-      .then(() => dispatch(cardsThunks.getCards({ packId: packId!, ...queryParams })));
+      .then(() => dispatch(cardsThunks.getCards({ packId: packId!, ...queryParams })))
+      .catch((e: AxiosError) => {
+        e ? toast.error(e.message) : toast.error("check your network connection");
+      });
   };
 
   const editCardHandle = (
@@ -91,12 +105,11 @@ export const Cards = () => {
     questionImg: string,
     answerImg: string
   ) => {
-    console.log(question);
     dispatch(cardsThunks.editCard({ cardId, question, answer, questionImg, answerImg }))
       .unwrap()
       .then(() => dispatch(cardsThunks.getCards({ packId: cardsPackId, ...queryParams })))
-      .catch((e) => {
-        toast.error(e);
+      .catch((e: AxiosError) => {
+        e ? toast.error(e.message) : toast.error("check your network connection");
       });
   };
 
@@ -163,13 +176,17 @@ export const Cards = () => {
                     <TableRow key={row._id} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                       <TableCell component="th" scope="row">
                         {row.questionImg ? (
-                          <img src={row.questionImg} alt="" className={s.photo} />
+                          <img src={row.questionImg} alt="question image" className={s.photo} />
                         ) : (
                           row.question
                         )}
                       </TableCell>
                       <TableCell align="right">
-                        {row.answerImg ? <img src={row.answerImg} alt="" className={s.photo} /> : row.answer}
+                        {row.answerImg ? (
+                          <img src={row.answerImg} alt="answer image" className={s.photo} />
+                        ) : (
+                          row.answer
+                        )}
                       </TableCell>
                       <TableCell align="right">
                         <div>{changeDateFormat(row.updated)}</div>
@@ -179,7 +196,6 @@ export const Cards = () => {
                         {userId === row.user_id ? (
                           <div>
                             <BaseModal buttonType={"iconEdit"} modalTitle={"Edit card"}>
-                              {/*TODO*/}
                               {(close) =>
                                 row.answerImg ? (
                                   <EditCard

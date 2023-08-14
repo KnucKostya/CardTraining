@@ -23,6 +23,7 @@ export const thunkTryCatch = async (
     dispatch(appActions.setIsLoading({ isLoading: true }));
     return await afterResolveFoo();
   } catch (error) {
+    console.log(error);
     const err = error as AxiosError<{ error: string }>;
     let errorMessage = err?.response?.data.error;
     let axiosErrorMessage = err?.message;

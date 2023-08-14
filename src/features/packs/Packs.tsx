@@ -21,7 +21,7 @@ import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
 import { PacksSlider } from "features/packs/slider/PacksSlider";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import { useActions } from "common/hooks/useActions";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { isLoading_Selector } from "app/appSelector";
 import InputLabel from "@mui/material/InputLabel";
 import {
@@ -30,7 +30,7 @@ import {
   packs_Selector,
   packsCount_Selector,
 } from "./packsSelector";
-import { userId_auth_Selector } from "../auth/authSelector";
+import { isAuth_auth_Selector, userId_auth_Selector } from "../auth/authSelector";
 import { Backdrop } from "@mui/material";
 import { AddPackModal } from "features/packs/modals/AddPackModal";
 import { BaseModal } from "common/components/BasicModal/BaseModal";
@@ -39,6 +39,7 @@ import { DeletePackModal } from "features/packs/modals/DeletePackModal";
 import { cardsThunks } from "features/cards/cardsSlice";
 import { changeDateFormat } from "common/utils/changeDateFormat";
 import defaultPackCover from "assets/images/defaultPackCover.svg";
+import { toast } from "react-toastify";
 
 export type QueryParamsType = {
   packName: string;
@@ -58,6 +59,9 @@ export const Packs = () => {
   const userId = useAppSelector(userId_auth_Selector);
   const minCardsCount = useAppSelector(minCardsCount_Selector);
   const maxCardsCount = useAppSelector(maxCardsCount_Selector);
+  const isAuth = useAppSelector(isAuth_auth_Selector);
+  const navigate = useNavigate();
+
   const [sliderValuesLocal, setSliderValuesLocal] = useState([minCardsCount, maxCardsCount]);
   const [queryParams, setQueryParams] = useState<QueryParamsType>({
     packName: "",
@@ -70,6 +74,11 @@ export const Packs = () => {
   });
   const [searchBarValue, setSearchBarValue] = useState(queryParams.packName);
   const packsPaginationCount: number = packsCount ? Math.ceil(packsCount / queryParams.pageCount) : 10;
+
+  if (!isAuth) {
+    toast.warning("you are not signed in yet");
+    navigate("/login");
+  }
 
   useEffect(() => {
     fetchPacks(queryParams);
@@ -132,7 +141,6 @@ export const Packs = () => {
           <span className={s.title}>Packs List</span>
           <BaseModal modalTitle={"Add new pack"} buttonType={"base"}>
             {(close) => <AddPackModal closeModal={close} queryParams={queryParams} />}
-            {/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/}
           </BaseModal>
         </div>
         <div className={s.actionsBlock}>
@@ -179,7 +187,7 @@ export const Packs = () => {
           </div>
         </div>
         {packs.length === 0 ? (
-          <div className={s.noPacksError}>Колоды не найдены. Измените параметры фильтра / поиска</div>
+          <div className={s.noPacksError}>Pack's not founded. Try to change filter or search parameters</div>
         ) : (
           <TableContainer component={Paper} sx={{ position: "relative" }}>
             <Table sx={{ overflowWrap: "break-word", tableLayout: "fixed" }}>

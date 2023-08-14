@@ -20,6 +20,14 @@ import { getRandomCard } from "common/utils/random-card";
 import { isLoading_Selector } from "app/appSelector";
 import { Backdrop } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
+import { toast } from "react-toastify";
+import { AxiosError } from "axios";
+import { BaseModal } from "common/components/BasicModal/BaseModal";
+
+type PropsType = {
+  closeModal?: () => void;
+  closeSecondModalHandler?: (value: null | HTMLElement) => void;
+};
 
 const grades = [
   { answer: "Didn't know", id: 1 },
@@ -28,7 +36,7 @@ const grades = [
   { answer: "Mostly knew the answer", id: 4 },
   { answer: "Knew the answer", id: 5 },
 ];
-export const Learn = () => {
+export const Learn = ({ closeModal, closeSecondModalHandler }: PropsType) => {
   const { getCards, updateGrade } = useActions({ ...packsThunks, ...cardsThunks });
   const { packId } = useParams();
   const packName = useAppSelector(pack_Name_Selector);
@@ -51,7 +59,14 @@ export const Learn = () => {
   const [grade, setGrade] = useState<GradeType>(0);
   const [answer, setAnswer] = useState<string>(grades[0].answer);
   const [showAnswer, setShowAnswer] = useState<boolean>(false);
-  // const [showLearning, setShowLearning] = useState<boolean>(true);
+  const [showLearning, setShowLearning] = useState<boolean>(true);
+
+  const cancelHandler = () => {
+    closeSecondModalHandler && closeSecondModalHandler(null);
+    if (closeModal) {
+      return closeModal();
+    }
+  };
 
   const setGradeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = (event.target as HTMLInputElement).value;
@@ -85,7 +100,14 @@ export const Learn = () => {
     return cards.every((card) => card.grade === 5);
   };
   const setNextCard = () => {
-    updateGrade({ grade, card_id: card._id });
+    updateGrade({ grade, card_id: card._id })
+      .then(() => toast.success(`grade updated to ${grade} stars`))
+      .catch((e: AxiosError) => {
+        let error = e;
+        error.message
+          ? toast.error(error.message)
+          : toast.error("something error occurred with changing card grade");
+      });
     setShowAnswer(false);
     if (areAllCardsWithGradeFive(cards)) {
       setShowLearning(false);
@@ -103,6 +125,16 @@ export const Learn = () => {
     }
   }, [first, cards, packId]);
 
+  {
+    /*{card.grade === 5 ? (*/
+  }
+  {
+    /*    <div>You have learned all pack at 5 stars rating. Do you want to learn another pack? </div>*/
+  }
+  {
+    /*  ) :''}*/
+  }
+
   return (
     <div className={s.learn}>
       <div className={`container ${s.learnContainer}`}>
@@ -116,7 +148,12 @@ export const Learn = () => {
           <h2 className={s.title}>Learn: "{packName}"</h2>
           <div className={s.learnCard}>
             <div className={s.question}>
-              <b>Question:</b>{" "}
+              <BaseModal modalTitle={"Title"} buttonType={"none"}>
+                {(close) => {
+                  return <div>Text</div>;
+                }}
+              </BaseModal>
+              <b>Question:</b>
               {card?.question !== ("no question" || card.grade !== 5) ? (
                 card.question
               ) : (

@@ -10,6 +10,8 @@ import { useAppSelector } from "../../hooks/useAppSelector";
 import { pack_Name_Selector } from "features/cards/cardsSelectors";
 import { Link, Navigate } from "react-router-dom";
 import { RouteNames } from "app/routes";
+import IconButton from "@mui/material/IconButton";
+import SchoolIcon from "@mui/icons-material/School";
 
 export function DropDownMenu(props: DropDownMenu) {
   const { packId } = props;
@@ -102,7 +104,13 @@ export function DropDownMenu(props: DropDownMenu) {
           </label>
         </MenuItem>
         <MenuItem component={Link} to={`/learn/${packId}`}>
-          Learn
+          <label style={{ cursor: "pointer" }}>
+            Learn
+            <Link to={`/learn/${packId}`}></Link>
+            <IconButton aria-label="learn">
+              <SchoolIcon color={"primary"} />
+            </IconButton>
+          </label>
         </MenuItem>
       </Menu>
     </span>

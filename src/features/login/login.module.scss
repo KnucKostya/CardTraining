@@ -13,50 +13,43 @@
   border-radius: 2px;
   width: 413px;
   height: 552px;
-}
+  .header {
+    @include formStyle($base-color, font-semibold, 25px, 400);
+    margin-top: 5%;
+  }
+  .forgotLink {
+    position: absolute;
+    width: 128px;
+    right: 23px;
+    top: 300px;
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    text-align: center;
+    color: #000000;
+    text-decoration: none;
+  }
+  .question {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 24px;
+    text-align: center;
+    color: #000000;
+    opacity: 0.5;
+  }
 
-.header {
-  @include formStyle($base-color, font-semibold, 25px, 400);
-  margin-top: 5%;
-}
-
-.forgot {
-  position: relative;
-}
-
-.registerLink {
-  font-family: "Montserrat";
-  font-style: normal;
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 24px;
-  text-align: center;
-  text-decoration-line: underline;
-  color: #366eff;
-}
-
-.forgotLink {
-  position: absolute;
-  width: 128px;
-  right: 23px;
-  top: 300px;
-  font-family: "Montserrat";
-  font-style: normal;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 17px;
-  text-align: center;
-  color: #000000;
-  text-decoration: none;
-}
-
-.question {
-  font-family: "Montserrat";
-  font-style: normal;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 24px;
-  text-align: center;
-  color: #000000;
-  opacity: 0.5;
+  .registerLink {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    text-align: center;
+    text-decoration-line: underline;
+    color: #366eff;
+  }
 }
