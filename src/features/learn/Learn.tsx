@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAppSelector } from "common/hooks/useAppSelector";
 import { useActions } from "common/hooks/useActions";
 import s from "features/learn/Learn.module.scss";
@@ -22,11 +22,9 @@ import { Backdrop } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
-
-// type PropsType = {
-//   closeModal?: () => void;
-//   closeSecondModalHandler?: (value: null | HTMLElement) => void;
-// };
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
 
 const grades = [
   { answer: "Didn't know", id: 1 },
@@ -58,14 +56,13 @@ export const Learn = () => {
   const [grade, setGrade] = useState<GradeType>(0);
   const [answer, setAnswer] = useState<string>(grades[0].answer);
   const [showAnswer, setShowAnswer] = useState<boolean>(false);
-  const [showLearning, setShowLearning] = useState<boolean>(true);
+  const navigate = useNavigate();
+  const [open, setOpen] = React.useState(false);
+  const handleClose = () => setOpen(false);
 
-  // const cancelHandler = () => {
-  //   closeSecondModalHandler && closeSecondModalHandler(null);
-  //   if (closeModal) {
-  //     return closeModal();
-  //   }
-  // };
+  const redirectToPacksHandler = () => {
+    navigate("/packs");
+  };
 
   const setGradeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = (event.target as HTMLInputElement).value;
@@ -95,9 +92,6 @@ export const Learn = () => {
         setGrade(0);
     }
   };
-  const areAllCardsWithGradeFive = (cards: CardType[]) => {
-    return cards.every((card) => card.grade === 5);
-  };
   const setNextCard = () => {
     updateGrade({ grade, card_id: card._id })
       .then(() => toast.success(`grade updated to ${grade} stars`))
@@ -108,11 +102,11 @@ export const Learn = () => {
           : toast.error("something error occurred with changing card grade");
       });
     setShowAnswer(false);
-    if (areAllCardsWithGradeFive(cards)) {
-      setShowLearning(false);
-    }
+
     setCard(getRandomCard(cards));
   };
+
+  const gradeCards = card.grade;
 
   useEffect(() => {
     if (first) {
@@ -122,17 +116,22 @@ export const Learn = () => {
     if (cards?.length > 0) {
       setCard(getRandomCard(cards));
     }
-  }, [first, cards, packId]);
+    if (gradeCards === 5) {
+      setOpen(true);
+    }
+  }, [first, cards, packId, gradeCards]);
 
-  {
-    /*{card.grade === 5 ? (*/
-  }
-  {
-    /*    <div>You have learned all pack at 5 stars rating. Do you want to learn another pack? </div>*/
-  }
-  {
-    /*  ) :''}*/
-  }
+  const style = {
+    position: "absolute" as "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 4,
+  };
 
   return (
     <div className={s.learn}>
@@ -144,28 +143,30 @@ export const Learn = () => {
           redirectPath={RouteNames.PACKS}
         />
         <div className={s.learnBlock}>
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+              <Typography id="modal-modal-title" variant="h6" component="h2">
+                You've already learned all cards at 5 stars rating
+              </Typography>
+              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                Do you want learn another pack?
+              </Typography>
+              <div>
+                <SuperButton name={"Yes"} onClickCallBack={redirectToPacksHandler} />
+              </div>
+              <div>
+                <SuperButton name={"No"} onClickCallBack={handleClose} />
+              </div>
+            </Box>
+          </Modal>
           <h2 className={s.title}>Learn: "{packName}"</h2>
           <div className={s.learnCard}>
             <div className={s.question}>
-              {/*make separated component for this modal situation with
-              button with redirect to packs and close modal button
-              and fix bug with additional useless button or
-              create modal for this situation
-              */}
-              {/*<BaseModal*/}
-              {/*  modalTitle={"You've already learned all cards at 5 stars rating"}*/}
-              {/*  showModalProps={true}*/}
-              {/*>*/}
-              {/*  {(close) => {*/}
-              {/*    return (*/}
-              {/*      <div>*/}
-              {/*        <span>Do you want learn another pack?</span>*/}
-              {/*        <button>Yes</button>*/}
-              {/*        <button onClick={cancelHandler}>No</button>*/}
-              {/*      </div>*/}
-              {/*    );*/}
-              {/*  }}*/}
-              {/*</BaseModal>*/}
               <b>Question:</b>
               {card?.question !== ("no question" || card.grade !== 5) ? (
                 card.question
@@ -173,7 +174,6 @@ export const Learn = () => {
                 <img src={card.questionImg} className={s.photo} alt="question Img" />
               )}
             </div>
-            {/*<div className={s.attempts}>Try counts: {card?.shots}</div>*/}
             {showAnswer && (
               <>
                 <div className={s.answer}>
