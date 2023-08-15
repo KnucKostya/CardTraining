@@ -239,7 +239,10 @@ export const Packs = () => {
                       />
                     </TableCell>
                     <TableCell component="th" scope="row" sx={{ padding: "0px 16px 0px 36px" }}>
-                      <Link to={`/cards/pack/${p._id}`} style={{ textDecoration: "none", color: "inherit" }}>
+                      <Link
+                        to={`/cards/pack/${p._id}`}
+                        style={{ textDecoration: "none", color: "rgb(154 145 200)" }}
+                      >
                         {p.name}
                       </Link>
                     </TableCell>

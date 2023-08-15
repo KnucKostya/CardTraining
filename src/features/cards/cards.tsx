@@ -38,6 +38,8 @@ import { changeDateFormat } from "common/utils/changeDateFormat";
 import { StarsRating } from "features/cards/StarsRating";
 import { isAuth_auth_Selector } from "features/auth/authSelector";
 import { AxiosError } from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowDown, faArrowUp } from "@fortawesome/free-solid-svg-icons";
 
 export type QueryParamsTypeCards = {
   cardQuestion: string;
@@ -64,7 +66,7 @@ export const Cards = () => {
     page: 1,
     pageCount: 4,
   });
-  const [sortGrade, setSortGrade] = useState<"up" | "down" | "noSort">("noSort");
+  const [sortGrade, setSortGrade] = useState<number>(0);
   const [searchBarValue, setSearchBarValue] = useState(queryParams.cardQuestion);
 
   if (!isAuth) {
@@ -82,7 +84,7 @@ export const Cards = () => {
   const removeCardHandle = (cardId: string, packId: string) => {
     dispatch(cardsThunks.removeCard({ cardId }))
       .unwrap()
-      .then(() => dispatch(cardsThunks.getCards({ packId, ...queryParams })))
+      .then(() => dispatch(cardsThunks.getCards({ packId, ...queryParams, sortBy: sortGrade })))
       .catch((e: AxiosError) => {
         e ? toast.error(e.message) : toast.error("check your network connection");
       });
@@ -91,7 +93,7 @@ export const Cards = () => {
   const addNewCardHandle = ({ answer, question, answerImg, questionImg }: AddCardCallbackType) => {
     dispatch(cardsThunks.addNewCard({ packId: packId!, answer, question, questionImg, answerImg }))
       .unwrap()
-      .then(() => dispatch(cardsThunks.getCards({ packId: packId!, ...queryParams })))
+      .then(() => dispatch(cardsThunks.getCards({ packId: packId!, ...queryParams, sortBy: sortGrade })))
       .catch((e: AxiosError) => {
         e ? toast.error(e.message) : toast.error("check your network connection");
       });
@@ -107,7 +109,7 @@ export const Cards = () => {
   ) => {
     dispatch(cardsThunks.editCard({ cardId, question, answer, questionImg, answerImg }))
       .unwrap()
-      .then(() => dispatch(cardsThunks.getCards({ packId: cardsPackId, ...queryParams })))
+      .then(() => dispatch(cardsThunks.getCards({ packId: cardsPackId, ...queryParams, sortBy: sortGrade })))
       .catch((e: AxiosError) => {
         e ? toast.error(e.message) : toast.error("check your network connection");
       });
@@ -115,10 +117,10 @@ export const Cards = () => {
 
   useEffect(() => {
     if (!packId) return;
-    dispatch(cardsThunks.getCards({ packId: packId, ...queryParams }))
+    dispatch(cardsThunks.getCards({ packId: packId, ...queryParams, sortBy: sortGrade }))
       .unwrap()
       .then(() => authApi.isAuth);
-  }, [dispatch, queryParams]);
+  }, [dispatch, queryParams, sortGrade]);
 
   useEffect(() => {
     let getUrl = sessionStorage.getItem("url");
@@ -166,7 +168,18 @@ export const Cards = () => {
                   <TableCell>Question</TableCell>
                   <TableCell align="right">Answers</TableCell>
                   <TableCell align="right">Updated</TableCell>
-                  <TableCell align="right">Grade</TableCell>
+                  <TableCell
+                    align="right"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => setSortGrade((value: number) => (value === 1 ? 0 : 1))}
+                  >
+                    Grade{" "}
+                    {sortGrade === 0 ? (
+                      <FontAwesomeIcon icon={faArrowUp} size="xs" />
+                    ) : (
+                      <FontAwesomeIcon icon={faArrowDown} size="xs" />
+                    )}
+                  </TableCell>
                   <TableCell align="right">Actions</TableCell>
                 </TableRow>
               </TableHead>

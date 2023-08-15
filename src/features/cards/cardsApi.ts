@@ -1,8 +1,9 @@
 import { instance } from "common/instance/instance";
 
 export const cardsApi = {
-  getCards: (packId: string, page?: number, pageCount?: number, cardQuestion?: string) => {
-    return instance.get<GetCardsResponse>(`cards/card`, {
+  getCards: (packId: string, page?: number, pageCount?: number, cardQuestion?: string, sortBy?: number) => {
+    console.log(sortBy);
+    return instance.get<GetCardsResponse>(`cards/card?sortCards=${sortBy}grade`, {
       params: { cardsPack_id: packId, page, pageCount, cardQuestion },
     });
   },

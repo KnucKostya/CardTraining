@@ -22,12 +22,11 @@ import { Backdrop } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
-import { BaseModal } from "common/components/BasicModal/BaseModal";
 
-type PropsType = {
-  closeModal?: () => void;
-  closeSecondModalHandler?: (value: null | HTMLElement) => void;
-};
+// type PropsType = {
+//   closeModal?: () => void;
+//   closeSecondModalHandler?: (value: null | HTMLElement) => void;
+// };
 
 const grades = [
   { answer: "Didn't know", id: 1 },
@@ -36,7 +35,7 @@ const grades = [
   { answer: "Mostly knew the answer", id: 4 },
   { answer: "Knew the answer", id: 5 },
 ];
-export const Learn = ({ closeModal, closeSecondModalHandler }: PropsType) => {
+export const Learn = () => {
   const { getCards, updateGrade } = useActions({ ...packsThunks, ...cardsThunks });
   const { packId } = useParams();
   const packName = useAppSelector(pack_Name_Selector);
@@ -61,12 +60,12 @@ export const Learn = ({ closeModal, closeSecondModalHandler }: PropsType) => {
   const [showAnswer, setShowAnswer] = useState<boolean>(false);
   const [showLearning, setShowLearning] = useState<boolean>(true);
 
-  const cancelHandler = () => {
-    closeSecondModalHandler && closeSecondModalHandler(null);
-    if (closeModal) {
-      return closeModal();
-    }
-  };
+  // const cancelHandler = () => {
+  //   closeSecondModalHandler && closeSecondModalHandler(null);
+  //   if (closeModal) {
+  //     return closeModal();
+  //   }
+  // };
 
   const setGradeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = (event.target as HTMLInputElement).value;
@@ -148,11 +147,25 @@ export const Learn = ({ closeModal, closeSecondModalHandler }: PropsType) => {
           <h2 className={s.title}>Learn: "{packName}"</h2>
           <div className={s.learnCard}>
             <div className={s.question}>
-              <BaseModal modalTitle={"Title"} buttonType={"none"}>
-                {(close) => {
-                  return <div>Text</div>;
-                }}
-              </BaseModal>
+              {/*make separated component for this modal situation with
+              button with redirect to packs and close modal button
+              and fix bug with additional useless button or
+              create modal for this situation
+              */}
+              {/*<BaseModal*/}
+              {/*  modalTitle={"You've already learned all cards at 5 stars rating"}*/}
+              {/*  showModalProps={true}*/}
+              {/*>*/}
+              {/*  {(close) => {*/}
+              {/*    return (*/}
+              {/*      <div>*/}
+              {/*        <span>Do you want learn another pack?</span>*/}
+              {/*        <button>Yes</button>*/}
+              {/*        <button onClick={cancelHandler}>No</button>*/}
+              {/*      </div>*/}
+              {/*    );*/}
+              {/*  }}*/}
+              {/*</BaseModal>*/}
               <b>Question:</b>
               {card?.question !== ("no question" || card.grade !== 5) ? (
                 card.question

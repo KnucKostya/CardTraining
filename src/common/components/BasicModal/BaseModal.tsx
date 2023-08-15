@@ -15,6 +15,7 @@ type BaseModalPropsType = {
   children: (close: () => void) => ReactNode;
   buttonType?: "base" | "iconEdit" | "iconDelete" | "none";
   modalTitle: string;
+  showModalProps?: boolean;
 };
 
 const style = {
@@ -29,8 +30,8 @@ const style = {
   padding: "19px 30px 47px 30px",
 };
 
-export function BaseModal({ children, modalTitle, buttonType }: BaseModalPropsType) {
-  const [showModal, setShowModal] = useState(false);
+export function BaseModal({ children, modalTitle, buttonType, showModalProps }: BaseModalPropsType) {
+  const [showModal, setShowModal] = useState(showModalProps ? showModalProps : false);
   const handleOpen = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
 
@@ -48,10 +49,19 @@ export function BaseModal({ children, modalTitle, buttonType }: BaseModalPropsTy
         <IconButton onClick={handleOpen}>
           {buttonType === "iconEdit" ? (
             <EditIcon color={"primary"} />
-          ) : buttonType === "iconDelete" ? (
+          ) : (
             <DeleteOutlineIcon color={"primary"} />
-          ) : buttonType === "none" ? null : null}
+          )}
         </IconButton>
+        // <IconButton onClick={handleOpen}>
+        //   {buttonType === "iconEdit" ? (
+        //     <EditIcon color={"primary"} />
+        //   ) : buttonType === "iconDelete" ? (
+        //     <DeleteOutlineIcon color={"primary"} />
+        //   ) : (
+        //     ""
+        //   )}
+        // </IconButton>
       )}
       <Modal
         aria-labelledby="transition-modal-title"

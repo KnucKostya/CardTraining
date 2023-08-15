@@ -5,12 +5,12 @@ import { thunkTryCatch } from "common/utils/thunkTryCatch";
 
 const getCards = createAppAsyncThunk<
   GetCardsResponse,
-  { packId: string; page?: number; pageCount?: number; cardQuestion?: string }
+  { packId: string; page?: number; pageCount?: number; cardQuestion?: string; sortBy?: number }
 >("cards/get", async (arg, thunkAPI) => {
   return thunkTryCatch(
     thunkAPI,
     async () => {
-      const res = await cardsApi.getCards(arg.packId, arg.page, arg.pageCount, arg.cardQuestion);
+      const res = await cardsApi.getCards(arg.packId, arg.page, arg.pageCount, arg.cardQuestion, arg.sortBy);
       return res.data;
     },
     false
