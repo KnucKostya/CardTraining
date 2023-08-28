@@ -106,7 +106,11 @@ export const Learn = () => {
     setCard(getRandomCard(cards));
   };
 
+  // const gradeCards = cards.map((c) => console.log(c.grade));
+  // console.log(gradeCards);
+
   const gradeCards = card.grade;
+  console.log(gradeCards);
 
   useEffect(() => {
     if (first) {
@@ -114,10 +118,9 @@ export const Learn = () => {
       setFirst(false);
     }
     if (cards?.length > 0) {
-      console.log(cards?.length);
       setCard(getRandomCard(cards));
     }
-    if (gradeCards === 5) {
+    if (gradeCards > 4.1) {
       setOpen(true);
     }
   }, [first, cards, packId, gradeCards]);
