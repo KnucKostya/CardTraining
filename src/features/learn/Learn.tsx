@@ -22,9 +22,7 @@ import { Backdrop } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
+import { AllFiveRatesModal } from "features/learn/modals/AllFiveRates";
 
 const grades = [
   { answer: "Didn't know", id: 1 },
@@ -57,6 +55,7 @@ export const Learn = () => {
   const [answer, setAnswer] = useState<string>(grades[0].answer);
   const [showAnswer, setShowAnswer] = useState<boolean>(false);
   const navigate = useNavigate();
+
   const [open, setOpen] = React.useState(false);
   const handleClose = () => setOpen(false);
 
@@ -93,6 +92,7 @@ export const Learn = () => {
     }
   };
   const setNextCard = () => {
+    console.log(card._id);
     updateGrade({ grade, card_id: card._id })
       .then(() => toast.success(`grade updated to ${grade} stars`))
       .catch((e: AxiosError) => {
@@ -114,24 +114,13 @@ export const Learn = () => {
       setFirst(false);
     }
     if (cards?.length > 0) {
+      console.log(cards?.length);
       setCard(getRandomCard(cards));
     }
     if (gradeCards === 5) {
       setOpen(true);
     }
   }, [first, cards, packId, gradeCards]);
-
-  const style = {
-    position: "absolute" as "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 400,
-    bgcolor: "background.paper",
-    border: "2px solid #000",
-    boxShadow: 24,
-    p: 4,
-  };
 
   return (
     <div className={s.learn}>
@@ -143,27 +132,11 @@ export const Learn = () => {
           redirectPath={RouteNames.PACKS}
         />
         <div className={s.learnBlock}>
-          <Modal
+          <AllFiveRatesModal
+            redirectToPacksHandler={redirectToPacksHandler}
+            handleClose={handleClose}
             open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <Box sx={style}>
-              <Typography id="modal-modal-title" variant="h6" component="h2">
-                You've already learned all cards at 5 stars rating
-              </Typography>
-              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                Do you want learn another pack?
-              </Typography>
-              <div>
-                <SuperButton name={"Yes"} onClickCallBack={redirectToPacksHandler} />
-              </div>
-              <div>
-                <SuperButton name={"No"} onClickCallBack={handleClose} />
-              </div>
-            </Box>
-          </Modal>
+          />
           <h2 className={s.title}>Learn: "{packName}"</h2>
           <div className={s.learnCard}>
             <div className={s.question}>
