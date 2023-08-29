@@ -25,10 +25,16 @@ export const SearchBar = ({
   const [isMounted, setIsMounted] = useState(false);
   const changeSearchHandler = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setSearchValue(e.target.value);
+    sessionStorage.setItem("searchValue", e.target.value);
   };
 
-  //second uE understand first/second mount of component - >
-  // no request on first (no rerender packs)
+  const storedValue = sessionStorage.getItem("searchValue");
+  if (storedValue === null) {
+    setSearchValue("");
+  } else {
+    setSearchValue(storedValue);
+  }
+
   useEffect(() => {
     setIsMounted(true);
     return () => {
