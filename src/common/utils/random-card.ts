@@ -1,7 +1,8 @@
 import { CardType } from "features/cards/cardsApi";
 
 /**
- *
+ * getRandomCard - random card function
+ * cards - array of cards in pack
  */
 
 export const getRandomCard = (cards: CardType[]) => {
