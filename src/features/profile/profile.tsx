@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import s from "./Profile.module.scss";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -16,6 +16,7 @@ import {
   userId_auth_Selector,
   userName_auth_Selector,
 } from "../auth/authSelector";
+import { toast } from "react-toastify";
 
 export const Profile = () => {
   const dispatch = useAppDispatch();
@@ -24,17 +25,45 @@ export const Profile = () => {
   const userAvatar = useAppSelector(userAvatar_auth_Selector);
   const userName = useAppSelector(userName_auth_Selector);
   const userEmail = useAppSelector(userEmail_auth_Selector);
+  const [fileFinal, setFile] = useState("");
 
-  const changePhotoHandle = () => {
-    alert("fill");
+  const uploadHandler = (e: any) => {
+    console.log(e);
+    if (e.target.files && e.target.files.length) {
+      const file = e.target.files[0];
+
+      if (file.size < 4000000) {
+        convertFileToBase64(file, (file64: string) => {
+          setFile(file64);
+        });
+      } else {
+        toast.error("File is to big, chose another file");
+      }
+    }
+  };
+
+  const convertFileToBase64 = (file: File, callBack: (value: string) => void) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const file64 = reader.result as string;
+      callBack(file64);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const onChangeNameHandler = (name: string) => {
+    dispatch(authThunks.updateUserTC({ name }));
   };
 
   const onClickLogoutHandler = () => {
     dispatch(authThunks.logoutTC());
   };
-  const onChangeNameHandler = (name: string) => {
-    dispatch(authThunks.updateUserTC({ name }));
-  };
+
+  useEffect(() => {
+    if (fileFinal) {
+      dispatch(authThunks.updateUserTC({ avatar: fileFinal }));
+    }
+  }, [fileFinal]);
 
   return (
     <div className={s.profileBlock} id="profile">
@@ -52,14 +81,22 @@ export const Profile = () => {
           <div className={s.info}>
             <div className={s.avatarBlock}>
               <img className={s.avatar} src={userId && userAvatar ? userAvatar : ava} alt="avatar" />
-              <IconButton className={s.photoIcon} aria-label="change photo">
-                <AddAPhotoIcon onClick={changePhotoHandle} />
-              </IconButton>
+
+              <label htmlFor="fileInput">
+                <input
+                  type="file"
+                  id="fileInput"
+                  style={{ opacity: 0, position: "absolute", zIndex: 999 }}
+                  onChange={uploadHandler}
+                />
+                <IconButton color="primary" aria-label="Загрузить файл" component="span">
+                  <AddAPhotoIcon />
+                </IconButton>
+              </label>
             </div>
             <EditableSpan
               value={userId && userName ? userName : "Change name input (not Logged in)"}
               onChange={onChangeNameHandler}
-              // disabled={props.taskEntityStatus === 'loading'}
               disabled={false}
             />
             <span className={s.email}>{userId ? userEmail : "Your email here"}</span>
