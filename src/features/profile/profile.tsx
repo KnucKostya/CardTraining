@@ -28,7 +28,6 @@ export const Profile = () => {
   const [fileFinal, setFile] = useState("");
 
   const uploadHandler = (e: any) => {
-    console.log(e);
     if (e.target.files && e.target.files.length) {
       const file = e.target.files[0];
 
