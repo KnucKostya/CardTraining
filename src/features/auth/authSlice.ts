@@ -44,9 +44,11 @@ const setNewPassword = createAppAsyncThunk("auth/newPassword", async (arg: SetNe
     });
   });
 });
-const logoutTC = createAppAsyncThunk<LogoutResType>("auth/logout", async () => {
-  const res = await authApi.logout();
-  return res.data;
+const logoutTC = createAppAsyncThunk<LogoutResType>("auth/logout", async (arg, thunkAPI) => {
+  return thunkTryCatch(thunkAPI, async () => {
+    const res = await authApi.logout();
+    return res.data;
+  });
 });
 const updateUserTC = createAppAsyncThunk<{ profile: UpdatedProfileType }, UpdateProfilePayloadType>(
   "profile/updateUser",

@@ -11,12 +11,14 @@ import { EditableSpan } from "common/components/EditableSpan/EditableSpan";
 import { useAppDispatch } from "common/hooks/useAppDispatch";
 import { useAppSelector } from "common/hooks/useAppSelector";
 import {
+  isAuth_auth_Selector,
   userAvatar_auth_Selector,
   userEmail_auth_Selector,
   userId_auth_Selector,
   userName_auth_Selector,
 } from "../auth/authSelector";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export const Profile = () => {
   const dispatch = useAppDispatch();
@@ -25,7 +27,15 @@ export const Profile = () => {
   const userAvatar = useAppSelector(userAvatar_auth_Selector);
   const userName = useAppSelector(userName_auth_Selector);
   const userEmail = useAppSelector(userEmail_auth_Selector);
+  const isAuth = useAppSelector(isAuth_auth_Selector);
+  const navigate = useNavigate();
+
   const [fileFinal, setFile] = useState("");
+
+  if (!isAuth) {
+    toast.warning("you are not signed in yet");
+    navigate("/login");
+  }
 
   const uploadHandler = (e: any) => {
     if (e.target.files && e.target.files.length) {
