@@ -66,9 +66,9 @@ export type CardPackType = {
 };
 export type PacksResType = {
   cardPacks: CardPackType[];
-  page: number; //выбранная страница
-  pageCount: number; //количество эл-ов на странице
-  cardPacksTotalCount: number; //количество колод
+  page: number; //current page
+  pageCount: number; // count of elements in page
+  cardPacksTotalCount: number; // count of packs
   minCardsCount: number;
   maxCardsCount: number;
   token: string;

@@ -79,9 +79,10 @@ export const Packs = () => {
     toast.warning("you are not signed in yet");
     navigate("/login");
   }
+  let sessionStorageData = sessionStorage.getItem("showPacks");
 
   useEffect(() => {
-    fetchPacks(queryParams);
+    sessionStorageData === "My" ? fetchPacks({ ...queryParams, user_id: userId }) : fetchPacks(queryParams);
   }, [queryParams]);
 
   const updatedSortHandler = () => {
@@ -102,9 +103,11 @@ export const Packs = () => {
 
   const showMyPacks = () => {
     if (userId) setQueryParams({ ...queryParams, user_id: userId });
+    sessionStorage.setItem("showPacks", "My");
   };
   const showFriendsPacks = () => {
     setQueryParams({ ...queryParams, user_id: "" });
+    sessionStorage.setItem("showPacks", "All");
   };
 
   const sliderCallBack = (arr: number[]) => {
@@ -160,13 +163,13 @@ export const Packs = () => {
                 name={"My"}
                 onClickCallBack={showMyPacks}
                 width={"90px"}
-                variant={queryParams.user_id === "" ? "outlined" : "contained"}
+                variant={sessionStorageData === "My" ? "contained" : "outlined"}
               />
               <SuperButton
                 name={"All"}
                 onClickCallBack={showFriendsPacks}
                 width={"90px"}
-                variant={queryParams.user_id === "" ? "contained" : "outlined"}
+                variant={sessionStorageData === "All" ? "contained" : "outlined"}
               />
             </div>
           </div>
