@@ -15,6 +15,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import { authThunks } from "../auth/authSlice";
 import { useAppDispatch } from "common/hooks/useAppDispatch";
 import { RouteNames } from "app/routes";
+import { toast } from "react-toastify";
 
 type FormInputType = {
   email: string;
@@ -33,7 +34,11 @@ export const Login = () => {
   const onSubmit: SubmitHandler<FormInputType> = (data) => {
     dispatch(authThunks.login(data))
       .unwrap()
-      .then(() => navigate(RouteNames.PACKS));
+      .then(() => navigate(RouteNames.PACKS))
+      .catch((e) => {
+        console.log(e);
+        toast.error(e.errorMessage);
+      });
   };
   const handleShowPassword = () => {
     setShowPassword((prev) => !prev);

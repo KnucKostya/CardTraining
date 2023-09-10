@@ -86,6 +86,7 @@ const slice = createSlice({
       })
       .addCase(logoutTC.fulfilled, (state) => {
         state.isAuth = false;
+        state.profile = null;
       })
       .addCase(isAuthTC.fulfilled, (state, action) => {
         state.profile = action.payload.profile;

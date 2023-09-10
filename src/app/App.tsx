@@ -7,24 +7,24 @@ import { authThunks } from "features/auth/authSlice";
 import { useAppDispatch } from "common/hooks/useAppDispatch";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { isLoading_Selector } from "./appSelector";
 import { isAuth_auth_Selector } from "features/auth/authSelector";
+import { RouteNames } from "app/routes";
 
 function App() {
   const isAuth = useAppSelector(isAuth_auth_Selector);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!isAuth) {
       dispatch(authThunks.isAuthTC())
         .unwrap()
-        .then((res) => {
-          if (res.profile._id) {
-            // navigate(RouteNames.PACKS);
-          }
+        .then(() => {
+          isAuth && navigate(RouteNames.PACKS);
         })
-        .catch((e) => console.log(e.errorMessage));
-      //TODO:  how to delete log ?
+        .catch((e) => {
+          return;
+        });
     } else return;
   }, []);
 

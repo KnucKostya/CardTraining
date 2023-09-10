@@ -81,10 +81,6 @@ export const Packs = () => {
   }
   let sessionStorageData = sessionStorage.getItem("showPacks");
 
-  useEffect(() => {
-    sessionStorageData === "My" ? fetchPacks({ ...queryParams, user_id: userId }) : fetchPacks(queryParams);
-  }, [queryParams]);
-
   const updatedSortHandler = () => {
     if (queryParams.sortPacks === "1updated" || queryParams.sortPacks === "") {
       setQueryParams((prevState) => ({
@@ -135,7 +131,9 @@ export const Packs = () => {
     setQueryParams({ ...queryParams, pageCount: +event.target.value });
   };
 
-  const onClickPackHandler = () => {};
+  useEffect(() => {
+    sessionStorageData === "My" ? fetchPacks({ ...queryParams, user_id: userId }) : fetchPacks(queryParams);
+  }, [queryParams]);
 
   return (
     <div className={s.packs}>
@@ -229,11 +227,7 @@ export const Packs = () => {
               </TableHead>
               <TableBody>
                 {packs.map((p) => (
-                  <TableRow
-                    key={p._id}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                    onClick={onClickPackHandler}
-                  >
+                  <TableRow key={p._id} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                     <TableCell align="center" sx={{ padding: 0, paddingLeft: "10px" }}>
                       <img
                         className={s.packLogo}
