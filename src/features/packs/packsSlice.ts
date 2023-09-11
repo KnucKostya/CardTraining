@@ -75,6 +75,7 @@ const slice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchPacks.fulfilled, (state, action) => {
+      console.log(action.payload);
       state.cardPacks = action.payload.packs.cardPacks;
       state.cardPacksTotalCount = action.payload.packs.cardPacksTotalCount;
       state.maxCardsCount = action.payload.packs.maxCardsCount;
