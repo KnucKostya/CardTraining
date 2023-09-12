@@ -15,8 +15,6 @@ import Button from "@mui/material/Button";
 import { QueryParamsType } from "features/packs/Packs";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
-import { useAppSelector } from "common/hooks/useAppSelector";
-import { cardUserIdSelector, pack_UserId_Selector } from "features/cards/cardsSelectors";
 
 type PropsType = {
   closeModal: () => void | ReactNode;
@@ -41,10 +39,6 @@ export const EditPackModal = ({
   const [name, setName] = React.useState(packName);
   const [packCover, setPackCover] = useState(cover);
   const [isCoverBroken, setIsCoverBroken] = useState(false);
-  const nameOfPack = useAppSelector((state) => state.packs.cardPacks).map(
-    (pack) => pack.user_id && pack.user_id === userId && pack.name
-  );
-  const userId = useAppSelector(pack_UserId_Selector);
 
   if (packName !== undefined) {
     localStorage.setItem("packName", JSON.stringify(packName));
@@ -63,19 +57,19 @@ export const EditPackModal = ({
   };
   const saveHandler = () => {
     updatePack({ _id, name, deckCover: packCover })
-      .then((res: any) => {
+      .unwrap()
+      .then(() => {
+        console.log("then");
         fetchPacks(queryParams!);
-        setName(name);
-        localStorage.setItem("packName", res.meta.arg.name);
+        dispatch(cardsActions.addPackName(name));
+        localStorage.setItem("packName", name!);
       })
       .catch((e: AxiosError) => {
         if (storageGetLocalPackName) {
           setName(storageGetLocalPackName);
         }
-        console.log(e);
         e.message ? toast.error(e.message) : toast.error("something error occurred");
       });
-    dispatch(cardsActions.addPackName(name)); //TODO why dispatch here? use : useActions hook!
     closeModal();
     closeSecondModalHandler && closeSecondModalHandler(null);
   };
@@ -121,8 +115,8 @@ export const EditPackModal = ({
         variant="standard"
         sx={{ marginBottom: "29px", marginTop: "35px" }}
         size={"medium"}
-        value={nameOfPack}
-        // onChange={handleSetName}
+        value={name}
+        onChange={handleSetName}
         InputProps={{
           style: {
             fontSize: "20px",

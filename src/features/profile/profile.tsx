@@ -29,7 +29,6 @@ export const Profile = () => {
   const userEmail = useAppSelector(userEmail_auth_Selector);
   const isAuth = useAppSelector(isAuth_auth_Selector);
   const navigate = useNavigate();
-
   const [fileFinal, setFile] = useState("");
 
   if (!isAuth) {

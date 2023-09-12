@@ -59,6 +59,7 @@ export const Cards = () => {
   const { packId } = useParams();
   const url = useLocation().pathname;
   const navigate = useNavigate();
+
   sessionStorage.setItem("url", url);
   const [queryParams, setQueryParams] = useState<QueryParamsTypeCards>({
     cardQuestion: "",
