@@ -39,8 +39,8 @@ export const Profile = () => {
   const uploadHandler = (e: any) => {
     if (e.target.files && e.target.files.length) {
       const file = e.target.files[0];
-
-      if (file.size < 4000000) {
+      console.log(file.size);
+      if (file.size < 40000) {
         convertFileToBase64(file, (file64: string) => {
           setFile(file64);
         });
@@ -68,7 +68,7 @@ export const Profile = () => {
   };
 
   useEffect(() => {
-    if (fileFinal) {
+    if (fileFinal !== "") {
       dispatch(authThunks.updateUserTC({ avatar: fileFinal }));
     }
   }, [fileFinal]);

@@ -59,7 +59,6 @@ export const EditPackModal = ({
     updatePack({ _id, name, deckCover: packCover })
       .unwrap()
       .then(() => {
-        console.log("then");
         fetchPacks(queryParams!);
         dispatch(cardsActions.addPackName(name));
         localStorage.setItem("packName", name!);

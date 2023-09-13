@@ -12,7 +12,10 @@ export const store = configureStore({
     packs: packsReducer,
     cards: cardsReducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(thunkMiddleware),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }).prepend(thunkMiddleware),
 });
 
 export type AppDispatch = typeof store.dispatch;

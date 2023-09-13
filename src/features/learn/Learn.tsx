@@ -106,12 +106,7 @@ export const Learn = () => {
     setCard(getRandomCard(cards));
   };
 
-  // const gradeCards = cards.map((c) => console.log(c.grade));
-  // console.log(gradeCards);
-
   const gradeCards = card.grade;
-  console.log(gradeCards);
-
   useEffect(() => {
     if (first) {
       getCards({ packId: packId! });

@@ -24,7 +24,6 @@ export const fetchPacks = createAppAsyncThunk<{ packs: PacksResType }, GetPacksP
 export const addPack = createAppAsyncThunk<{ pack: CardPackType }, AddPackPayloadType>(
   "packs/addPack",
   async (args, thunkAPI) => {
-    const { dispatch } = thunkAPI;
     return thunkTryCatch(thunkAPI, async () => {
       return await packsApi.addPack(args);
     });
@@ -33,10 +32,8 @@ export const addPack = createAppAsyncThunk<{ pack: CardPackType }, AddPackPayloa
 export const removePack = createAppAsyncThunk<{ packId: string }, { _id: string }>(
   "packs/deletePack",
   async (arg, thunkAPI) => {
-    const { dispatch } = thunkAPI;
     return thunkTryCatch(thunkAPI, async () => {
-      let res = await packsApi.removePack(arg._id);
-      return res;
+      return await packsApi.removePack(arg._id);
     });
   }
 );
@@ -49,7 +46,6 @@ export const updatePack = createAppAsyncThunk<
     dispatch(packsActions.savePackName(arg.name));
     await packsApi.updatePack(arg);
     await dispatch(fetchPacks({ user_id: arg.userId }));
-    // return {pack: res.data.updatedCardsPack}
   });
 });
 
@@ -75,7 +71,6 @@ const slice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchPacks.fulfilled, (state, action) => {
-      console.log(action.payload);
       state.cardPacks = action.payload.packs.cardPacks;
       state.cardPacksTotalCount = action.payload.packs.cardPacksTotalCount;
       state.maxCardsCount = action.payload.packs.maxCardsCount;
