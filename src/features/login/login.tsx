@@ -15,7 +15,6 @@ import Visibility from "@mui/icons-material/Visibility";
 import { authThunks } from "../auth/authSlice";
 import { useAppDispatch } from "common/hooks/useAppDispatch";
 import { RouteNames } from "app/routes";
-import { toast } from "react-toastify";
 
 type FormInputType = {
   email: string;
@@ -35,9 +34,8 @@ export const Login = () => {
     dispatch(authThunks.login(data))
       .unwrap()
       .then(() => navigate(RouteNames.PACKS))
-      .catch((e) => {
-        console.log(e);
-        toast.error(e.errorMessage);
+      .catch(() => {
+        //error handling in thunkTryCatch
       });
   };
   const handleShowPassword = () => {

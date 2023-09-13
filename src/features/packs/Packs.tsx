@@ -75,6 +75,12 @@ export const Packs = () => {
   const [searchBarValue, setSearchBarValue] = useState(queryParams.packName);
   const packsPaginationCount: number = packsCount ? Math.ceil(packsCount / queryParams.pageCount) : 10;
 
+  const SetSearchBarValueHandler = (value: any) => {
+    useEffect(() => {
+      setSearchBarValue(value);
+    }, []);
+  };
+
   if (!isAuth) {
     toast.warning("you are not signed in yet");
     navigate("/login");
@@ -154,7 +160,7 @@ export const Packs = () => {
               queryParams={queryParams}
               setQueryParams={setQueryParams}
               searchValue={searchBarValue}
-              setSearchValue={setSearchBarValue}
+              setSearchValue={SetSearchBarValueHandler}
             />
           </div>
           <div className={s.showCards}>

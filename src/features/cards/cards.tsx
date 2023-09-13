@@ -71,7 +71,6 @@ export const Cards = () => {
   const [searchBarValue, setSearchBarValue] = useState(queryParams.cardQuestion);
 
   if (!isAuth) {
-    toast.warning("you are not signed in yet");
     navigate("/login");
   }
 
@@ -120,7 +119,10 @@ export const Cards = () => {
     if (!packId) return;
     dispatch(cardsThunks.getCards({ packId: packId, ...queryParams, sortBy: sortGrade }))
       .unwrap()
-      .then(() => authApi.isAuth);
+      .then(() => authApi.isAuth)
+      .catch(() => {
+        //error handling in thunkTryCatch
+      });
   }, [dispatch, queryParams, sortGrade]);
 
   useEffect(() => {
