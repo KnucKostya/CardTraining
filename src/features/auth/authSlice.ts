@@ -101,17 +101,10 @@ const slice = createSlice({
       .addCase(setNewPassword.fulfilled, (state, action) => {
         state.password = action.meta.arg.password;
       });
-    //TODO
-    // .addCase(isAuthTC.rejected, (state, action) => {
-    //   console.log("isAuth ", action.payload);
-    //   return action.payload;
-    // })
   },
 });
-
 export const authReducer = slice.reducer;
 
-// export const authActions = slice.actions;
 export const authThunks = {
   updateUserTC,
   isAuthTC,

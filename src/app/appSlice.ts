@@ -44,7 +44,6 @@ const slice = createSlice({
           const { errorMessage, showGlobalError = true } = action.payload;
           if (!showGlobalError) return;
           if (errorMessage) {
-            console.log(errorMessage);
             state.error = errorMessage;
           } else {
             state.error = `Undefined error occurred`;

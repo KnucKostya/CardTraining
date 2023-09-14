@@ -1,21 +1,34 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
-import { cardsApi, EditCardType, EditGradePayloadType, EditGradeResType, GetCardsResponse } from "./cardsApi";
+import {
+  cardsApi,
+  EditCardType,
+  EditGradePayloadType,
+  EditGradeResType,
+  GetCardsPayloadType,
+  GetCardsResponse,
+} from "./cardsApi";
 import { thunkTryCatch } from "common/utils/thunkTryCatch";
 
-const getCards = createAppAsyncThunk<
-  GetCardsResponse,
-  { packId: string; page?: number; pageCount?: number; cardQuestion?: string; sortBy?: number }
->("cards/get", async (arg, thunkAPI) => {
-  return thunkTryCatch(
-    thunkAPI,
-    async () => {
-      const res = await cardsApi.getCards(arg.packId, arg.page, arg.pageCount, arg.cardQuestion, arg.sortBy);
-      return res.data;
-    },
-    false
-  );
-});
+const getCards = createAppAsyncThunk<GetCardsResponse, GetCardsPayloadType>(
+  "cards/get",
+  async (arg, thunkAPI) => {
+    return thunkTryCatch(
+      thunkAPI,
+      async () => {
+        const res = await cardsApi.getCards(
+          arg.packId,
+          arg.page,
+          arg.pageCount,
+          arg.cardQuestion,
+          arg.sortBy
+        );
+        return res.data;
+      },
+      false
+    );
+  }
+);
 
 const removeCard = createAppAsyncThunk<any, { cardId: string }>("cards/delete", async (arg, thunkAPI) => {
   return thunkTryCatch(
@@ -83,7 +96,7 @@ const slice = createSlice({
     cards: {} as GetCardsResponse,
   },
   reducers: {
-    addPackName: (state, action) => {
+    addPackName: (state, action: PayloadAction<string>) => {
       state.cards.packName = action.payload;
     },
   },

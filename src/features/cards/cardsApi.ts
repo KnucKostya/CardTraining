@@ -41,6 +41,14 @@ export type CardType = {
   _id: string;
 };
 
+export type GetCardsPayloadType = {
+  packId: string;
+  page?: number;
+  pageCount?: number;
+  cardQuestion?: string;
+  sortBy?: number;
+};
+
 export type GetCardsResponse = {
   cards: CardType[];
   packName: string;
