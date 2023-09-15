@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
 import {
+  AddNewCardPayloadType,
   cardsApi,
   EditCardType,
   EditGradePayloadType,
@@ -40,10 +41,7 @@ const removeCard = createAppAsyncThunk<any, { cardId: string }>("cards/delete", 
     true
   );
 });
-const addNewCard = createAppAsyncThunk<
-  any,
-  { packId: string; question?: string; answer?: string; answerImg?: string; questionImg?: string }
->("cards/add", async (arg, thunkAPI) => {
+const addNewCard = createAppAsyncThunk<any, AddNewCardPayloadType>("cards/add", async (arg, thunkAPI) => {
   return thunkTryCatch(
     thunkAPI,
     async () => {

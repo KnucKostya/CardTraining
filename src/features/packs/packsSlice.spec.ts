@@ -33,7 +33,7 @@ describe("packsReducer", () => {
     ],
     page: 1,
     pageCount: 1,
-    cardPacksTotalCount: 1889,
+    cardPacksTotalCount: 1,
     minCardsCount: 0,
     maxCardsCount: 78,
     token: "e0908fb0-eb1e-11ed-b359-fbf835b5a380",
@@ -41,7 +41,6 @@ describe("packsReducer", () => {
   };
 
   it("should fetchPacks work correctly", () => {
-
     // 2. fulfilled takes 3 params:
     // 2.1. what thunk returns
     // 2.2. Await string. We would use "requestId" - like meta information

@@ -60,6 +60,14 @@ export type GetCardsResponse = {
   packUserId: string;
 };
 
+export type AddNewCardPayloadType = {
+  packId: string;
+  question?: string;
+  answer?: string;
+  answerImg?: string;
+  questionImg?: string;
+};
+
 export type PostCard = {
   card: {
     cardsPack_id: string;
